@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 import test from 'node:test';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
@@ -11,6 +14,28 @@ const canonicalHash = '0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db0
 test('LICENSE preserves the canonical GNU AGPLv3 bytes', () => {
   const bytes = readFileSync(new URL('../LICENSE', import.meta.url));
   assert.equal(createHash('sha256').update(bytes).digest('hex'), canonicalHash);
+});
+
+test('verified licenses retain their exact bytes with Windows autocrlf enabled', () => {
+  const root = mkdtempSync(join(tmpdir(), 'mourn-license-checkout-'));
+  const git = (...args) => execFileSync('git', ['-c', 'core.autocrlf=true', ...args], { cwd: root, stdio: 'pipe' });
+  const files = ['LICENSE', 'public/fonts/opendyslexic/OFL.txt'];
+  try {
+    git('init', '--quiet');
+    for (const file of ['.gitattributes', ...files]) {
+      const target = join(root, file);
+      mkdirSync(dirname(target), { recursive: true });
+      writeFileSync(target, readFileSync(new URL(`../${file}`, import.meta.url)));
+    }
+    git('add', '--', '.gitattributes', ...files);
+    for (const file of files) rmSync(join(root, file));
+    git('checkout-index', '--all', '--force');
+    for (const file of files) {
+      assert.deepEqual(readFileSync(join(root, file)), readFileSync(new URL(`../${file}`, import.meta.url)), file);
+    }
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test('package and AppStream metadata agree on version 3 only', () => {

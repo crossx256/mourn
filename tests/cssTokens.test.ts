@@ -1,5 +1,5 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { compileString } from 'sass';
 import { describe, expect, it } from 'vitest';
@@ -52,7 +52,7 @@ function stylesheets(): Array<{ rel: string; source: string }> {
     (path) => path.endsWith('.scss') || path.endsWith('.css'),
   );
   const sheets = cssFiles.map((path) => ({
-    rel: path.slice(root.length),
+    rel: relative(root, path).split(sep).join('/'),
     source: path.endsWith('.scss') ? compile(path) : readFileSync(path, 'utf8'),
   }));
   for (const path of walk(join(root, 'src'))) {
@@ -69,7 +69,7 @@ function stylesheets(): Array<{ rel: string; source: string }> {
           : body ?? '',
       )
       .join('\n');
-    if (all.length) sheets.push({ rel: path.slice(root.length), source: compiled });
+    if (all.length) sheets.push({ rel: relative(root, path).split(sep).join('/'), source: compiled });
   }
   return sheets;
 }

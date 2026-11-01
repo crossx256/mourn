@@ -119,7 +119,7 @@ describe('Quasar v3 configuration', () => {
         'import.meta.env.VITE_CLIENT_THEMES': JSON.stringify('true'),
       });
     }
-    expect(cfg.build!.env!.folder).toContain('scripts/isolated-env');
+    expect(cfg.build!.env!.folder).toBe(fileURLToPath(new URL('../scripts/isolated-env', import.meta.url)));
     expect(cfg.build!.vueOptionsAPI).toBe(true);
   });
 

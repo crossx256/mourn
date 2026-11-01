@@ -1,3 +1,9 @@
+# Source, scripts and verified license bytes must not change on Windows checkout.
+* text=auto eol=lf
+*.woff2 binary
+/public/fonts/opendyslexic/OFL.txt text eol=lf
+/LICENSE text eol=lf
+
 # Lock commitments use canonical UTF-8/LF bytes on every platform.
 /bun.lock text eol=lf
 /src-tauri/Cargo.lock text eol=lf

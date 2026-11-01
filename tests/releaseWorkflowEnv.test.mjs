@@ -36,6 +36,16 @@ function buildJobSteps() {
 
 const steps = buildJobSteps();
 
+test('every Quasar workflow installs the aliased Capacitor dependencies before prepare', () => {
+  for (const name of ['release', 'verify', 'web-release', 'android']) {
+    const workflow = readFileSync(new URL(`../.github/workflows/${name}.yml`, import.meta.url), 'utf8');
+    const install = workflow.search(/working-directory: src-capacitor\r?\n\s+run: bun install --frozen-lockfile --ignore-scripts/);
+    const prepare = workflow.indexOf('node node_modules/@quasar/app-vite/bin/quasar.js prepare');
+    assert.ok(install !== -1 && install < prepare,
+      `${name}: Quasar aliases Capacitor dependencies in every mode; install the locked shell tree before prepare`);
+  }
+});
+
 // A step is a list of fields; blocks (env:, run: |) keep their deeper lines.
 function fieldsOf(step) {
   const fields = [];

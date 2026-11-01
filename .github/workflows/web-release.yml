@@ -63,6 +63,10 @@ jobs:
       - name: Install dependencies without lifecycle scripts
         run: bun install --frozen-lockfile --ignore-scripts
 
+      - name: Install aliased Capacitor dependencies
+        working-directory: src-capacitor
+        run: bun install --frozen-lockfile --ignore-scripts
+
       - name: Install isolated SSR dependencies without lifecycle scripts
         working-directory: src-ssr
         run: bun install --frozen-lockfile --ignore-scripts

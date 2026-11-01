@@ -32,6 +32,9 @@ jobs:
           node --test tests/releaseScripts.test.mjs tests/packaging.test.mjs tests/linuxdeploy.test.mjs
           python3 -B tests/test_source_audit.py
       - run: bun install --frozen-lockfile --ignore-scripts
+      - name: Install aliased Capacitor dependencies
+        working-directory: src-capacitor
+        run: bun install --frozen-lockfile --ignore-scripts
       - name: Install isolated SSR dependencies without lifecycle scripts
         working-directory: src-ssr
         run: bun install --frozen-lockfile --ignore-scripts
