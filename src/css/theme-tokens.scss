@@ -44,7 +44,7 @@
   --m-arcMutedWarm-rgb: 156 151 145;
   // Leaderboard ink follows the accent in both the runtime palette and the
   // un-themed default, so the alias never flashes a different red. The default
-  // is DEFAULT_THEME.lbRed (#ff0000) — tests/theme.tokens.test.ts pins the pair.
+  // is DEFAULT_THEME.lbRed — tests/theme.tokens.test.ts pins the pair.
   --m-lbRed-rgb: 255 0 0;
   --m-lbMuted-rgb: 136 136 136;
 }
