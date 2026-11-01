@@ -1,0 +1,13 @@
+# Reviewed SHA-256 for the linuxdeploy x86_64 AppImage.
+#
+# linuxdeploy is downloaded and executed during Linux packaging, so its digest
+# is pinned here rather than fetched at build time. Update it only after an
+# independent review of the published artifact:
+#
+#   curl -fsSL -o /tmp/linuxdeploy.AppImage \
+#     https://github.com/tauri-apps/binary-releases/releases/download/linuxdeploy/linuxdeploy-x86_64.AppImage
+#   sha256sum /tmp/linuxdeploy.AppImage
+#
+# The value must match https://github.com/tauri-apps/binary-releases/releases/tag/linuxdeploy
+# for asset linuxdeploy-x86_64.AppImage (13,264,064 bytes as of this pin).
+e762bea85c8eb0d4b3508d46e5c1f037f717d0f9303ae3b4aafc8b04991fa1ef

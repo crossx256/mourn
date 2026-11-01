@@ -71,9 +71,20 @@ const envOf = (step) => {
   }
   return env;
 };
+/** Values exported with `echo NAME=value >> $GITHUB_ENV` by steps before `index`. */
+const exportedTo = (list, index) => {
+  const exported = {};
+  for (const step of list.slice(0, index)) {
+    for (const match of command(step).matchAll(/^\s*echo\s+"?([A-Z_][\w]*)=(.*?)"?\s*>>\s*"?\$\{?GITHUB_ENV\}?"?\s*$/gm)) {
+      exported[match[1]] = match[2];
+    }
+  }
+  return exported;
+};
 
 const buildIndex = steps.findIndex((step) => /tauri:build-signed|build_collect_signatures/.test(command(step)));
 const prerequisiteIndex = steps.findIndex((step) => /pin_linuxdeploy_for_bundling\.sh/.test(command(step)));
+const digestIndex = steps.findIndex((step) => /linuxdeploy\.sha256|inputs\.linuxdeploy_sha256/.test(command(step)));
 
 test('the workflow has the linuxdeploy prerequisite and the signed build, in that order', () => {
   assert.notEqual(prerequisiteIndex, -1, 'no step verifies/pins the reviewed linuxdeploy input');
@@ -81,9 +92,21 @@ test('the workflow has the linuxdeploy prerequisite and the signed build, in tha
   assert.ok(prerequisiteIndex < buildIndex, 'the linuxdeploy prerequisite must run before the build');
 });
 
-test('the prerequisite reads the reviewed digest from the workflow input', () => {
-  const value = envOf(steps[prerequisiteIndex]).LINUXDEPLOY_SHA256;
-  assert.match(String(value || ''), /inputs\.linuxdeploy_sha256/, `prerequisite LINUXDEPLOY_SHA256 is ${value}`);
+test('the digest is resolved before the prerequisite runs, from the input or the pinned file', () => {
+  assert.notEqual(digestIndex, -1, 'no step resolves the reviewed linuxdeploy digest');
+  assert.ok(digestIndex < prerequisiteIndex, 'the digest must be resolved before pin_linuxdeploy runs');
+  const body = command(steps[digestIndex]);
+  // An operator-supplied digest wins; otherwise the reviewed value committed in
+  // the repository is used. Both paths must end in a full 64-character SHA-256.
+  assert.match(body, /inputs\.linuxdeploy_sha256/, 'the dispatch input must be honoured');
+  assert.match(body, /scripts\/linuxdeploy\.sha256/, 'the pinned digest file must be the fallback');
+  assert.match(body, /\^\[0-9a-fA-F\]\{64\}\$/, 'the resolved value must be validated as a SHA-256');
+});
+
+test('the pinned digest file contains exactly one reviewed SHA-256', () => {
+  const file = readFileSync(new URL('../scripts/linuxdeploy.sha256', import.meta.url), 'utf8');
+  const digests = file.split('\n').map((line) => line.trim()).filter((line) => /^[0-9a-fA-F]{64}$/.test(line));
+  assert.equal(digests.length, 1, `expected one pinned digest, found ${digests.length}`);
 });
 
 test('the signed-build step actually receives LINUXDEPLOY_SHA256', () => {
@@ -99,14 +122,15 @@ test('the signed-build step actually receives LINUXDEPLOY_SHA256', () => {
 
   assert.ok(value, 'the signed-build step does not receive LINUXDEPLOY_SHA256 (env of that step: ' +
     `${Object.keys(own).join(', ') || 'none'}${Object.keys(exported).length ? `; exported: ${Object.keys(exported).join(', ')}` : ''})`);
-  assert.match(String(value), /inputs\.linuxdeploy_sha256/,
-    `the build step must carry the reviewed digest, not "${value}"`);
+  assert.match(String(value), /digest/,
+    `the build step must carry the resolved digest, not "${value}"`);
 });
 
 test('no step that runs the bundler is left without the digest', () => {
   steps.forEach((step, index) => {
     if (!/tauri:build-signed|build_collect_signatures/.test(command(step))) return;
     const own = envOf(steps[index]);
-    assert.ok(own.LINUXDEPLOY_SHA256, `step ${index + 1} runs the signed build without LINUXDEPLOY_SHA256 in its env`);
+    const value = own.LINUXDEPLOY_SHA256 ?? exportedTo(steps, index).LINUXDEPLOY_SHA256;
+    assert.ok(value, `step ${index + 1} runs the signed build without LINUXDEPLOY_SHA256 in its env or $GITHUB_ENV`);
   });
 });

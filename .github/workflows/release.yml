@@ -9,8 +9,9 @@ on:
         required: true
         type: string
       linuxdeploy_sha256:
-        description: Independently reviewed SHA-256 of the original x86_64 linuxdeploy AppImage; never copy a hash from this run. Required before any download or execution; extraction is always fresh.
-        required: true
+        description: 'Optional override for the reviewed SHA-256 of the x86_64 linuxdeploy AppImage. Leave empty to use the pinned digest in scripts/linuxdeploy.sha256.'
+        required: false
+        default: ''
         type: string
       publish:
         description: 'Set to true to attach the assembled, checked assets to the existing tag as a GitHub release. Build-only when false.'
@@ -83,23 +84,32 @@ jobs:
         env:
           TAURI_UPDATER_PUBLIC_KEY: ${{ secrets.TAURI_UPDATER_PUBLIC_KEY }}
           TAURI_UPDATER_ENDPOINT: 'https://mourn.bio/update/{{target}}/{{current_version}}'
-      - name: Verify reviewed linuxdeploy input and prepare a fresh extraction
+      - name: Resolve the reviewed linuxdeploy digest
         if: runner.os == 'Linux'
         run: |
           set -euo pipefail
-          # The GStreamer bundling adapter installed here re-checks the digest when
-          # the signed build runs it, so the reviewed value must outlive this step.
-          # Publishing it to $GITHUB_ENV is that hand-off; it is not a secret.
-          bash scripts/pin_linuxdeploy_for_bundling.sh
-          printf 'LINUXDEPLOY_SHA256=%s\n' "$LINUXDEPLOY_SHA256" >> "$GITHUB_ENV"
-        env:
-          LINUXDEPLOY_SHA256: ${{ inputs.linuxdeploy_sha256 }}
+          # An explicit dispatch input wins; otherwise use the digest pinned in
+          # scripts/linuxdeploy.sha256. Either way the value is a full SHA-256.
+          digest='${{ inputs.linuxdeploy_sha256 }}'
+          if [ -z "$digest" ]; then
+            digest="$(grep -E '^[0-9a-fA-F]{64}$' scripts/linuxdeploy.sha256 | head -n1)"
+          fi
+          if ! printf '%s' "$digest" | grep -qE '^[0-9a-fA-F]{64}$'; then
+            echo '::error::No reviewed linuxdeploy SHA-256 available (input empty and scripts/linuxdeploy.sha256 has no digest).'
+            exit 1
+          fi
+          echo "LINUXDEPLOY_SHA256=$digest" >> "$GITHUB_ENV"
+          echo "Using linuxdeploy digest $digest"
+      - name: Verify reviewed linuxdeploy input and prepare a fresh extraction
+        if: runner.os == 'Linux'
+        run: bash scripts/pin_linuxdeploy_for_bundling.sh
       - name: Build and validate signed packages in a fresh target directory
         run: bun run tauri:build-signed
         env:
           # Also set explicitly: the bundle runs the GStreamer adapter, which refuses
           # to run without the reviewed digest (tests/releaseWorkflowEnv.test.mjs).
-          LINUXDEPLOY_SHA256: ${{ inputs.linuxdeploy_sha256 }}
+          # Resolved in the "Resolve the reviewed linuxdeploy digest" step above,
+          # so this is inherited from $GITHUB_ENV; Linux only.
           MOURN_ISOLATED_BUILD: '1'
           MOURN_ENABLE_UPDATER: 'true'
           VITE_API_BASE: https://mourn.bio
