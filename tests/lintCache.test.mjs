@@ -4,7 +4,7 @@ import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execFile } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
 
@@ -42,14 +42,19 @@ test('unset MOURN_ESLINT_CACHE_KEY gives every run a distinct cache directory', 
     assert.notEqual(dir('1'), dir('2'));
     // A pinned key is honoured verbatim (pkg.scripts.lint expands to this).
     const pinned = 'release';
+    // Native Node need not have sh on PATH even when Actions uses Git Bash.
+    // Resolve the shell from the installed Git rather than assuming C:\\Program Files.
+    const shell = process.platform === 'win32'
+      ? path.resolve(execFileSync('git', ['--exec-path'], { encoding: 'utf8' }).trim(), '../../../bin/bash.exe')
+      : 'sh';
     const expanded = await promisify(execFile)(
-      'sh',
+      shell,
       ['-c', `echo node_modules/.cache/eslint/\${MOURN_ESLINT_CACHE_KEY:-$$}/.eslintcache`],
       { env: { ...process.env, MOURN_ESLINT_CACHE_KEY: pinned } },
     );
     assert.equal(expanded.stdout.trim(), 'node_modules/.cache/eslint/release/.eslintcache');
     const unpinned = await promisify(execFile)(
-      'sh',
+      shell,
       ['-c', 'echo node_modules/.cache/eslint/${MOURN_ESLINT_CACHE_KEY:-$$}/.eslintcache'],
       { env: { ...process.env, MOURN_ESLINT_CACHE_KEY: '' } },
     );

@@ -1,4 +1,4 @@
-import { test } from 'node:test';
+import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -7,9 +7,12 @@ import crypto from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
+// These integrations execute Linux ELF tools and AppImage shell helpers.
+// Run them on Linux; Windows still runs the portable release-policy tests.
+describe('Linux AppImage and GStreamer integration', { skip: process.platform !== 'linux' }, () => {
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const script = path.join(root, 'scripts/pin_linuxdeploy_for_bundling.sh');
-const bash = process.platform === 'win32' ? 'C:/Program Files/Git/bin/bash.exe' : '/bin/bash';
+const bash = '/bin/bash';
 const mediaScript = path.join(root, 'scripts/bundler-tools/mourn-gstreamer-bundle.sh');
 const run = (args, options = {}) => spawnSync(bash, [mediaScript, ...args], {
   encoding: 'utf8', timeout: 20000, ...options,
@@ -103,7 +106,7 @@ function mediaFixture() {
     clean: () => fs.rmSync(dir, { recursive: true, force: true }) };
 }
 
-const elfTools = ['cc', 'patchelf', 'python3'].every(tool => spawnSync('which', [tool]).status === 0);
+const elfTools = process.platform === 'linux' && ['cc', 'patchelf', 'python3'].every(tool => spawnSync('which', [tool]).status === 0);
 if (process.platform === 'linux') assert.ok(elfTools, 'Linux ELF regressions require cc, patchelf and python3');
 
 const graphicsRemoved = [
@@ -464,4 +467,5 @@ test('wrong-digest and non-ELF local inputs never execute or reuse an extracted 
       assert.equal(fs.readFileSync(path.join(stable, 'squashfs-root/AppRun'), 'utf8'), '#!/bin/sh\nexit 99\n');
     }
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
 });

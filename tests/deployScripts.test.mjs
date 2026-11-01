@@ -60,8 +60,8 @@ function writeRelease(dir, { pkg = '{"name":"x"}\n', lock = null, index = 'modul
 }
 
 function writeFakeNpm(file) {
-  fs.writeFileSync(file, `#!${process.execPath}\nimport fs from 'node:fs';\nfs.mkdirSync('node_modules', { recursive: true });\n`);
-  fs.chmodSync(file, 0o755);
+  return executableStub(path.dirname(file), path.basename(file),
+    "import fs from 'node:fs'; fs.mkdirSync('node_modules', { recursive: true });");
 }
 
 function listen(handler) {
@@ -238,8 +238,7 @@ test('a lock that is not valid JSON is never silently ignored', async () => {
 test('dependency trees are keyed by package.json AND package-lock.json', () => {
   const install = tempRoot();
   try {
-    const npm = path.join(install, 'fake-npm.mjs');
-    writeFakeNpm(npm);
+    const npm = writeFakeNpm(path.join(install, 'fake-npm.mjs'));
     const a = writeRelease(path.join(install, 'a'), { lock: '{"lockfileVersion":3,"v":1}\n' });
     const b = writeRelease(path.join(install, 'b'), { lock: '{"lockfileVersion":3,"v":2}\n' });
     const unpinned = writeRelease(path.join(install, 'c'));
@@ -270,8 +269,7 @@ test('dependency trees are keyed by package.json AND package-lock.json', () => {
 test('a dependency tree installed from another lockfile is not reused', () => {
   const install = tempRoot();
   try {
-    const npm = path.join(install, 'fake-npm.mjs');
-    writeFakeNpm(npm);
+    const npm = writeFakeNpm(path.join(install, 'fake-npm.mjs'));
     const release = writeRelease(path.join(install, 'a'), { lock: '{"v":1}\n' });
     const result = harness(install, {}, `
       const first = deploy.ensureDeps(${JSON.stringify(release)}, ${JSON.stringify(npm)});
@@ -364,9 +362,16 @@ function bundleTarball(dir, { tag, commit, index }) {
 }
 
 function executableStub(dir, name, body) {
-  const file = path.join(dir, name);
+  const file = path.join(dir, name.endsWith('.mjs') ? name : `${name}.mjs`);
   fs.writeFileSync(file, `#!${process.execPath}\n${body}\n`);
+  if (process.platform === 'win32') {
+    const launcher = path.join(dir, `${name.replace(/\.mjs$/, '')}.cmd`);
+    fs.writeFileSync(launcher, `@echo off\r\n"${process.execPath}" "${file}" %*\r\n`);
+    return launcher;
+  }
   fs.chmodSync(file, 0o755);
+  // Keep bare npm/pm2 names discoverable through PATH on Unix.
+  if (file !== path.join(dir, name)) fs.symlinkSync(file, path.join(dir, name));
   return file;
 }
 
@@ -410,7 +415,7 @@ test('a same-tag redeploy keeps the outgoing live bundle as the rollback copy', 
     const liveRelease = path.join(root, 'releases', 'v1.0.0');
     writeRelease(liveRelease, { index: 'outgoing-working-build\n' });
     fs.mkdirSync(root, { recursive: true });
-    fs.symlinkSync(liveRelease, path.join(root, 'current'), 'dir');
+    fs.symlinkSync(liveRelease, path.join(root, 'current'), process.platform === 'win32' ? 'junction' : 'dir');
     fs.writeFileSync(path.join(root, 'deployed.json'), JSON.stringify({ tag: 'v1.0.0', commit: 'oldcommit' }));
 
     const result = await deploy(root, ['--tag', 'v1.0.0', '--force', '--port', String(app.address().port)], {

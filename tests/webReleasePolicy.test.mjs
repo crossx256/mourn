@@ -65,7 +65,7 @@ function shellStep(name) {
   return script.split('\n').filter(line => !line || line.startsWith('          ')).map(line => line.slice(10)).join('\n');
 }
 
-test('web configuration gate rejects missing Cap but permits optional Klipy without exposing values', () => {
+test('web configuration gate rejects missing Cap but permits optional Klipy without exposing values', { skip: process.platform !== 'linux' }, () => {
   const run = overrides => spawnSync('bash', ['-c', shellStep('Verify build-time configuration')], {
     encoding: 'utf8', timeout: 5000,
     env: { ...process.env, VITE_API_BASE: 'https://api.example', VITE_WS_BASE: 'https://ws.example',
@@ -82,7 +82,9 @@ test('web configuration gate rejects missing Cap but permits optional Klipy with
   }
 });
 
-test('SSR packaging produces a checksum-verifiable tarball with lockfile and provenance, without node_modules', () => {
+// These shell steps ship only in the Ubuntu SSR workflow; keep their policy
+// assertions above cross-platform and execute the actual Unix tools on Linux.
+test('SSR packaging produces a checksum-verifiable tarball with lockfile and provenance, without node_modules', { skip: process.platform !== 'linux' }, () => {
   const root = mkdtempSync(join(tmpdir(), 'mourn-web-policy-'));
   try {
     const ssr = join(root, 'dist/ssr');
