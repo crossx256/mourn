@@ -127,8 +127,16 @@ jobs:
           name: release-${{ matrix.platform }}
           path: artifacts/release-${{ matrix.platform }}/
           if-no-files-found: error
+  android:
+    # Reuses the standalone Android workflow: same tag gate, same keystore
+    # handling, same certificate verification. Output feeds `assemble`.
+    uses: ./.github/workflows/android.yml
+    with:
+      tag: ${{ inputs.tag }}
+    secrets: inherit
+
   assemble:
-    needs: build
+    needs: [build, android]
     runs-on: ubuntu-latest
     env:
       RELEASE_TAG: ${{ inputs.tag }}
@@ -150,8 +158,14 @@ jobs:
         with:
           pattern: release-*
           path: artifacts/shards
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: mourn-android-apk
+          path: artifacts/android
       - name: Validate every shard before exposing one combined draft
         run: node scripts/assemble_release.mjs
+      - name: Add the signed APK to the combined draft
+        run: node scripts/assemble_android_into_release.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: reviewed-release-draft
@@ -188,12 +202,21 @@ jobs:
         run: |
           set -euo pipefail
           test -s artifacts/draft-release/SHA256SUMS
+          # Every entry is also a file we must be publishing: refuse a manifest
+          # that lost entries or an asset the manifest does not cover.
           while read -r sum name; do
             [ -n "${name}" ] || continue
             test -f "artifacts/draft-release/${name}" || {
               echo "::error::Manifest lists ${name} but the file is missing."; exit 1; }
             echo "${sum}  artifacts/draft-release/${name}" | sha256sum -c --strict -
           done < artifacts/draft-release/SHA256SUMS
+          listed="$(sed -E 's#^[0-9a-f]{64}  ##' artifacts/draft-release/SHA256SUMS | sort)"
+          present="$(ls artifacts/draft-release | grep -vE '^SHA256SUMS|^release-index-' | sort)"
+          if [ "$listed" != "$present" ]; then
+            echo '::error::SHA256SUMS does not match the files being published:'
+            diff <(echo "$listed") <(echo "$present") || true
+            exit 1
+          fi
       - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

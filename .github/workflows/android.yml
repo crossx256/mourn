@@ -7,6 +7,13 @@ on:
         description: Existing reviewed version tag to build (no release upload)
         required: true
         type: string
+  # Called by release.yml so one dispatch produces desktop + APK together.
+  workflow_call:
+    inputs:
+      tag:
+        description: Existing reviewed version tag to build
+        required: true
+        type: string
 permissions:
   contents: read
 jobs:

@@ -34,7 +34,7 @@
     "preview": "vite preview --outDir dist/spa",
     "test": "vitest run --config scripts/vitest.release.config.ts",
     "typecheck": "vue-tsc --noEmit",
-    "test:release": "node --test tests/releaseScripts.test.mjs tests/packaging.test.mjs tests/linuxdeploy.test.mjs tests/webReleasePolicy.test.mjs tests/licensing.test.mjs tests/deployScripts.test.mjs tests/lintCache.test.mjs tests/releaseWorkflowEnv.test.mjs tests/workflowSecurity.test.mjs",
+    "test:release": "node --test tests/releaseScripts.test.mjs tests/packaging.test.mjs tests/linuxdeploy.test.mjs tests/webReleasePolicy.test.mjs tests/licensing.test.mjs tests/deployScripts.test.mjs tests/lintCache.test.mjs tests/releaseWorkflowEnv.test.mjs tests/workflowSecurity.test.mjs tests/releaseComposition.test.mjs",
     "flatpak:prepare": "python flatpak/prepare-sources.py",
     "postinstall": "quasar prepare",
     "tauri": "tauri",
