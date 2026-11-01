@@ -1,0 +1,18 @@
+# src-capacitor is COMMITTED (it holds the Android/iOS projects: manifest,
+# gradle config, icons, google-services.json, entitlements). Only build output
+# and installed deps are ignored.
+node_modules/
+www/
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/.idea/
+ios/App/build/
+ios/App/Pods/
+ios/App/App/public/
+ios/App/App.xcworkspace/xcuserdata/
+ios/App/App.xcodeproj/xcuserdata/
+*.keystore
+*.jks
+package-lock.json

@@ -1,0 +1,195 @@
+:root {
+  color-scheme: dark;
+  font-family: 'Courier New', Consolas, monospace;
+  background: rgb(var(--m-bg-rgb, 0 0 0));
+  color: rgb(var(--m-text-rgb, 238 238 238));
+}
+
+* {
+  box-sizing: border-box;
+  border-radius: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: rgb(var(--m-bg-rgb, 0 0 0));
+}
+
+button {
+  font: inherit;
+}
+
+.tray-shell {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  border: 1px solid rgb(var(--m-borderStrong-rgb, 42 42 42));
+  background: rgb(var(--m-surface-rgb, 13 13 13));
+  box-shadow: inset 0 0 0 1px rgb(var(--m-bg-rgb, 0 0 0));
+}
+
+.tray-shell::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: rgb(var(--m-accent-rgb, 255 0 0));
+  content: '';
+}
+
+.tray-header {
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgb(var(--m-border-rgb, 26 26 26));
+  padding: 12px 14px;
+  background: rgb(var(--m-elevated-rgb, 8 8 8));
+}
+
+.tray-mark {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.tray-title {
+  color: rgb(var(--m-text-rgb, 238 238 238));
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.1;
+  text-transform: lowercase;
+}
+
+.tray-status {
+  margin-top: 5px;
+  color: rgb(var(--m-textMuted-rgb, 119 119 119));
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.tray-nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px;
+}
+
+.tray-action,
+.tray-exit {
+  border: 1px solid transparent;
+  outline: none;
+  cursor: pointer;
+  text-transform: lowercase;
+}
+
+.tray-action {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 11px;
+  background: rgb(var(--m-card-rgb, 16 16 16));
+  color: rgb(var(--m-textMuted-rgb, 179 179 179));
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-align: left;
+}
+
+.tray-action:hover,
+.tray-action:focus-visible {
+  border-color: rgb(var(--m-accent-rgb, 255 0 0));
+  background: rgb(var(--m-hover-rgb, 21 21 21));
+  color: rgb(var(--m-text-rgb, 255 255 255));
+}
+
+.tray-action:active {
+  background: rgb(var(--m-accent-rgb, 255 0 0) / .15);
+}
+
+.tray-action--primary {
+  border-color: rgb(var(--m-accent-rgb, 255 0 0));
+  background: rgb(var(--m-accent-rgb, 255 0 0));
+  color: rgb(var(--m-bg-rgb, 0 0 0));
+  font-weight: 700;
+}
+
+.tray-action--primary:hover,
+.tray-action--primary:focus-visible {
+  border-color: rgb(var(--m-accent-rgb, 255 0 0));
+  background: rgb(var(--m-bg-rgb, 0 0 0));
+  color: rgb(var(--m-accent-rgb, 255 0 0));
+}
+
+.tray-code {
+  color: rgb(var(--m-textDim-rgb, 85 85 85));
+  font-size: 9px;
+}
+
+.tray-action:hover .tray-code,
+.tray-action:focus-visible .tray-code {
+  color: rgb(var(--m-accent-rgb, 255 0 0));
+}
+
+.tray-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 2px 2px;
+  color: rgb(var(--m-textDim-rgb, 85 85 85));
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.tray-divider::after {
+  height: 1px;
+  flex: 1;
+  background: rgb(var(--m-border-rgb, 26 26 26));
+  content: '';
+}
+
+.tray-footer {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgb(var(--m-border-rgb, 26 26 26));
+  padding: 8px 10px 8px 13px;
+  background: rgb(var(--m-elevated-rgb, 8 8 8));
+}
+
+#tray-feedback {
+  color: rgb(var(--m-textDim-rgb, 85 85 85));
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+#tray-feedback[data-error='true'] {
+  color: rgb(var(--m-accent-rgb, 255 0 0));
+}
+
+.tray-exit {
+  padding: 5px 8px;
+  background: transparent;
+  color: rgb(var(--m-textMuted-rgb, 119 119 119));
+  font-size: 9px;
+  letter-spacing: 0.15em;
+}
+
+.tray-exit:hover,
+.tray-exit:focus-visible {
+  border-color: rgb(var(--m-accent-rgb, 255 0 0));
+  color: rgb(var(--m-accent-rgb, 255 0 0));
+}

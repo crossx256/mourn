@@ -1,0 +1,21 @@
+{
+  "name": "Mourn",
+  "version": "1.5.3",
+  "private": true,
+  "dependencies": {
+    "@aparajita/capacitor-secure-storage": "^8.0.0",
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/camera": "^8",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/filesystem": "^8",
+    "@capacitor/haptics": "^8",
+    "@capacitor/ios": "^8.5.0",
+    "@capacitor/local-notifications": "^8.0.0",
+    "@capacitor/push-notifications": "^8.0.0",
+    "@capacitor/share": "^8",
+    "@capacitor/status-bar": "^8",
+    "@capawesome/capacitor-badge": "^8.0.3"
+  }
+}

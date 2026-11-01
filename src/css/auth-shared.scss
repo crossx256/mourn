@@ -1,0 +1,210 @@
+/* Shared auth styles - ONLY for styles that cannot be migrated to UnoCSS */
+/* Pseudo-elements, deep Quasar component overrides, autofill hacks, transitions */
+
+/* Root font for auth pages */
+.auth-card {
+  font-family: 'Courier New', monospace;
+  font-weight: bolder;
+}
+
+.auth-card,
+.auth-card * {
+  box-sizing: border-box;
+}
+
+/* Pseudo-element: label prefix */
+.auth-label::before {
+  content: '> ';
+  color: var(--primary);
+}
+
+/* ── Default input styling (original look) ── */
+.auth-card .q-field__control {
+  background: var(--black) !important;
+  color: var(--white) !important;
+  font-size: 0.65rem;
+  border: 1px solid var(--white) !important;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+  box-sizing: border-box;
+}
+
+.auth-card input {
+  color: var(--white);
+  font-weight: bolder;
+  font-size: 0.85rem;
+  caret-color: var(--primary);
+  transition: color 0.3s ease;
+}
+
+.auth-card input::placeholder,
+.auth-card ::placeholder {
+  color: var(--muted) !important;
+}
+
+/* ── Focused state: glitch activation ── */
+.auth-card .q-field--focused .q-field__control {
+  background: rgba(0, 0, 0, 0.7) !important;
+  border: 1px solid rgba(255, 0, 0, 0.35) !important;
+  border-bottom: 2px solid var(--primary) !important;
+  box-shadow:
+    0 0 20px rgba(255, 0, 0, 0.1),
+    inset 0 0 30px rgba(255, 0, 0, 0.03);
+}
+
+.auth-card .q-field--focused input {
+  color: var(--primary);
+}
+
+/* Quasar outlined variant border overrides */
+.auth-card .q-field--outlined .q-field__control::before {
+  border-color: transparent !important;
+}
+
+/* ── Data stream bars ── */
+.input-data-stream {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  display: flex;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.1s;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.stream-bar {
+  flex-grow: 1;
+  background-color: var(--primary);
+  transform: scaleY(0);
+  transform-origin: bottom;
+}
+
+.auth-card .q-field--focused ~ .input-data-stream {
+  opacity: 1;
+}
+
+.auth-card .q-field--focused ~ .input-data-stream .stream-bar {
+  animation: data-pulse 2s infinite;
+  animation-delay: calc(var(--i) * 0.1s);
+}
+
+/* Form group needs relative positioning for data-stream */
+.form-group {
+  position: relative;
+}
+
+/* Label glitch on focus */
+.form-group:focus-within > .auth-label {
+  color: var(--primary);
+  animation: auth-label-glitch 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.auth-card small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+/* Autofill overrides (webkit-specific, cannot be utilities) */
+input {
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: var(--white) !important;
+}
+
+/* Vue transition classes */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Custom scrollbar (webkit + firefox) */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--black);
+  border: 1px solid var(--white);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border: 1px solid var(--black);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--white);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--black);
+}
+
+/* ── Keyframes ── */
+@keyframes auth-label-glitch {
+  0% {
+    transform: translate(0);
+    text-shadow: none;
+  }
+  20% {
+    transform: translate(-2px, 1px);
+    text-shadow:
+      -2px 0 #00ffff,
+      2px 0 var(--primary);
+  }
+  40% {
+    transform: translate(1px, -1px);
+    text-shadow:
+      1px 0 #00ffff,
+      -1px 0 var(--primary);
+  }
+  60% {
+    transform: translate(-1px, 0.5px);
+    text-shadow:
+      -1px 0 #00ffff,
+      1px 0 var(--primary);
+  }
+  80% {
+    transform: translate(1px, -0.5px);
+    text-shadow:
+      1px 0 #00ffff,
+      -2px 0 var(--primary);
+  }
+  100% {
+    transform: translate(0);
+    text-shadow: none;
+  }
+}
+
+@keyframes data-pulse {
+  0%,
+  100% {
+    transform: scaleY(0.2);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 0.8;
+  }
+}

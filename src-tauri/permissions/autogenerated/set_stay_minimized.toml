@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-set-stay-minimized"
+description = "Enables the set_stay_minimized command without any pre-configured scope."
+commands.allow = ["set_stay_minimized"]
+
+[[permission]]
+identifier = "deny-set-stay-minimized"
+description = "Denies the set_stay_minimized command without any pre-configured scope."
+commands.deny = ["set_stay_minimized"]

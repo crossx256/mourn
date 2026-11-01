@@ -1,0 +1,12 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "tray",
+  "description": "Local tray launcher only; no storage, updater, or plugin access",
+  "windows": ["tray-menu"],
+  "permissions": [
+    "allow-tray-open",
+    "allow-tray-navigate",
+    "allow-tray-dismiss",
+    "allow-tray-exit"
+  ]
+}

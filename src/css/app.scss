@@ -1,0 +1,239 @@
+// app global css in SCSS form
+@import './login.scss';
+@import './dashboard.scss';
+@import './messaging-shared.scss';
+
+/* ── Native-shell basics ──────────────────────────────────────────────────
+   These are the three things every Capacitor surface needs and none of them
+   are cosmetic:
+     • no grey flash on tap (:hover styles still key off, but the OS highlight
+       box under the finger looks broken inside an app shell)
+     • no scroll chaining / rubber-band glow behind the app's own scrollers
+     • text remains selectable where the UI wants it (opt back in per element),
+       so the shell default is "don't hijack", not "block selection"
+   `viewport-fit=cover` (index.html) is what makes the env(safe-area-inset-*)
+   values used by the bottom nav actually non-zero on a notched device. */
+html,
+body {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  background: #000;
+}
+
+/* Touch press feedback.
+   A phone has no hover state, so without this a tap gives nothing back until the
+   next screen paints. Scoped to `hover: none` so desktop keeps its hover styles
+   and never sees a stuck ":active" after a click. */
+@media (hover: none) {
+  .nav-icon-btn:active,
+  .vault-chat-item:active,
+  .vault-suite-item:active,
+  .vault-nav-btn:active,
+  .chat-mobile-back-btn:active,
+  .vault-back-btn:active {
+    opacity: 0.6;
+  }
+}
+
+// CSS Variables matching uno.config.ts theme colors exactly
+:root {
+  // Primary theme colors (from uno.config.ts)
+  --primary: #ff0000;
+  --primary-dark: #410101;
+  --primary-dim: rgba(255, 0, 0, 0.15);
+  --accent: #f85149;
+  --accent-secondary: #f78166;
+  --q-primary: #ff0000;
+  --q-secondary: #bdbdbd;
+  --q-accent: #f85149;
+  --q-dark: #000000;
+  --q-dark-page: #000000;
+  --q-positive: #21ba45;
+  --q-negative: #f85149;
+  --q-info: #f78166;
+  --q-warning: #ffaa00;
+
+  // Background colors (from uno.config.ts)
+  --dash-bg: #000000;
+  --dash-sidebar: #0a0a0a;
+  --dash-panel: #0d0d0d;
+  --dash-card: #101010;
+
+  // Border colors (from uno.config.ts)
+  --dash-border: #1a1a1a;
+  --dash-border-hover: #2a2a2a;
+
+  // Text colors (from uno.config.ts)
+  --dash-text: #eeeeee;
+  --dash-muted: #888888;
+
+  // Status colors (from uno.config.ts)
+  --dash-success: #00ff00;
+  --dash-warning: #ffaa00;
+
+  // Legacy aliases (from uno.config.ts)
+  --bg-primary: #0d1117;
+  --text-primary: #ff0000;
+  --border: #30363d;
+  --warning: #d29922;
+  --danger: #f85149;
+  --panel: #0d0d0d;
+  --card: #101010;
+  --muted: #888888;
+  --hellamuted: #666666;
+
+  // Safe area defaults (web/mobile)
+  --titlebar-height: 0px;
+  // --shell-safe-top: viewport distance to the bottom of the desktop window chrome.
+  // 0 on web/mobile, the titlebar height in the Tauri shell — the anchor for every
+  // top-anchored transient surface (arrival banner, top toasts).
+  --shell-safe-top: 0px;
+  --notify-safe-top: 0px;
+}
+body {
+  background: #000;
+  color: rgb(var(--m-text-rgb));
+}
+
+/* Desktop native shell safe area (Tauri only) */
+body.is-tauri {
+  --titlebar-height: 32px;
+  /* Everything top-anchored must start below the frameless titlebar. */
+  --shell-safe-top: var(--titlebar-height);
+  --app-height: calc(100vh - var(--titlebar-height));
+  --notify-safe-top: calc(var(--shell-safe-top) + var(--header-height, 56px) + 8px);
+
+  /* Push the app below the native titlebar */
+  padding-top: var(--titlebar-height);
+  box-sizing: border-box;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/*
+ * CRITICAL: Quasar's q-layout uses min-height:100vh internally.
+ * With body padding-top, the layout overflows by --titlebar-height.
+ * Force it to fill only the available body content area.
+ */
+body.is-tauri .q-layout {
+  height: var(--app-height) !important;
+  min-height: 0 !important;
+  max-height: var(--app-height) !important;
+  overflow: hidden;
+}
+
+/* Quasar's page container also uses 100vh-based min-height — override */
+body.is-tauri .q-page-container {
+  min-height: 0 !important;
+}
+
+body.is-tauri .q-page {
+  min-height: 0 !important;
+}
+
+/*
+ * Keep top notifications below the titlebar + app header in Tauri.
+ * `--shell-safe-top` is the titlebar edge; the app header height is added so a
+ * toast never covers the header either. Quasar puts every top-ish position
+ * ('top', 'top-left', 'top-right') on this one list element, so this single rule
+ * covers all of them, on every route — in fullscreen the titlebar is translated
+ * away but its 32px strip is still reserved, so the offset stays correct.
+ */
+body.is-tauri .q-notifications__list--top {
+  top: var(--notify-safe-top) !important;
+}
+
+// Dark theme for Quasar cards
+.q-card {
+  background: var(--dash-card, #101010);
+  color: rgb(var(--m-text-rgb));
+}
+
+// Dark theme for expansion items
+.q-expansion-item {
+  .q-expansion-item__container {
+    background: transparent;
+  }
+}
+
+// Dark theme for inputs
+.q-field--dark {
+  .q-field__control {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Kill the browser scroll globally */
+html,
+body,
+#q-app {
+  height: 100vh;
+  height: -webkit-fill-available; // Fix for mobile browser bars
+  overflow: hidden !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* Force the Quasar Layout to be a rigid container */
+.q-layout {
+  height: 100vh;
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure the container fills exactly what's left between Header and Footer */
+.q-page-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 0; // The 'Flex Height' trick to force children to respect boundaries
+}
+
+/* Make EVERY page scrollable by default internally */
+.q-page {
+  flex: 1;
+  overflow-y: auto;
+  height: 100%;
+}
+
+/* Re-apply your custom scrollbar globally to the internal areas */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--dash-accent-dim, #ff0000) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dash-accent-dim, #ff0000);
+  border-radius: 0px;
+}
+
+/* Quasar paints .q-drawer white. The drawer's content box does not fill the drawer
+   (the safe-area insets sit outside it), so on a black app that white showed through
+   as strips above and below the navigation menu. This lives in the GLOBAL stylesheet
+   on purpose: a scoped rule compiles to .q-drawer.global-drawer[data-v-…] and never
+   matches the element Quasar renders. */
+.q-drawer {
+  background: #000 !important;
+}
+
+/* Dialogs must never be wider (or taller) than the phone.
+   Several modals still carry pixel sizes from the desktop layout — the suite
+   creator at min-width:440px on a 411px screen, GroupSettings at 620x620,
+   SecurityTab 460, SocialIconDialog 520 — so on a phone they overflowed the
+   viewport and looked "huge". Clamping here fixes the whole class in one place
+   instead of chasing each modal. */
+@media (max-width: 600px) {
+  .q-dialog__inner > .q-card {
+    min-width: 0 !important;
+    max-width: 96vw !important;
+    max-height: 92vh !important;
+  }
+}
+
+@import "./theme-tokens.scss";

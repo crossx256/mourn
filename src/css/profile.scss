@@ -1,0 +1,1548 @@
+/* ==========================================================================
+   Profile Page Styles
+   Ported from legacy mourn.bio profile.css for Quasar SSR
+   ========================================================================== */
+
+/* Shimmer Mask Animation Property */
+@property --mask {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* ========================================================================
+   KEYFRAMES
+   ======================================================================== */
+
+@keyframes shimmer-spin {
+  0% {
+    --mask: 0deg;
+  }
+  100% {
+    --mask: 360deg;
+  }
+}
+
+@keyframes shimmer-wave {
+  0% {
+    mask-position: 200% center;
+  }
+  100% {
+    mask-position: 0% center;
+  }
+}
+
+@keyframes shimmer-throb {
+  0%,
+  90%,
+  100% {
+    opacity: 0.4;
+  }
+  20% {
+    opacity: 1;
+  }
+}
+
+@keyframes text-shimmer {
+  0% {
+    background-position: 100% center;
+  }
+  100% {
+    background-position: -100% center;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.85;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    text-shadow:
+      0 0 20px var(--username-glow-color, var(--profile-border-color)),
+      0 0 40px var(--username-glow-color, var(--profile-border-color)) !important;
+  }
+  50% {
+    text-shadow:
+      0 0 30px var(--username-glow-color, var(--profile-border-color)),
+      0 0 50px var(--username-glow-color, var(--profile-border-color)) !important;
+  }
+}
+
+@keyframes rainbow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes glitch {
+  0%,
+  90%,
+  100% {
+    transform: translate(0);
+  }
+  92% {
+    transform: translate(-2px, 2px);
+  }
+  94% {
+    transform: translate(2px, -2px);
+  }
+  96% {
+    transform: translate(-2px, -2px);
+  }
+  98% {
+    transform: translate(2px, 2px);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes profileFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink-cursor {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes rep-surge {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(-8px) scale(1.25);
+  }
+  60% {
+    transform: translateY(0) scale(1.1);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ========================================================================
+   BASE PROFILE PAGE
+   ======================================================================== */
+
+.profile-page {
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #000;
+  font-family: var(--custom-font, inherit);
+}
+
+/* ---- 404 Error State ---- */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.error-404 {
+  font-size: 6rem;
+  margin: 0;
+  color: #f00;
+  letter-spacing: 4px;
+}
+
+.error-message {
+  font-size: 1.5rem;
+  color: #999;
+  margin: 1rem 0 2rem 0;
+}
+
+.error-link {
+  color: #f00;
+  text-decoration: none;
+  font-size: 1.2rem;
+  border: 2px solid #f00;
+  padding: 1rem 2rem;
+  display: inline-block;
+  transition: all 0.2s;
+  letter-spacing: 2px;
+
+  &:hover {
+    background: #f00;
+    color: #000;
+  }
+}
+
+/* ---- Loading State ---- */
+.profile-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* ========================================================================
+   PROFILE CONTAINER (background layer)
+   ======================================================================== */
+
+.profile-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* While the entrance overlay is up the content behind it must stay inert:
+   no scroll, no pointer interaction. The overlay itself is fixed + opaque. */
+.profile-container.is-entrance-blocked {
+  overflow: hidden;
+  pointer-events: none;
+}
+.profile-container.is-entrance-blocked > * {
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Background blur layer */
+.profile-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  background-attachment: inherit;
+  filter: blur(var(--bg-blur, 0));
+  pointer-events: none;
+  scale: 1.1;
+}
+
+.profile-container[data-bg-type='video']::before {
+  display: none;
+}
+
+/* Background opacity overlay */
+.profile-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: rgba(0, 0, 0, calc(1 - min(var(--bg-opacity, 1), 1)));
+}
+
+.profile-container > * {
+  z-index: 1;
+}
+
+/* ---- Entrance Overlay ---- */
+.entrance-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: pointer;
+  transition: opacity 0.5s ease;
+}
+
+.entrance-text {
+  font-size: 3rem;
+  text-align: center;
+  user-select: none;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ---- Background Video ---- */
+.background-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  object-fit: cover;
+  filter: blur(var(--bg-blur, 0));
+  opacity: var(--bg-opacity, 1);
+}
+
+/* ========================================================================
+   PROFILE CARD
+   ======================================================================== */
+
+.profile-card {
+  position: relative;
+  z-index: 2;
+  max-width: var(--card-max-width, 600px);
+  width: var(--card-width, 100%);
+  padding: var(--card-padding, 3rem 2rem);
+  margin: var(--card-margin, 0);
+  display: flex;
+  flex-direction: column;
+  /* Keep overflow visible so hover transforms on badges/socials aren't clipped.
+     The ::before pseudo-element carries the rounded background. */
+  overflow: visible;
+  backdrop-filter: blur(var(--card-blur, 0));
+  -webkit-backdrop-filter: blur(var(--card-blur, 0));
+  box-shadow: var(--card-shadow, none);
+}
+
+/* Mobile: reduce card padding on small screens */
+@media (max-width: 480px) {
+  .profile-card {
+    padding: var(--card-padding, 2rem 1.25rem);
+  }
+}
+
+/* Card background layer */
+.profile-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--card-bg-color, #000000);
+  opacity: var(--card-opacity, 1);
+  pointer-events: none;
+  border-radius: calc(
+    max(var(--profile-card-border-radius, 0) - var(--profile-card-border-width, 2px), 0px)
+  );
+}
+
+/* Card border – solid (only when not using shimmer borders which have their own border style) */
+.profile-card:not(.no-card):not(.no-borders):not([data-border-style='shimmer-spin']):not(
+    [data-border-style='shimmer-wave']
+  ):not([data-border-style='shimmer-throb']):not([data-border-style='gradient']) {
+  border-width: var(--profile-card-border-width, 2px);
+  border-style: var(--profile-card-border-style, solid);
+  border-color: var(--profile-card-border-color, #ffffff);
+  border-radius: var(--profile-card-border-radius, 0);
+}
+
+/* ---- No-card mode ---- */
+.profile-card.no-card {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.profile-card.no-card::before,
+.profile-card.no-card::after {
+  display: none !important;
+}
+
+.profile-card.no-card .shimmer-glow {
+  display: none !important;
+}
+
+/* ---- No-borders mode ---- */
+.profile-card.no-borders {
+  border: none !important;
+}
+
+.profile-card.no-borders .shimmer-glow {
+  display: none !important;
+}
+
+/* ---- Inner no-borders mode ---- */
+.profile-card.inner-no-borders .stat,
+.profile-card.inner-no-borders .social-link,
+.profile-card.inner-no-borders .badge-item,
+.profile-card.inner-no-borders .profile-bio,
+.profile-card.inner-no-borders .profile-picture,
+.profile-card.inner-no-borders .profile-picture-placeholder {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ========================================================================
+   SHIMMER GLOW EFFECT — Card Borders
+   ======================================================================== */
+
+.shimmer-glow {
+  position: absolute;
+  inset: calc(var(--profile-card-border-width, 2px) * -2);
+  border-radius: calc(var(--profile-card-border-radius, 0) + 4px);
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.shimmer-glow::before,
+.shimmer-glow::after {
+  content: '';
+  position: absolute;
+  inset: calc(var(--profile-card-border-width, 2px) * 2);
+  border-radius: var(--profile-card-border-radius, 0);
+  transition: opacity 0.3s ease;
+}
+
+.shimmer-glow::before {
+  box-shadow:
+    0 0 calc(var(--profile-card-border-width, 2px) * 2.5)
+      calc(var(--profile-card-border-width, 2px) * 1) var(--shimmer-color, #fff),
+    0 0 calc(var(--profile-card-border-width, 2px) * 7.5)
+      calc(var(--profile-card-border-width, 2px) * 2.5) var(--shimmer-color, #fff),
+    0 0 calc(var(--profile-card-border-width, 2px) * 15)
+      calc(var(--profile-card-border-width, 2px) * 5) rgba(255, 255, 255, 0.3);
+  z-index: -1;
+}
+
+.shimmer-glow::after {
+  box-shadow:
+    inset 0 0 0 var(--profile-card-border-width, 2px) var(--shimmer-color, #fff),
+    inset 0 0 calc(var(--profile-card-border-width, 2px) * 2.5)
+      var(--profile-card-border-width, 2px) rgba(255, 255, 255, 0.5);
+  z-index: 2;
+}
+
+/* Shimmer Spin */
+.profile-card[data-border-style='shimmer-spin'] .shimmer-glow {
+  mask-image: conic-gradient(
+    from var(--mask, 0deg),
+    transparent 0%,
+    transparent 10%,
+    black 36%,
+    black 45%,
+    transparent 50%,
+    transparent 60%,
+    black 85%,
+    black 95%,
+    transparent 100%
+  );
+  mask-size: cover;
+  animation: shimmer-spin 3s linear infinite;
+}
+
+/* Shimmer Wave */
+.profile-card[data-border-style='shimmer-wave'] .shimmer-glow {
+  mask-image: linear-gradient(90deg, transparent 15%, black 45%, black 55%, transparent 85%);
+  mask-size: 200% 200%;
+  mask-position: center;
+  animation: shimmer-wave 3s linear infinite;
+}
+
+/* Shimmer Throb */
+.profile-card[data-border-style='shimmer-throb'] .shimmer-glow {
+  mask-image: none;
+  animation: shimmer-throb 3s ease infinite;
+}
+
+/* Shimmer base styles */
+.profile-card[data-border-style='shimmer-spin'],
+.profile-card[data-border-style='shimmer-wave'],
+.profile-card[data-border-style='shimmer-throb'] {
+  border: var(--profile-card-border-width, 2px) solid rgba(255, 255, 255, 0.15);
+  border-color: var(--shimmer-border-color, rgba(255, 255, 255, 0.15));
+  border-radius: var(--profile-card-border-radius, 0);
+}
+
+/* Gradient border */
+.profile-card[data-border-style='gradient'] {
+  border: var(--profile-card-border-width, 2px) solid transparent;
+  background:
+    linear-gradient(var(--card-bg-color, #000), var(--card-bg-color, #000)) padding-box,
+    var(--profile-card-border-gradient, linear-gradient(45deg, #ff0000, #00ff00)) border-box;
+}
+
+/* ========================================================================
+   USERNAME SHIMMER EFFECTS
+   Legacy pattern: shimmer effects go on .username-container, non-shimmer on .profile-username
+   ======================================================================== */
+/* Common setup for all text-based shimmers */
+.effect-shimmer-wave,
+.effect-shimmer-spin,
+.effect-shimmer-throb,
+/* When shimmer is applied to username-container, target the text inside */
+.username-container.effect-shimmer-wave .profile-username,
+.username-container.effect-shimmer-spin .profile-username,
+.username-container.effect-shimmer-throb .profile-username {
+  &::before,
+  &::after {
+    display: none !important;
+  } /* Kill the boxes */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+}
+
+/* 1. WAVE: Smooth, constant sliding highlight */
+.effect-shimmer-wave,
+.username-container.effect-shimmer-wave .profile-username {
+  background-image: linear-gradient(
+    90deg,
+    var(--username-text-color) 25%,
+    var(--username-glow-color, var(--shimmer-color)) 50%,
+    var(--username-text-color) 75%
+  );
+  animation: text-shimmer-slide 2.5s linear infinite;
+}
+
+/* 2. SPIN (Refraction): Faster, sharper "glint" effect */
+.effect-shimmer-spin,
+.username-container.effect-shimmer-spin .profile-username {
+  background-image: linear-gradient(
+    110deg,
+    var(--username-text-color) 40%,
+    var(--username-glow-color, var(--shimmer-color)) 50%,
+    var(--username-text-color) 60%
+  );
+  background-size: 150% auto;
+  animation: text-shimmer-slide 2s ease-in-out infinite;
+}
+
+/* 3. THROB: Text glows in and out instead of sliding */
+.effect-shimmer-throb,
+.username-container.effect-shimmer-throb .profile-username {
+  background-image: linear-gradient(
+    -10deg,
+    var(--username-glow-color, var(--shimmer-color)) 0%,
+    var(--username-text-color) 30%,
+    var(--username-glow-color, var(--shimmer-color)) 100%
+  );
+  animation: text-throb-fade 3s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes text-shimmer-slide {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@keyframes text-throb-fade {
+  0%,
+  100% {
+    /* keep full color at baseline; use glow via text-shadow/brightness instead of reducing opacity */
+    opacity: 1;
+    filter: brightness(1);
+    text-shadow: 0 0 8px var(--username-glow-color, currentColor);
+  }
+  50% {
+    opacity: 1;
+    /* brighten slightly and intensify glow without darkening the base color */
+    filter: brightness(1.18);
+    text-shadow:
+      0 0 26px var(--username-glow-color, currentColor),
+      0 0 40px rgba(255, 255, 255, 0.08);
+  }
+}
+/* Standard Glow */
+.profile-username.effect-glow {
+  text-shadow:
+    0 0 20px var(--username-glow-color, var(--profile-border-color)),
+    0 0 40px var(--username-glow-color, var(--profile-border-color)) !important;
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Rainbow - applies to profile-username (legacy pattern) */
+.profile-username.effect-rainbow,
+.effect-rainbow {
+  background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow 5s linear infinite;
+}
+
+/* Glitch - CSS-based using clip-path with RGB-split text-shadow (terminal feel) */
+.profile-username.effect-glitch,
+.effect-glitch {
+  position: relative;
+  animation: glitch-clip 3s step-end infinite;
+}
+
+.profile-username.effect-glitch::before,
+.effect-glitch::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--username-text-color, #fff);
+  text-shadow: 2px 0 #ff0040;
+  clip-path: inset(0 0 0 0);
+  animation: glitch-clip-before 3s step-end infinite;
+}
+
+.profile-username.effect-glitch::after,
+.effect-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--username-text-color, #fff);
+  text-shadow: -2px 0 #00e5ff;
+  clip-path: inset(0 0 0 0);
+  animation: glitch-clip-after 3s step-end infinite;
+}
+
+/* Glitch keyframes — intermittent bursts with calm periods for terminal feel */
+@keyframes glitch-clip {
+  0%,
+  5%,
+  15%,
+  25%,
+  35%,
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+  6% {
+    clip-path: inset(20% 0 60% 0);
+    transform: translate(-1px, 0);
+  }
+  7% {
+    clip-path: inset(60% 0 20% 0);
+    transform: translate(1px, 0);
+  }
+  8% {
+    clip-path: inset(40% 0 40% 0);
+    transform: translate(-1px, 1px);
+  }
+  16% {
+    clip-path: inset(10% 0 80% 0);
+    transform: translate(1px, -1px);
+  }
+  17% {
+    clip-path: inset(80% 0 10% 0);
+    transform: translate(-1px, 0);
+  }
+  26% {
+    clip-path: inset(30% 0 50% 0);
+    transform: translate(2px, 0);
+  }
+  27% {
+    clip-path: inset(50% 0 30% 0);
+    transform: translate(-2px, 1px);
+  }
+}
+
+@keyframes glitch-clip-before {
+  0%,
+  5%,
+  15%,
+  25%,
+  35%,
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+  6% {
+    clip-path: inset(25% 0 55% 0);
+    transform: translate(-3px, 1px);
+  }
+  7% {
+    clip-path: inset(65% 0 15% 0);
+    transform: translate(2px, -1px);
+  }
+  8% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+  16% {
+    clip-path: inset(15% 0 75% 0);
+    transform: translate(3px, 1px);
+  }
+  17% {
+    clip-path: inset(75% 0 15% 0);
+    transform: translate(-2px, 0);
+  }
+  26% {
+    clip-path: inset(35% 0 45% 0);
+    transform: translate(-3px, -1px);
+  }
+  27% {
+    clip-path: inset(45% 0 35% 0);
+    transform: translate(3px, 1px);
+  }
+}
+
+@keyframes glitch-clip-after {
+  0%,
+  5%,
+  15%,
+  25%,
+  35%,
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+  6% {
+    clip-path: inset(30% 0 50% 0);
+    transform: translate(3px, -1px);
+  }
+  7% {
+    clip-path: inset(55% 0 25% 0);
+    transform: translate(-2px, 1px);
+  }
+  8% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+  16% {
+    clip-path: inset(20% 0 70% 0);
+    transform: translate(-3px, -1px);
+  }
+  17% {
+    clip-path: inset(70% 0 20% 0);
+    transform: translate(2px, 0);
+  }
+  26% {
+    clip-path: inset(40% 0 40% 0);
+    transform: translate(3px, 1px);
+  }
+  27% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+}
+
+/* ========================================================================
+   PROFILE CONTENT
+   ======================================================================== */
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.profile-picture {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.profile-picture.shape-circle {
+  border-radius: 50%;
+}
+.profile-picture.shape-square {
+  border-radius: 0;
+}
+
+.profile-picture-placeholder {
+  width: 120px;
+  height: 120px;
+  background: var(--primary, #f00);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #000;
+  margin: 0 auto 1rem;
+  border: 2px solid var(--white, #eee);
+}
+
+.profile-picture-placeholder.shape-circle {
+  border-radius: 50%;
+}
+
+/* Username */
+.profile-username {
+  font-size: var(--username-font-size, 2rem) !important;
+  font-weight: var(--username-font-weight, 700) !important;
+  letter-spacing: var(--username-letter-spacing, 2px) !important;
+  color: var(--username-text-color, #fff) !important;
+  text-shadow: var(--username-text-shadow, none) !important;
+  -webkit-text-stroke: var(--username-text-stroke, initial) !important;
+  margin: 0.5rem 0 0.25rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  position: relative;
+  /* Long usernames must wrap instead of overflowing the card. */
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Rainbow effect needs to override color for text-clip to work */
+.profile-username.effect-rainbow {
+  color: transparent !important;
+}
+
+/* Glitch effect - CSS clip-path based */
+.profile-username.effect-glitch {
+  display: inline-block;
+  /* data-text attribute is set in ProfileHeader.vue for ::before/::after content */
+}
+
+.donor-badge-inline {
+  display: inline-flex;
+  font-size: 1.5rem;
+  align-items: center;
+  color: var(--username-text-color, var(--primary, #f00));
+}
+
+.profile-handle {
+  color: #999;
+  font-size: 1rem;
+  margin: 0 0 1rem 0;
+}
+
+.username-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Username Value */
+.username-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #000;
+  border: 2px solid #0f0;
+  margin-top: 0.5rem;
+}
+
+.value-label {
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.value-amount {
+  color: #0f0;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* ---- Bio ---- */
+.profile-bio {
+  text-align: center;
+  color: var(--bio-text-color, #ccc) !important;
+  font-size: var(--bio-font-size, 16px) !important;
+  font-weight: var(--bio-font-weight, 400) !important;
+  line-height: var(--bio-line-height, 1.6) !important;
+  letter-spacing: var(--bio-letter-spacing, normal) !important;
+  text-shadow: var(--bio-text-shadow, none) !important;
+  -webkit-text-stroke: var(--bio-text-stroke, initial) !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Bio with borders (when showBorders is true) */
+.profile-card:not(.inner-no-borders) .profile-bio {
+  border: 1px solid var(--profile-border-color, #fff);
+  border-radius: var(--profile-border-radius, 0);
+}
+
+/* Typewriter */
+.typewriter-container {
+  display: inline-block;
+  word-wrap: break-word;
+}
+
+.typewriter-container .typewriter-text {
+  display: inline;
+}
+
+.typewriter-cursor {
+  display: inline;
+  color: var(--bio-text-color, #ffffff);
+  animation: blink-cursor 1s step-end infinite;
+}
+
+.anim-fade {
+  animation: fadeIn 2s ease 0s 1 normal forwards;
+}
+
+/* ---- Stats ---- */
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.stat {
+  text-align: center;
+  padding: 1rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.profile-card:not(.inner-no-borders) .stat {
+  border: 1px solid var(--profile-border-color, #fff);
+  border-radius: var(--profile-border-radius, 0);
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--bio-text-color, #fff) !important;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--bio-text-color, #fff) !important;
+  text-transform: lowercase;
+}
+
+.profile-stats.position-top {
+  order: -1;
+  margin-bottom: 2rem;
+}
+.profile-stats.position-bottom {
+  order: 999;
+  margin-top: 2rem;
+}
+.profile-stats.size-small .stat {
+  padding: 0.5rem;
+}
+.profile-stats.size-small .stat-value {
+  font-size: 1rem;
+}
+.profile-stats.size-large .stat {
+  padding: 1.5rem;
+}
+.profile-stats.size-large .stat-value {
+  font-size: 2rem;
+}
+
+/* ---- Social Links ---- */
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.social-link {
+  width: var(--social-icon-size, 50px);
+  height: var(--social-icon-size, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--social-icon-color, #eee);
+  text-decoration: none;
+  font-size: calc(var(--social-icon-size, 50px) * 0.6);
+  transition: all 0.3s;
+  position: relative;
+}
+
+.social-link.hover-static:hover {
+  color: #f00;
+}
+.social-link.hover-bounce:hover {
+  animation: bounce 0.6s ease;
+  color: #f00;
+}
+.social-link.hover-glow:hover {
+  filter: drop-shadow(0 0 4px var(--username-glow-color, var(--social-icon-color)));
+}
+.social-link.hover-scale:hover {
+  transform: scale(1.2);
+  color: #f00;
+}
+
+/* Platform hover colors */
+.social-link.twitter:hover {
+  color: #1da1f2;
+}
+.social-link.discord:hover {
+  color: #5865f2;
+}
+.social-link.telegram:hover {
+  color: #0088cc;
+}
+.social-link.instagram:hover {
+  color: #e4405f;
+}
+.social-link.github:hover {
+  color: #eee;
+}
+.social-link.youtube:hover {
+  color: #ff0000;
+}
+.social-link.twitch:hover {
+  color: #9146ff;
+}
+.social-link.tiktok:hover {
+  color: #fe2c55;
+}
+.social-link.roblox:hover {
+  color: #e11d48;
+}
+
+.social-link.roblox svg {
+  width: calc(var(--social-icon-size, 50px) * 0.6);
+  height: calc(var(--social-icon-size, 50px) * 0.6);
+  fill: currentColor;
+}
+
+/* ---- Badges ---- */
+.profile-badges {
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+.badges-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.badge-item {
+  width: var(--badge-size, 50px);
+  height: var(--badge-size, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  font-size: calc(var(--badge-size, 50px) * 0.6);
+  color: var(--badge-color, #ccc);
+  transition: all 0.3s;
+  cursor: default;
+}
+
+/* Hover effects — mirror social icon hover classes */
+.badge-item.hover-static:hover {
+  transform: scale(1.1);
+}
+.badge-item.hover-bounce:hover {
+  animation: bounce 0.6s ease;
+  color: var(--badge-color, #ccc);
+}
+.badge-item.hover-glow:hover {
+  filter: drop-shadow(0 0 6px var(--badge-color, #ccc));
+  transform: scale(1.05);
+}
+.badge-item.hover-scale:hover {
+  transform: scale(1.25);
+}
+
+.badge-item.premium {
+  color: var(--badge-color, #f00);
+}
+
+/* ========================================================================
+   MUSIC CONTROLS
+   ======================================================================== */
+
+.music-controls-fixed {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+}
+
+.mute-btn {
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  color: #eee;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mute-btn:hover {
+  filter: drop-shadow(0 0 10px var(--username-glow-color, #eee));
+}
+
+.volume-slider-fixed {
+  width: 0;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  opacity: 0;
+  transition: all 0.3s ease;
+  border: none;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.music-controls-fixed:hover .volume-slider-fixed {
+  width: 80px;
+  opacity: 1;
+}
+
+.volume-slider-fixed::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--profile-border-color, #f00);
+  cursor: pointer;
+  border: none;
+}
+
+.volume-slider-fixed::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #f00;
+  cursor: pointer;
+  border: none;
+}
+
+/* ========================================================================
+   VOTING
+   ======================================================================== */
+
+.profile-voting {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-voting .rep-btn,
+.profile-voting .rep-btn * {
+  cursor: pointer !important;
+  pointer-events: auto;
+}
+
+.rep-btn {
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  user-select: none;
+}
+
+.rep-btn-glyph {
+  display: inline-block;
+  font-size: 2.75rem;
+  font-weight: 200;
+  line-height: 1;
+  color: #eee;
+  filter: drop-shadow(0 0 0 transparent);
+  transition:
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.25s ease,
+    filter 0.25s ease;
+  will-change: transform, filter;
+}
+
+.rep-btn:hover:not(.animating):not(.already-repped) .rep-btn-glyph {
+  transform: scale(1.2);
+  color: var(--rep-hover-color, #f00);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--rep-hover-color, #f00) 35%, transparent))
+    drop-shadow(0 0 4px color-mix(in srgb, var(--rep-hover-color, #f00) 25%, transparent));
+}
+
+.rep-btn:active:not(.animating):not(.already-repped) .rep-btn-glyph {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--rep-active-color, #f00) 50%, transparent))
+    drop-shadow(0 0 6px color-mix(in srgb, var(--rep-active-color, #f00) 35%, transparent));
+}
+
+.rep-btn.animating .rep-btn-glyph {
+  animation: rep-surge 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.rep-btn.already-repped .rep-btn-glyph {
+  color: #ffffff !important;
+  opacity: 0.2;
+}
+
+.rep-message {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  color: #eee;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.rep-message.show {
+  opacity: 1;
+}
+
+/* ========================================================================
+   PROMO BANNER
+   ======================================================================== */
+
+.profile-promo-banner {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  animation: fadeIn 2s ease 0s 1 normal forwards;
+}
+
+.promo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--profile-border-color, rgba(255, 0, 0, 0.2));
+  border-radius: 50px;
+  color: #eee;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-family: var(--custom-font, inherit);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 8px var(--profile-border-color, rgba(255, 0, 0, 0.2));
+}
+
+.promo-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 1px 12px var(--profile-border-color, rgba(255, 0, 0, 0.2));
+}
+
+.promo-link .fa-gem,
+.promo-link .q-icon:first-child {
+  color: var(--profile-border-color, #f00);
+  font-size: 1rem;
+}
+
+.promo-link .fa-arrow-right,
+.promo-link .q-icon:last-child {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  transition: transform 0.3s ease;
+}
+
+.promo-link:hover .fa-arrow-right,
+.promo-link:hover .q-icon:last-child {
+  transform: translateX(3px);
+  opacity: 1;
+}
+
+/* ========================================================================
+   LAYOUTS
+   ======================================================================== */
+
+[data-layout='split'] .profile-card {
+  max-width: 800px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  text-align: left;
+}
+
+[data-layout='minimal'] .profile-card {
+  max-width: 400px;
+  padding: 2rem;
+}
+
+[data-layout='minimal'] .profile-stats,
+[data-layout='minimal'] .profile-badges {
+  display: none;
+}
+
+/* ---- Profile Animations ---- */
+/* Legacy profile entrance: fade (CSS) and glitch (legacy EJS used baffle.js; class for consistency) */
+.profile-anim-fade {
+  animation: profileFadeIn 2s ease 0s 1 normal forwards;
+}
+
+.profile-anim-glitch {
+  /* Legacy glitch was JS (baffle) on text nodes; class present for data-attribute parity */
+}
+
+/* ---- 3D Tilt ---- */
+[data-tilt] {
+  transform-style: preserve-3d;
+}
+
+[data-tilt] > * {
+  transform: translateZ(35px);
+}
+
+/* ========================================================================
+   RESPONSIVE
+   ======================================================================== */
+
+@media (max-width: 768px) {
+  .profile-page {
+    overflow-y: auto;
+    min-height: 100vh;
+  }
+
+  .profile-container {
+    padding: 1rem;
+    min-height: 100vh;
+    align-items: flex-start;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .profile-card {
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+    margin: 0;
+    /* Mobile: prevent text (long usernames, unbroken words) overflowing out
+       of the card and pushing it off-center. */
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .profile-card > * {
+    max-width: 100%;
+  }
+
+  .profile-picture,
+  .profile-picture-placeholder {
+    width: 100px;
+    height: 100px;
+    font-size: 2.5rem;
+  }
+
+  .profile-username {
+    font-size: 1.3rem !important;
+    letter-spacing: 1px !important;
+    flex-wrap: wrap;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.2;
+  }
+
+  .donor-badge-inline .fa-gem {
+    font-size: 1.1rem;
+  }
+
+  .profile-bio {
+    padding: 1rem;
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .profile-stats {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat {
+    padding: 0.75rem 0.5rem;
+  }
+  .stat-value {
+    font-size: 1.2rem;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .social-links {
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .music-controls-fixed {
+    top: 10px;
+    left: 10px;
+    padding: 0.5rem 0.75rem;
+    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+  }
+
+  .mute-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+
+  .music-controls-fixed:hover .volume-slider-fixed {
+    width: 60px;
+  }
+
+  [data-layout='split'] .profile-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  [data-layout='minimal'] .profile-card {
+    padding: 1.5rem 1rem;
+  }
+
+  [data-tilt] > * {
+    transform: translateZ(20px);
+  }
+
+  .profile-promo-banner {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+  }
+
+  .promo-link {
+    justify-content: center;
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .profile-container {
+    padding: 40px 18px 64px;
+  }
+  .profile-username {
+    font-size: 1.5rem !important;
+  }
+  .profile-bio {
+    font-size: 0.95rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-tilt] {
+    transform: none !important;
+  }
+  [data-tilt] > * {
+    transform: none !important;
+  }
+
+  .shimmer-glow,
+  .profile-username::before {
+    animation: none !important;
+  }
+}
+
+/* ── Report this profile (§4d) ──────────────────────────────────────
+   A discreet, non-destructive action under the voting block. Amber (not
+   crimson) because reporting is not a destructive act on the page. */
+.profile-report-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0.75rem 0 0;
+}
+
+.profile-report-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--dash-border, #1a1a1a);
+  border-radius: 0;
+  background: transparent;
+  color: var(--dash-muted, #888888);
+  font-family: 'Courier New', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.profile-report-btn:hover {
+  border-color: var(--dash-warning, #ffaa00);
+  color: var(--dash-warning, #ffaa00);
+}

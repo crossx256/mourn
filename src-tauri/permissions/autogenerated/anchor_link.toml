@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-anchor-link"
+description = "Enables the anchor_link command without any pre-configured scope."
+commands.allow = ["anchor_link"]
+
+[[permission]]
+identifier = "deny-anchor-link"
+description = "Denies the anchor_link command without any pre-configured scope."
+commands.deny = ["anchor_link"]

@@ -1,0 +1,60 @@
+name: Secretless frontend verification
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  # One run per PR/branch: superseded pushes cancel, anything on the default
+  # branch is allowed to finish so a merged commit always has a full result.
+  group: verify-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  frontend:
+    runs-on: ubuntu-24.04
+    env:
+      MOURN_ISOLATED_BUILD: '1'
+      MOURN_ENABLE_UPDATER: 'false'
+      VITE_API_BASE: http://127.0.0.1:3000
+      VITE_WS_BASE: http://127.0.0.1:3000
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.22.0'
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: '1.4.2'
+      - name: Offline packaging and release-tooling regressions
+        run: |
+          node --test tests/releaseScripts.test.mjs tests/packaging.test.mjs tests/linuxdeploy.test.mjs
+          python3 -B tests/test_source_audit.py
+      - run: bun install --frozen-lockfile --ignore-scripts
+      - name: Install isolated SSR dependencies without lifecycle scripts
+        working-directory: src-ssr
+        run: bun install --frozen-lockfile --ignore-scripts
+      - run: bun audit --audit-level=high
+      - name: Audit isolated SSR dependencies
+        working-directory: src-ssr
+        run: bun audit --audit-level=high
+      - run: node node_modules/@quasar/app-vite/bin/quasar.js prepare
+      # VAL-12: the browser-only cascade test renders the real page styles in
+      # Chromium and skips when MOURN_THEME_CHROMIUM is unset. Nothing set it,
+      # so that coverage never ran. Playwright's headless shell is the binary the
+      # repo's theme probes already use.
+      - name: Install Chromium for the theme cascade test
+        run: |
+          bunx --bun playwright install --only-shell chromium
+          echo "MOURN_THEME_CHROMIUM=$(find ~/.cache/ms-playwright -path '*chrome-headless-shell-linux64/chrome-headless-shell' | head -1)" >> "$GITHUB_ENV"
+      - name: Assert the theme cascade test is actually running (not skipped)
+        run: |
+          test -x "$MOURN_THEME_CHROMIUM"
+          bunx vitest run --config scripts/vitest.release.config.ts tests/theme.browser.test.ts
+      - run: bun run typecheck && bun run lint && bun run test && bun run test:release
+      - run: python3 -B flatpak/test_sources.py && python3 -B flatpak/prepare-sources.py --check
+      - run: python3 -B scripts/source_audit.py HEAD
+      - run: bun run build:spa
+      - run: bun run build:spa:desktop
+      - run: bun run build:ssr

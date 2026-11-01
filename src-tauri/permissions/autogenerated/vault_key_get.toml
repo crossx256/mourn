@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-vault-key-get"
+description = "Enables the vault_key_get command without any pre-configured scope."
+commands.allow = ["vault_key_get"]
+
+[[permission]]
+identifier = "deny-vault-key-get"
+description = "Denies the vault_key_get command without any pre-configured scope."
+commands.deny = ["vault_key_get"]

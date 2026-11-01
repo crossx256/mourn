@@ -1,0 +1,1262 @@
+{
+  "version": 1,
+  "scope": "src/**/*.{vue,scss,css}; comments masked; profile excluded",
+  "rawTotal": 1297,
+  "excludedTotal": 89,
+  "allowedTotal": 1,
+  "total": 1207,
+  "files": {
+    "src/App.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/AboutMournContent.vue": {
+      "count": 2,
+      "colors": {
+        "#101010": 1,
+        "#1a1a1a": 1
+      }
+    },
+    "src/components/AccountSwitcher.vue": {
+      "count": 9,
+      "colors": {
+        "#000": 1,
+        "#0a0a0a": 1,
+        "#ff0000": 1,
+        "rgba(255, 0, 0, 0.06)": 1,
+        "rgba(255, 255, 255, 0.04)": 2,
+        "rgba(255, 255, 255, 0.08)": 1,
+        "rgba(255, 255, 255, 0.4)": 1,
+        "rgba(255, 255, 255, 0.9)": 1
+      }
+    },
+    "src/components/archives/ManageDownloadsDialog.vue": {
+      "count": 19,
+      "colors": {
+        "#00ff41": 3,
+        "#ff5555": 2,
+        "rgba(0, 255, 65, 0.08)": 1,
+        "rgba(0, 255, 65, 0.4)": 1,
+        "rgba(0, 255, 65, 0.5)": 1,
+        "rgba(255, 0, 0, 0.08)": 2,
+        "rgba(255, 0, 0, 0.1)": 1,
+        "rgba(255, 255, 255, 0.06)": 1,
+        "rgba(255, 255, 255, 0.1)": 1,
+        "rgba(255, 255, 255, 0.12)": 1,
+        "rgba(255, 255, 255, 0.15)": 1,
+        "rgba(255, 255, 255, 0.2)": 1,
+        "rgba(255, 51, 51, 0.5)": 2,
+        "rgba(255, 51, 51, 0.6)": 1
+      }
+    },
+    "src/components/AttachmentQueue.vue": {
+      "count": 7,
+      "colors": {
+        "#0a0a0a": 1,
+        "#1a1a1a": 1,
+        "#ff4444": 2,
+        "rgba(220, 20, 60, 0.05)": 1,
+        "rgba(220, 20, 60, 0.2)": 1,
+        "rgba(255, 68, 68, 0.1)": 1
+      }
+    },
+    "src/components/dashboard/AccountTab.vue": {
+      "count": 2,
+      "colors": {
+        "#0d0d0d": 1,
+        "#2a2a2a": 1
+      }
+    },
+    "src/components/dashboard/AppearanceTab.vue": {
+      "count": 7,
+      "colors": {
+        "#000000": 1,
+        "#0a0a0a": 2,
+        "#1a1a1a": 2,
+        "#ffffff": 2
+      }
+    },
+    "src/components/dashboard/AppTab.vue": {
+      "count": 10,
+      "colors": {
+        "#4caf50": 2,
+        "#e53935": 2,
+        "#ffd54f": 2,
+        "rgba(0, 0, 0, 0.28)": 1,
+        "rgba(255, 0, 0, 0.08)": 1,
+        "rgba(255, 255, 255, 0.01)": 1,
+        "rgba(255, 255, 255, 0.02)": 1
+      }
+    },
+    "src/components/dashboard/CardTab.vue": {
+      "count": 6,
+      "colors": {
+        "#00ff00": 2,
+        "#ff0000": 3,
+        "#ffffff": 1
+      }
+    },
+    "src/components/dashboard/ChangePasswordModal.vue": {
+      "count": 7,
+      "colors": {
+        "#10b981": 1,
+        "#22c55e": 1,
+        "#cc0000": 1,
+        "#ef4444": 1,
+        "#f59e0b": 1,
+        "rgba(255, 0, 0, 0.1)": 1,
+        "rgba(255, 0, 0, 0.15)": 1
+      }
+    },
+    "src/components/dashboard/DashboardPreview.vue": {
+      "count": 17,
+      "colors": {
+        "#000": 2,
+        "#000000": 2,
+        "#0a0a0a": 1,
+        "#1a1a1a": 3,
+        "#888": 1,
+        "#cccccc": 1,
+        "#ffffff": 5,
+        "rgba(bg, opacity)": 1,
+        "rgba(hex: string, a: number)": 1
+      }
+    },
+    "src/components/dashboard/DashboardSidebarContent.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/dashboard/DeleteAccountModal.vue": {
+      "count": 5,
+      "colors": {
+        "#cc0000": 1,
+        "rgba(255, 0, 0, 0.1)": 1,
+        "rgba(255, 0, 0, 0.15)": 1,
+        "rgba(255, 0, 0, 0.3)": 2
+      }
+    },
+    "src/components/dashboard/EffectsTab.vue": {
+      "count": 10,
+      "colors": {
+        "#000000": 1,
+        "#0a0a0a": 2,
+        "#111": 1,
+        "#1a1a1a": 1,
+        "#222": 1,
+        "#333": 1,
+        "#ffffff": 3
+      }
+    },
+    "src/components/dashboard/LinkEditorDialog.vue": {
+      "count": 10,
+      "colors": {
+        "#ddd": 1,
+        "#f00": 3,
+        "#fff": 2,
+        "rgba(255, 0, 0, 0.12)": 1,
+        "rgba(255, 255, 255, 0.08)": 1,
+        "rgba(255, 255, 255, 0.12)": 2
+      }
+    },
+    "src/components/dashboard/PerformanceTab.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/dashboard/PresetsTab.vue": {
+      "count": 1,
+      "colors": {
+        "#1a1a1a": 1
+      }
+    },
+    "src/components/dashboard/PrivacyTab.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/dashboard/ProfilePictureCropper.vue": {
+      "count": 7,
+      "colors": {
+        "#000": 1,
+        "#0a0a0a": 1,
+        "#1a1a1a": 1,
+        "#ff0000": 1,
+        "rgba(0, 0, 0, 0.6)": 1,
+        "rgba(255, 0, 0, 0.4)": 1,
+        "rgba(255, 0, 0, 0.6)": 1
+      }
+    },
+    "src/components/dashboard/ProfileTab.vue": {
+      "count": 1,
+      "colors": {
+        "#555": 1
+      }
+    },
+    "src/components/dashboard/SecurityTab.vue": {
+      "count": 3,
+      "colors": {
+        "#0f0f12": 1,
+        "#2a2a30": 1,
+        "rgba(255, 255, 255, 0.025)": 1
+      }
+    },
+    "src/components/dashboard/SocialIconDialog.vue": {
+      "count": 14,
+      "colors": {
+        "#0f0f12": 1,
+        "#141418": 2,
+        "#222228": 1,
+        "#26262c": 2,
+        "#2a2a30": 1,
+        "#8a8a92": 1,
+        "#d7d7dd": 1,
+        "#fff": 1,
+        "rgba(255, 0, 0, 0.12)": 1,
+        "rgba(255, 0, 0, 0.45)": 1,
+        "rgba(255, 0, 0, 0.6)": 1,
+        "rgba(255, 0, 0, 0.75)": 1
+      }
+    },
+    "src/components/dashboard/SocialTab.vue": {
+      "count": 31,
+      "colors": {
+        "#22c55e": 2,
+        "#bbb": 1,
+        "#ddd": 1,
+        "#ef4444": 2,
+        "#f00": 6,
+        "#f55": 3,
+        "#f59e0b": 4,
+        "#fff": 3,
+        "#ffffff": 2,
+        "rgba(0, 0, 0, 0.35)": 1,
+        "rgba(0, 0, 0, 0.45)": 1,
+        "rgba(255, 0, 0, 0.06)": 1,
+        "rgba(255, 0, 0, 0.08)": 1,
+        "rgba(255, 255, 255, 0.07)": 1,
+        "rgba(255, 255, 255, 0.12)": 1,
+        "rgba(255, 255, 255, 0.2)": 1
+      }
+    },
+    "src/components/dashboard/ThemeTab.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/dashboard/UserInviteTree.vue": {
+      "count": 9,
+      "colors": {
+        "#050505": 1,
+        "#333": 2,
+        "#555": 1,
+        "#66bb6a": 2,
+        "#eeeeee": 2,
+        "#ffffff": 1
+      }
+    },
+    "src/components/dashboard/WatcherLog.vue": {
+      "count": 8,
+      "colors": {
+        "#050505": 2,
+        "#0a0a0a": 2,
+        "#1a1a1a": 1,
+        "#333": 1,
+        "#444": 1,
+        "#555": 1
+      }
+    },
+    "src/components/dashboard/WatcherTab.vue": {
+      "count": 2,
+      "colors": {
+        "#0a0a0a": 1,
+        "rgba(255, 0, 0, 0.04)": 1
+      }
+    },
+    "src/components/DeviceLoginDialog.vue": {
+      "count": 6,
+      "colors": {
+        "#111": 1,
+        "#9ca3af": 1,
+        "#dc143c": 1,
+        "rgba(255, 255, 255, 0.03)": 1,
+        "rgba(255, 255, 255, 0.06)": 1,
+        "rgba(255, 255, 255, 0.08)": 1
+      }
+    },
+    "src/components/DownloadCard.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/EssentialLink.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/graveyard/GraveyardFinder.vue": {
+      "count": 3,
+      "colors": {
+        "rgba(255, 0, 0, 0.06)": 1,
+        "rgba(255, 0, 0, 0.08)": 1,
+        "rgba(255, 0, 0, 0.1)": 1
+      }
+    },
+    "src/components/graveyard/GraveyardRitual.vue": {
+      "count": 20,
+      "colors": {
+        "#000": 1,
+        "#333": 2,
+        "rgba(0, 0, 0, 0.15)": 2,
+        "rgba(0, 255, 255, 0.08)": 2,
+        "rgba(0, 255, 255, 0.1)": 2,
+        "rgba(0, 255, 255, 0.2)": 2,
+        "rgba(255, 0, 0, 0.03)": 1,
+        "rgba(255, 0, 0, 0.12)": 1,
+        "rgba(255, 0, 0, 0.15)": 3,
+        "rgba(255, 0, 0, 0.3)": 2,
+        "rgba(255, 0, 0, 0.4)": 2
+      }
+    },
+    "src/components/graveyard/LetterDialog.vue": {
+      "count": 2,
+      "colors": {
+        "rgba(0, 0, 0, 0.3)": 1,
+        "rgba(255, 0, 0, 0.04)": 1
+      }
+    },
+    "src/components/graveyard/LetterDrawer.vue": {
+      "count": 12,
+      "colors": {
+        "rgba(0, 0, 0, 0.06)": 2,
+        "rgba(0, 0, 0, 0.5)": 1,
+        "rgba(0, 0, 0, 0.65)": 1,
+        "rgba(0, 255, 255, 0.15)": 1,
+        "rgba(0, 255, 255, 0.6)": 1,
+        "rgba(255, 0, 0, 0.08)": 1,
+        "rgba(255, 0, 0, 0.1)": 1,
+        "rgba(255, 0, 0, 0.15)": 1,
+        "rgba(255, 0, 0, 0.2)": 1,
+        "rgba(255, 0, 0, 0.7)": 1,
+        "rgba(255, 255, 255, 0.5)": 1
+      }
+    },
+    "src/components/graveyard/TheVoid.vue": {
+      "count": 1,
+      "colors": {
+        "#000000": 1
+      }
+    },
+    "src/components/graveyard/VoidScene.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/GraveyardQueue.vue": {
+      "count": 1,
+      "colors": {
+        "rgba(0, 255, 0, 0.05)": 1
+      }
+    },
+    "src/components/icons/MournLogoInline.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/LeaderBoardCard.vue": {
+      "count": 27,
+      "colors": {
+        "#000": 1,
+        "#30363d": 1,
+        "#888": 3,
+        "#cd7f32": 1,
+        "#eee": 1,
+        "#ff0000": 6,
+        "#ffd700": 1,
+        "rgba(0, 0, 0, 0.1)": 2,
+        "rgba(0, 0, 0, 0.8)": 1,
+        "rgba(0, 255, 255, 0.05)": 1,
+        "rgba(0, 255, 255, 0.2)": 1,
+        "rgba(192, 192, 192, 0.3)": 1,
+        "rgba(205, 127, 50, 0.3)": 1,
+        "rgba(255, 0, 0, 0.08)": 1,
+        "rgba(255, 0, 0, 0.3)": 3,
+        "rgba(255, 215, 0, 0.4)": 1,
+        "rgba(255, 255, 255, 0.03)": 1
+      }
+    },
+    "src/components/messaging/ChatListItem.vue": {
+      "count": 16,
+      "colors": {
+        "#000": 1,
+        "#0c0c0c": 1,
+        "#111111": 1,
+        "#1a1a1a": 3,
+        "#1c1c1c": 1,
+        "#cccccc": 1,
+        "#ff0000": 1,
+        "#ffffff": 1,
+        "rgba(255, 170, 0, 0.12)": 1,
+        "rgba(255, 170, 0, 0.25)": 1,
+        "rgba(255, 255, 255, 0.03)": 2,
+        "rgba(255, 255, 255, 0.05)": 1,
+        "rgba(255, 255, 255, 0.08)": 1
+      }
+    },
+    "src/components/messaging/ChatMessage.vue": {
+      "count": 10,
+      "colors": {
+        "#111": 1,
+        "rgb(220, 20, 60)": 1,
+        "rgba(220, 20, 60, 0.1)": 1,
+        "rgba(220, 20, 60, 0.2)": 1,
+        "rgba(220, 20, 60, 0.3)": 3,
+        "rgba(220, 20, 60, 0.4)": 1,
+        "rgba(220, 20, 60, 0.6)": 1,
+        "rgba(255, 255, 255, 0.06)": 1
+      }
+    },
+    "src/components/messaging/MessageContextMenu.vue": {
+      "count": 11,
+      "colors": {
+        "#0c0c0c": 1,
+        "#1a1a1a": 2,
+        "#f00": 1,
+        "rgba(0, 0, 0, 0.8)": 1,
+        "rgba(255, 0, 0, 0.12)": 1,
+        "rgba(255, 170, 0, 0.12)": 1,
+        "rgba(255, 255, 255, 0.06)": 1,
+        "rgba(255, 255, 255, 0.08)": 1,
+        "rgba(255, 255, 255, 0.4)": 1,
+        "rgba(255, 255, 255, 0.7)": 1
+      }
+    },
+    "src/components/messaging/MessageQuickActions.vue": {
+      "count": 5,
+      "colors": {
+        "#0c0c0c": 1,
+        "rgba(255, 255, 255, 0.08)": 1,
+        "rgba(255, 255, 255, 0.1)": 1,
+        "rgba(255, 255, 255, 0.4)": 1,
+        "rgba(255, 255, 255, 0.7)": 1
+      }
+    },
+    "src/components/messaging/MessageReactions.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/messaging/MessageReplyReference.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/NoticeCard.vue": {
+      "count": 7,
+      "colors": {
+        "#444": 1,
+        "#555": 1,
+        "#eee": 2,
+        "rgba(0, 0, 0, 0.1)": 2,
+        "rgba(255, 255, 255, 0.04)": 1
+      }
+    },
+    "src/components/notifications/ArrivalBanner.vue": {
+      "count": 9,
+      "colors": {
+        "#232428": 1,
+        "#ffffff": 1,
+        "rgba(0, 0, 0, 0.4)": 1,
+        "rgba(0, 0, 0, 0.55)": 1,
+        "rgba(255, 255, 255, 0.08)": 2,
+        "rgba(255, 255, 255, 0.12)": 1,
+        "rgba(255, 255, 255, 0.65)": 1,
+        "rgba(255, 255, 255, 0.72)": 1
+      }
+    },
+    "src/components/offline/OfflineAlert.vue": {
+      "count": 13,
+      "colors": {
+        "#0a0a0a": 1,
+        "#555": 1,
+        "#999": 1,
+        "#bbb": 1,
+        "#ff0000": 7,
+        "rgba(255, 0, 0, 0.08)": 1,
+        "rgba(255, 255, 255, 0.1)": 1
+      }
+    },
+    "src/components/PageConstruct.vue": {
+      "count": 17,
+      "colors": {
+        "#000": 1,
+        "#333": 2,
+        "#ff0000": 12,
+        "rgba(0, 0, 0, 0.15)": 2
+      }
+    },
+    "src/components/profile/ProfileBadges.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/profile/ProfileBio.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/profile/ProfileEntrance.vue": {
+      "count": 2,
+      "colors": {
+        "#000000": 1,
+        "#ffffff": 1
+      }
+    },
+    "src/components/profile/ProfileHeader.vue": {
+      "count": 1,
+      "colors": {
+        "#fff": 1
+      }
+    },
+    "src/components/profile/ProfileLinkList.vue": {
+      "count": 12,
+      "colors": {
+        "#eee": 1,
+        "#f00": 5,
+        "#fff": 1,
+        "rgba(255, 255, 255, 0.04)": 1,
+        "rgba(255, 255, 255, 0.08)": 2,
+        "rgba(255, 255, 255, 0.14)": 1,
+        "rgba(255, 255, 255, 0.55)": 1
+      }
+    },
+    "src/components/profile/ProfileMusic.vue": {
+      "count": 2,
+      "colors": {
+        "rgba(0, 0, 0, 0.4)": 1,
+        "rgba(255, 255, 255, 0.2)": 1
+      }
+    },
+    "src/components/profile/ProfilePromo.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/profile/ProfileSocials.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/profile/ProfileStats.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/profile/ProfileVoting.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/RiteofPassage.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/security/CapCaptcha.vue": {
+      "count": 2,
+      "colors": {
+        "#333": 1,
+        "#ff6666": 1
+      }
+    },
+    "src/components/suites/BroadcastChatWindow.vue": {
+      "count": 19,
+      "colors": {
+        "#000": 1,
+        "#050505": 1,
+        "#090909": 1,
+        "#0c0c0c": 2,
+        "#111": 1,
+        "#1a1a1a": 7,
+        "#1d1d1d": 1,
+        "#333": 1,
+        "#444": 1,
+        "#555": 1,
+        "#aaa": 1,
+        "rgba(255, 255, 255, 0.04)": 1
+      }
+    },
+    "src/components/suites/GroupChatWindow.vue": {
+      "count": 50,
+      "colors": {
+        "#000": 3,
+        "#090909": 4,
+        "#0c0c0c": 2,
+        "#111": 2,
+        "#171717": 4,
+        "#1d1d1d": 2,
+        "#222": 1,
+        "#252525": 1,
+        "#282828": 1,
+        "#333": 2,
+        "#444": 1,
+        "#6b6b6b": 4,
+        "#9a9a9a": 4,
+        "#aaa": 1,
+        "#bbb": 1,
+        "#ddd": 1,
+        "#f44": 1,
+        "#fff": 2,
+        "rgba(0, 0, 0, 0.55)": 1,
+        "rgba(0, 0, 0, 0.6)": 1,
+        "rgba(0, 0, 0, 0.75)": 1,
+        "rgba(0, 0, 0, 0.8)": 1,
+        "rgba(0, 0, 0, 0.82)": 1,
+        "rgba(0, 0, 0, 0.85)": 1,
+        "rgba(255, 255, 255, 0.03)": 3,
+        "rgba(255, 255, 255, 0.04)": 1,
+        "rgba(255, 255, 255, 0.05)": 1,
+        "rgba(255, 255, 255, 0.14)": 1,
+        "rgba(255, 255, 255, 0.15)": 1
+      }
+    },
+    "src/components/suites/GroupSettingsModal.vue": {
+      "count": 16,
+      "colors": {
+        "#000000": 1,
+        "#050505": 1,
+        "#080808": 5,
+        "#0c0c0c": 3,
+        "#ffaa00": 2,
+        "rgba(0, 0, 0, 0.75)": 2,
+        "rgba(255, 170, 0, 0.35)": 1,
+        "rgba(255, 255, 255, 0.02)": 1
+      }
+    },
+    "src/components/TauriTitleBar.vue": {
+      "count": 12,
+      "colors": {
+        "#000": 2,
+        "#1a0000": 1,
+        "#c22": 3,
+        "#e8e8e8": 1,
+        "#f44": 1,
+        "#fff": 1,
+        "rgba(255, 0, 0, 0.35)": 1,
+        "rgba(255, 255, 255, 0.08)": 2
+      }
+    },
+    "src/components/theme/BackdropLayer.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/tickets/TicketComposer.vue": {
+      "count": 8,
+      "colors": {
+        "#000000": 3,
+        "#00ff00": 1,
+        "#ffffff": 2,
+        "rgba(0, 0, 0, 0.75)": 1,
+        "rgba(255, 0, 0, 0.12)": 1
+      }
+    },
+    "src/components/tickets/TicketThreadPicker.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/components/UserCountDisplay.vue": {
+      "count": 7,
+      "colors": {
+        "#000": 1,
+        "#888": 1,
+        "#ff0000": 3,
+        "rgba(0, 0, 0, 0.1)": 2
+      }
+    },
+    "src/components/WordsOverlay.vue": {
+      "count": 5,
+      "colors": {
+        "#000": 1,
+        "rgba(0, 0, 0, 0.4)": 1,
+        "rgba(23, 0, 0, 0.68)": 1,
+        "rgba(255, 255, 255, 0.08)": 1,
+        "rgba(255, 255, 255, 0.72)": 1
+      }
+    },
+    "src/css/app.scss": {
+      "count": 40,
+      "colors": {
+        "#000": 3,
+        "#000000": 3,
+        "#00ff00": 1,
+        "#0a0a0a": 1,
+        "#0d0d0d": 2,
+        "#0d1117": 1,
+        "#101010": 3,
+        "#1a1a1a": 1,
+        "#21ba45": 1,
+        "#2a2a2a": 1,
+        "#30363d": 1,
+        "#410101": 1,
+        "#666666": 1,
+        "#888888": 2,
+        "#bdbdbd": 1,
+        "#d29922": 1,
+        "#eeeeee": 1,
+        "#f78166": 2,
+        "#f85149": 4,
+        "#ff0000": 5,
+        "#ffaa00": 2,
+        "rgba(255, 0, 0, 0.15)": 1,
+        "rgba(255, 255, 255, 0.05)": 1
+      }
+    },
+    "src/css/auth-shared.scss": {
+      "count": 8,
+      "colors": {
+        "#00ffff": 4,
+        "rgba(0, 0, 0, 0.7)": 1,
+        "rgba(255, 0, 0, 0.03)": 1,
+        "rgba(255, 0, 0, 0.1)": 1,
+        "rgba(255, 0, 0, 0.35)": 1
+      }
+    },
+    "src/css/dashboard.scss": {
+      "count": 33,
+      "colors": {
+        "#0000ff": 1,
+        "#00e5ff": 1,
+        "#00ff00": 1,
+        "#4b0082": 1,
+        "#9400d3": 1,
+        "#cc0000": 2,
+        "#f00": 2,
+        "#ff0040": 1,
+        "#ff7f00": 1,
+        "#fff": 6,
+        "#ffff00": 1,
+        "rgba(0, 0, 0, 0.3)": 3,
+        "rgba(0, 0, 0, 0.5)": 1,
+        "rgba(0, 0, 255, 0.75)": 1,
+        "rgba(0, 255, 0, 0.75)": 1,
+        "rgba(255, 0, 0, 0.1)": 3,
+        "rgba(255, 0, 0, 0.15)": 1,
+        "rgba(255, 0, 0, 0.3)": 1,
+        "rgba(255, 0, 0, 0.75)": 1,
+        "rgba(255, 170, 0, 0.1)": 1,
+        "rgba(255, 255, 255, 0.08)": 1,
+        "rgba(255, 255, 255, 0.15)": 1
+      }
+    },
+    "src/css/landingPage.scss": {
+      "count": 11,
+      "colors": {
+        "#cd7f32": 1,
+        "#ffd700": 1,
+        "rgba(0, 0, 0, 0.1)": 4,
+        "rgba(192, 192, 192, 0.3)": 1,
+        "rgba(205, 127, 50, 0.3)": 1,
+        "rgba(255, 215, 0, 0.4)": 1,
+        "rgba(255, 255, 255, 0.03)": 2
+      }
+    },
+    "src/css/login.scss": {
+      "count": 15,
+      "colors": {
+        "#00ffff": 4,
+        "#66ff66": 1,
+        "#999": 1,
+        "#ff6666": 1,
+        "rgba(0, 0, 0, 0.7)": 1,
+        "rgba(0, 255, 0, 0.1)": 1,
+        "rgba(0, 255, 0, 0.3)": 1,
+        "rgba(255, 0, 0, 0.03)": 1,
+        "rgba(255, 0, 0, 0.1)": 2,
+        "rgba(255, 0, 0, 0.3)": 1,
+        "rgba(255, 0, 0, 0.35)": 1
+      }
+    },
+    "src/css/mainlayout.scss": {
+      "count": 13,
+      "colors": {
+        "#000": 6,
+        "rgba(0, 0, 0, 0.1)": 4,
+        "rgba(0, 0, 0, 0.15)": 2,
+        "rgba(255, 255, 255, 0.45)": 1
+      }
+    },
+    "src/css/messaging-shared.scss": {
+      "count": 12,
+      "colors": {
+        "#0c0c0c": 1,
+        "#1a1a1a": 1,
+        "rgba(255, 255, 255, 0.02)": 1,
+        "rgba(255, 255, 255, 0.03)": 1,
+        "rgba(255, 255, 255, 0.04)": 1,
+        "rgba(255, 255, 255, 0.06)": 1,
+        "rgba(255, 255, 255, 0.08)": 2,
+        "rgba(255, 255, 255, 0.15)": 1,
+        "rgba(255, 255, 255, 0.2)": 1,
+        "rgba(255, 255, 255, 0.35)": 1,
+        "rgba(255, 255, 255, 0.5)": 1
+      }
+    },
+    "src/css/quasar.variables.scss": {
+      "count": 43,
+      "colors": {
+        "#000": 1,
+        "#000000": 3,
+        "#00ff00": 1,
+        "#0a0a0a": 1,
+        "#0d0d0d": 3,
+        "#0d1117": 1,
+        "#101010": 2,
+        "#1a1a1a": 3,
+        "#21ba45": 1,
+        "#2a2a2a": 1,
+        "#2e2e2f": 1,
+        "#31ccec": 1,
+        "#666666": 2,
+        "#736f6f": 1,
+        "#888888": 2,
+        "#b3b3b3": 1,
+        "#bdbdbd": 1,
+        "#cc0000": 1,
+        "#d29922": 1,
+        "#eeeeee": 3,
+        "#f00": 1,
+        "#f78166": 1,
+        "#f85149": 2,
+        "#ff0000": 4,
+        "#ffaa00": 1,
+        "#ffffffaa": 1,
+        "rgba(0, 0, 0, 0.45)": 1,
+        "rgba(255, 0, 0, 0.15)": 1
+      }
+    },
+    "src/css/theme-chrome.scss": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/css/theme-font.scss": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/css/theme-surfaces.scss": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/css/theme-tokens.scss": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/layouts/MainLayout.vue": {
+      "count": 16,
+      "colors": {
+        "#000": 2,
+        "#0a0a0a": 1,
+        "#444": 2,
+        "#555": 2,
+        "#ff0000": 1,
+        "rgba(0, 0, 0, 0.72)": 1,
+        "rgba(255, 255, 255, 0.03)": 1,
+        "rgba(255, 255, 255, 0.04)": 2,
+        "rgba(255, 255, 255, 0.08)": 3,
+        "rgba(255, 255, 255, 0.9)": 1
+      }
+    },
+    "src/layouts/ProfileLayout.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/pages/AboutPage.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/pages/ArchiveShowPage.vue": {
+      "count": 35,
+      "colors": {
+        "#00ff41": 1,
+        "#333": 1,
+        "#555": 10,
+        "#999": 3,
+        "#bbb": 1,
+        "#e0e0e0": 1,
+        "#ff0000": 6,
+        "#ff3333": 2,
+        "rgba(0, 255, 65, 0.25)": 1,
+        "rgba(255, 255, 255, 0.04)": 1,
+        "rgba(255, 255, 255, 0.08)": 4,
+        "rgba(255, 255, 255, 0.1)": 1,
+        "rgba(255, 255, 255, 0.15)": 2,
+        "rgba(255,255,255,0.1)": 1
+      }
+    },
+    "src/pages/ArchivesPage.vue": {
+      "count": 83,
+      "colors": {
+        "#000": 3,
+        "#060606": 1,
+        "#090909": 2,
+        "#14090a": 1,
+        "#141414": 1,
+        "#161111": 1,
+        "#18090e": 1,
+        "#190808": 2,
+        "#1b0e0b": 1,
+        "#1c100b": 1,
+        "#222": 1,
+        "#242020": 1,
+        "#242424": 1,
+        "#292929": 9,
+        "#303030": 1,
+        "#3b3434": 1,
+        "#494541": 1,
+        "#4a4642": 1,
+        "#633": 1,
+        "#706b68": 1,
+        "#77716c": 1,
+        "#817c76": 1,
+        "#8d2931": 1,
+        "#8f8585": 1,
+        "#9c9791": 1,
+        "#a6a09b": 1,
+        "#a81717": 1,
+        "#a82845": 1,
+        "#aaa5a0": 2,
+        "#aba6a0": 1,
+        "#b4afa9": 1,
+        "#bb4a35": 1,
+        "#c2bdb7": 1,
+        "#c7c3bd": 1,
+        "#d35b2d": 1,
+        "#d6d2cd": 1,
+        "#d82323": 2,
+        "#e1ddd8": 1,
+        "#e2dfda": 1,
+        "#e32626": 1,
+        "#e3dfda": 1,
+        "#e4e0db": 1,
+        "#ece9e4": 1,
+        "#efebe6": 1,
+        "#f3f0eb": 3,
+        "#f4f1ec": 1,
+        "#fff": 5,
+        "rgba(0, 0, 0, 0.15)": 1,
+        "rgba(0, 0, 0, 0.24)": 1,
+        "rgba(0, 0, 0, 0.28)": 1,
+        "rgba(0, 0, 0, 0.5)": 2,
+        "rgba(0, 0, 0, 0.8)": 2,
+        "rgba(0, 210, 220, 0.1)": 1,
+        "rgba(0, 210, 220, 0.12)": 1,
+        "rgba(0, 210, 220, 0.16)": 1,
+        "rgba(255, 255, 255, 0.04)": 1,
+        "rgba(255, 255, 255, 0.055)": 1,
+        "rgba(255, 255, 255, 0.09)": 1,
+        "rgba(255, 255, 255, 0.35)": 1,
+        "rgba(255, 255, 255, 0.7)": 1,
+        "rgba(255, 255, 255, 0.72)": 1
+      }
+    },
+    "src/pages/ContactPage.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/pages/DashboardPage.vue": {
+      "count": 13,
+      "colors": {
+        "#000": 1,
+        "#0f0f12": 1,
+        "#1d1d1d": 1,
+        "#292929": 1,
+        "#2a2a30": 1,
+        "#777": 1,
+        "#a6a6a6": 1,
+        "#aaa": 1,
+        "#d0d0d0": 1,
+        "#e5e5e5": 1,
+        "#f0f0f0": 1,
+        "#f3f3f3": 1,
+        "#fff": 1
+      }
+    },
+    "src/pages/DesktopOnlyPage.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/pages/DiscoveryPage.vue": {
+      "count": 7,
+      "colors": {
+        "#0d0d0d": 2,
+        "#111": 1,
+        "#1a1a1a": 1,
+        "#2a2a2a": 1,
+        "rgba(255, 255, 255, 0.08)": 1,
+        "rgba(255, 255, 255, 0.15)": 1
+      }
+    },
+    "src/pages/DownloadPage.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/pages/ErrorNotFound.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/pages/ForgotPasswordPage.vue": {
+      "count": 2,
+      "colors": {
+        "#999": 2
+      }
+    },
+    "src/pages/GraveyardPage.vue": {
+      "count": 30,
+      "colors": {
+        "#00ff41": 1,
+        "#bbb": 1,
+        "#ffb300": 1,
+        "#ffffff": 3,
+        "rgba(0, 0, 0, 0.55)": 1,
+        "rgba(0, 0, 0, 0.6)": 1,
+        "rgba(0, 0, 0, 0.8)": 9,
+        "rgba(0, 0, 0, 0.9)": 2,
+        "rgba(0, 255, 65, 0.5)": 1,
+        "rgba(255, 0, 0, 0.06)": 2,
+        "rgba(255, 0, 0, 0.1)": 1,
+        "rgba(255, 0, 0, 0.5)": 3,
+        "rgba(255, 0, 0, 0.8)": 2,
+        "rgba(255, 179, 0, 0.55)": 1,
+        "rgba(255, 255, 255, 0.18)": 1
+      }
+    },
+    "src/pages/HelpPage.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/pages/IndexPage.vue": {
+      "count": 15,
+      "colors": {
+        "#ff0000": 4,
+        "#fff": 2,
+        "rgba(0, 0, 0, 0.6)": 1,
+        "rgba(0, 0, 0, 0.78)": 2,
+        "rgba(0, 255, 255, 0.04)": 1,
+        "rgba(255, 255, 255, 0.008)": 2,
+        "rgba(255, 255, 255, 0.08)": 1,
+        "rgba(255, 255, 255, 0.68)": 2
+      }
+    },
+    "src/pages/LeaderboardPage.vue": {
+      "count": 31,
+      "colors": {
+        "#111": 1,
+        "#131010": 1,
+        "#1c1212": 1,
+        "#242424": 1,
+        "#292929": 4,
+        "#311313": 2,
+        "#34302f": 1,
+        "#3b3634": 1,
+        "#45403e": 1,
+        "#4a1919": 1,
+        "#743331": 2,
+        "#89817d": 2,
+        "#a6a09a": 1,
+        "#b8b2ac": 1,
+        "#e32626": 1,
+        "#ece9e4": 1,
+        "#f1ede8": 1,
+        "#f4f1ec": 1,
+        "#ff6060": 1,
+        "#fff": 4,
+        "rgba(255, 255, 255, 0.008)": 1,
+        "rgba(80, 174, 174, 0.12)": 1
+      }
+    },
+    "src/pages/LoginPage.vue": {
+      "count": 7,
+      "colors": {
+        "#66ff66": 1,
+        "#999": 1,
+        "#ff6666": 1,
+        "rgba(0,255,0,0.1)": 1,
+        "rgba(0,255,0,0.3)": 1,
+        "rgba(255,0,0,0.1)": 1,
+        "rgba(255,0,0,0.3)": 1
+      }
+    },
+    "src/pages/MessagingPage.vue": {
+      "count": 204,
+      "colors": {
+        "#000": 5,
+        "#000000": 1,
+        "#00cc55": 3,
+        "#080808": 1,
+        "#0c0c0c": 3,
+        "#141414": 3,
+        "#1f1f1f": 1,
+        "#6699ff": 3,
+        "#6b6b6b": 2,
+        "#7a3b36": 1,
+        "#88bbff": 1,
+        "#8a8a8a": 1,
+        "#c8c8c8": 1,
+        "#cc3333": 1,
+        "#d8d8d8": 2,
+        "#e6e6e6": 1,
+        "#e8a0bf": 1,
+        "#ff0000": 1,
+        "#ff5252": 1,
+        "#ffaa00": 3,
+        "#fff": 3,
+        "rgba(0, 0, 0, 0.3)": 3,
+        "rgba(0, 0, 0, 0.4)": 3,
+        "rgba(0, 0, 0, 0.5)": 2,
+        "rgba(0, 0, 0, 0.55)": 2,
+        "rgba(0, 0, 0, 0.6)": 4,
+        "rgba(0, 0, 0, 0.65)": 2,
+        "rgba(0, 0, 0, 0.7)": 1,
+        "rgba(0, 0, 0, 0.72)": 3,
+        "rgba(0, 0, 0, 0.8)": 4,
+        "rgba(0, 0, 0, 0.82)": 1,
+        "rgba(0, 0, 0, 0.85)": 3,
+        "rgba(0, 0, 0, 0.95)": 1,
+        "rgba(0, 0, 0, 0.97)": 1,
+        "rgba(0, 204, 85, 0.1)": 3,
+        "rgba(0, 204, 85, 0.15)": 2,
+        "rgba(0, 204, 85, 0.2)": 1,
+        "rgba(0, 204, 85, 0.3)": 3,
+        "rgba(102, 153, 255, 0.3)": 1,
+        "rgba(102, 153, 255, 0.4)": 1,
+        "rgba(128, 128, 128, 0.2)": 1,
+        "rgba(150, 150, 150, 0.4)": 1,
+        "rgba(200, 200, 200, 0.4)": 2,
+        "rgba(220, 20, 60, 0.1)": 1,
+        "rgba(220, 20, 60, 0.15)": 1,
+        "rgba(220, 20, 60, 0.2)": 1,
+        "rgba(220, 20, 60, 0.3)": 1,
+        "rgba(220, 20, 60, 0.4)": 2,
+        "rgba(220, 20, 60, 0.5)": 1,
+        "rgba(220, 20, 60, 0.7)": 1,
+        "rgba(220, 20, 60, 1)": 1,
+        "rgba(255, 0, 0, 0.08)": 1,
+        "rgba(255, 0, 0, 0.1)": 1,
+        "rgba(255, 0, 0, 0.12)": 2,
+        "rgba(255, 0, 0, 0.2)": 5,
+        "rgba(255, 0, 0, 0.3)": 3,
+        "rgba(255, 0, 0, 0.4)": 2,
+        "rgba(255, 0, 0, 0.5)": 3,
+        "rgba(255, 0, 0, 0.6)": 1,
+        "rgba(255, 170, 0, 0.06)": 1,
+        "rgba(255, 170, 0, 0.08)": 1,
+        "rgba(255, 170, 0, 0.12)": 1,
+        "rgba(255, 170, 0, 0.15)": 1,
+        "rgba(255, 170, 0, 0.2)": 1,
+        "rgba(255, 170, 0, 0.3)": 2,
+        "rgba(255, 170, 0, 0.35)": 1,
+        "rgba(255, 255, 255, 0.02)": 5,
+        "rgba(255, 255, 255, 0.03)": 9,
+        "rgba(255, 255, 255, 0.04)": 6,
+        "rgba(255, 255, 255, 0.05)": 7,
+        "rgba(255, 255, 255, 0.06)": 7,
+        "rgba(255, 255, 255, 0.07)": 1,
+        "rgba(255, 255, 255, 0.08)": 7,
+        "rgba(255, 255, 255, 0.1)": 7,
+        "rgba(255, 255, 255, 0.12)": 1,
+        "rgba(255, 255, 255, 0.14)": 1,
+        "rgba(255, 255, 255, 0.15)": 5,
+        "rgba(255, 255, 255, 0.2)": 4,
+        "rgba(255, 255, 255, 0.25)": 4,
+        "rgba(255, 255, 255, 0.3)": 3,
+        "rgba(255, 255, 255, 0.35)": 2,
+        "rgba(255, 255, 255, 0.4)": 5,
+        "rgba(255, 255, 255, 0.5)": 4,
+        "rgba(255, 255, 255, 0.6)": 2,
+        "rgba(255, 255, 255, 0.7)": 4,
+        "rgba(255, 255, 255, 0.8)": 1
+      }
+    },
+    "src/pages/PatchNotesPage.vue": {
+      "count": 11,
+      "colors": {
+        "#999999": 1,
+        "#cccccc": 2,
+        "#dddddd": 1,
+        "#ff0000": 5,
+        "rgba(255, 255, 255, 0.1)": 2
+      }
+    },
+    "src/pages/PaymentPage.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/pages/ProfilePage.vue": {
+      "count": 20,
+      "colors": {
+        "#000000": 5,
+        "#0a0a0a": 1,
+        "#1a1a1a": 2,
+        "#cccccc": 2,
+        "#ffffff": 10
+      }
+    },
+    "src/pages/RegisterPage.vue": {
+      "count": 18,
+      "colors": {
+        "#1a1a1a": 1,
+        "#66ff66": 1,
+        "#999": 1,
+        "#ff6666": 3,
+        "#ffa500": 4,
+        "rgba(0,0,0,0.85)": 1,
+        "rgba(0,255,0,0.1)": 1,
+        "rgba(0,255,0,0.3)": 1,
+        "rgba(255, 0, 0, 0.5)": 1,
+        "rgba(255,0,0,0.1)": 1,
+        "rgba(255,0,0,0.3)": 1,
+        "rgba(255,100,100,0.1)": 1,
+        "rgba(255,100,100,0.3)": 1
+      }
+    },
+    "src/pages/RegistrationApplicationPage.vue": {
+      "count": 14,
+      "colors": {
+        "#101010": 1,
+        "#160000": 1,
+        "#1a1a1a": 3,
+        "#ff6666": 1,
+        "rgba(255, 0, 0, 0.04)": 1,
+        "rgba(255, 0, 0, 0.06)": 1,
+        "rgba(255, 0, 0, 0.16)": 1,
+        "rgba(255, 0, 0, 0.18)": 1,
+        "rgba(255, 0, 0, 0.35)": 1,
+        "rgba(255, 0, 0, 0.45)": 1,
+        "rgba(255, 0, 0, 0.7)": 1,
+        "rgba(255, 255, 255, 0.025)": 1
+      }
+    },
+    "src/pages/RegistrationEntryPage.vue": {
+      "count": 0,
+      "colors": {}
+    },
+    "src/pages/ResetPasswordPage.vue": {
+      "count": 2,
+      "colors": {
+        "#999": 2
+      }
+    },
+    "src/pages/SupportReportsPage.vue": {
+      "count": 34,
+      "colors": {
+        "#000000": 3,
+        "#00ff00": 1,
+        "#101010": 3,
+        "#1a1a1a": 5,
+        "#888888": 9,
+        "#eeeeee": 5,
+        "#ff0000": 4,
+        "#ffaa00": 3,
+        "rgba(255, 0, 0, 0.12)": 1
+      }
+    },
+    "src/pages/TermsPage.vue": {
+      "count": 5,
+      "colors": {
+        "rgba(0, 0, 0, 0.25)": 1,
+        "rgba(0, 0, 255, 0.01)": 1,
+        "rgba(0, 255, 0, 0.01)": 1,
+        "rgba(18, 16, 16, 0)": 1,
+        "rgba(255, 0, 0, 0.01)": 1
+      }
+    },
+    "src/pages/VerifyEmailPage.vue": {
+      "count": 2,
+      "colors": {
+        "#999": 2
+      }
+    }
+  }
+}

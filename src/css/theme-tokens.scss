@@ -1,0 +1,157 @@
+:root {
+  // Historical utility colors are intentionally independent of client palettes.
+  --m-legacyBg-rgb: 13 17 23;
+  --m-legacyBorder-rgb: 48 54 61;
+  --m-legacyWarning-rgb: 210 153 34;
+  --m-legacyAccentDark-rgb: 65 1 1;
+  --m-legacyVaultMuted-rgb: 119 119 119;
+}
+
+// Defaults must exist even when the client theme is OFF (VITE_CLIENT_THEMES unset):
+// 195 component rules read these vars directly, so an undefined var would invalidate the
+// declaration (black-on-black body text, transparent panels). applyTheme() still overrides
+// every one of them with inline custom properties when a theme is active.
+:root {
+  --m-bg-rgb: 0 0 0;
+  --m-surface-rgb: 13 13 13;
+  --m-card-rgb: 16 16 16;
+  --m-elevated-rgb: 10 10 10;
+  --m-hover-rgb: 26 26 26;
+  --m-border-rgb: 26 26 26;
+  --m-borderStrong-rgb: 42 42 42;
+  --m-text-rgb: 238 238 238;
+  --m-textMuted-rgb: 136 136 136;
+  --m-textDim-rgb: 102 102 102;
+  --m-textFaint-rgb: 85 85 85;
+  --m-accent-rgb: 255 0 0;
+  --m-accentStrong-rgb: 204 0 0;
+  --m-accentAlt-rgb: 248 81 73;
+  --m-accentAlt2-rgb: 247 129 102;
+  --m-onAccent-rgb: 0 0 0;
+  --m-success-rgb: 0 255 0;
+  --m-warning-rgb: 255 170 0;
+  --m-danger-rgb: 248 81 73;
+  --m-info-rgb: 247 129 102;
+  --m-arcBg-rgb: 5 5 5;
+  --m-arcSurface-rgb: 10 10 10;
+  --m-arcCard-rgb: 13 13 13;
+  --m-arcText-rgb: 224 224 224;
+  --m-arcMuted-rgb: 119 119 119;
+  --m-arcDim-rgb: 85 85 85;
+  --m-arcAccent-rgb: 192 192 192;
+  --m-arcEncrypted-rgb: 255 51 51;
+  --m-arcRed-rgb: 227 38 38;
+  --m-arcMutedWarm-rgb: 156 151 145;
+  // Leaderboard ink follows the accent in both the runtime palette and the
+  // un-themed default, so the alias never flashes a different red. The default
+  // is DEFAULT_THEME.lbRed (#ff0000) — tests/theme.tokens.test.ts pins the pair.
+  --m-lbRed-rgb: 255 0 0;
+  --m-lbMuted-rgb: 136 136 136;
+}
+
+// Lazy Quasar/SFC styles emit legacy :root aliases. An active theme must outrank
+// them regardless of route chunk loading order; defaults above remain available off.
+:root[data-client-theme='on'] {
+  --black: rgb(var(--m-bg-rgb));
+  --bg: rgb(var(--m-bg-rgb));
+  --dash-bg: rgb(var(--m-bg-rgb));
+  --panel: rgb(var(--m-surface-rgb));
+  --dash-panel: rgb(var(--m-surface-rgb));
+  --dash-surface: rgb(var(--m-surface-rgb));
+  --card: rgb(var(--m-card-rgb));
+  --dash-card: rgb(var(--m-card-rgb));
+  --dash-sidebar: rgb(var(--m-elevated-rgb));
+  --dash-hover: rgb(var(--m-hover-rgb));
+
+  --border-legacy: rgb(var(--m-border-rgb));
+  --dash-border: rgb(var(--m-border-rgb));
+  --dash-border-hover: rgb(var(--m-borderStrong-rgb));
+  --white: rgb(var(--m-text-rgb));
+  --text: rgb(var(--m-text-rgb));
+  --dash-text: rgb(var(--m-text-rgb));
+  --dash-text-primary: rgb(var(--m-text-rgb));
+
+  --dash-muted: rgb(var(--m-textMuted-rgb));
+  --dash-text-secondary: rgb(var(--m-textMuted-rgb));
+  --hellamuted: rgb(var(--m-textDim-rgb));
+
+  --dash-text-muted: rgb(var(--m-textDim-rgb));
+  --primary: rgb(var(--m-accent-rgb));
+  --dash-accent: rgb(var(--m-accent-rgb));
+  --accent: rgb(var(--m-accentAlt-rgb));
+  --accent-secondary: rgb(var(--m-accentAlt2-rgb));
+  --accent-strong: rgb(var(--m-accentStrong-rgb));
+  --danger: rgb(var(--m-danger-rgb));
+  --warning: rgb(var(--m-legacyWarning-rgb));
+  --dash-warning: rgb(var(--m-warning-rgb));
+  --dash-success: rgb(var(--m-success-rgb));
+
+  --archive-red: rgb(var(--m-arcRed-rgb));
+  --archive-text: rgb(var(--m-arcText-rgb));
+  --archive-muted: rgb(var(--m-arcMuted-rgb));
+  --lb-red: rgb(var(--m-lbRed-rgb));
+  --lb-muted: rgb(var(--m-lbMuted-rgb));
+  --dash-accent-dim: rgb(var(--m-accent-rgb) / 0.15);
+  --primary-dim: rgb(var(--m-accent-rgb) / 0.15);
+  --dash-accent-rgb: var(--m-accent-rgb);
+}
+
+// Crimson inherits these aliases from the existing application/Quasar cascade.
+:root[data-client-theme='on']:not([data-theme='crimson']) {
+  --muted: rgb(var(--m-textMuted-rgb));
+  --hella-muted: rgb(var(--m-textDim-rgb));
+  --dash-error: rgb(var(--m-danger-rgb));
+}
+
+// Keep default crimson's existing interaction styles byte-for-byte in effect.
+html[data-client-theme='on']:is(:not([data-theme='crimson']), [data-theme-accent]) {
+  .q-btn.bg-primary:not(:disabled):not(.disabled) {
+    color: rgb(var(--m-onAccent-rgb)) !important;
+
+    &:hover {
+      background: var(--m-accent-hover) !important;
+    }
+    &:active {
+      background: var(--m-accent-active) !important;
+    }
+  }
+
+  :is(.q-btn, .master-nav-link, .messaging-nav-item, .vault-chat-item):focus-visible {
+    outline: 2px solid var(--m-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+html[data-client-theme='on'] body {
+  background: rgb(var(--m-bg-rgb));
+}
+html[data-client-theme='on']:not([data-density='comfortable']) {
+  .dashboard-page .dash-setting,
+  .dashboard-page .toggle-item.compact,
+  .master-nav-link,
+  .messaging-nav-item,
+  .vault-chat-item {
+    min-height: var(--m-row-h);
+    padding-block: var(--m-space-unit);
+  }
+  .vault-chat-item,
+  .master-nav-link {
+    font-size: var(--m-font-step);
+  }
+  .vault-msg {
+    padding-block: var(--m-space-unit);
+  }
+}
+html[data-client-theme='on'][data-chat-size='sm'] :is(.vault-msg-text, .group-message-text) {
+  font-size: 12px;
+}
+html[data-client-theme='on'][data-chat-size='lg'] :is(.vault-msg-text, .group-message-text) {
+  font-size: 16px;
+}
+html[data-client-theme='on'][data-chat-density='compact'] .vault-msg {
+  padding-block: 2px;
+}
+
+@import './theme-chrome.scss';
+@import './theme-surfaces.scss';
+@import './theme-font.scss';

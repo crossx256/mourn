@@ -1,0 +1,195 @@
+name: MOURN manual signed build
+
+# No tag-push publication: an unreviewed build must never update a live channel.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing reviewed version tag to build (no publishing)
+        required: true
+        type: string
+      linuxdeploy_sha256:
+        description: Independently reviewed SHA-256 of the original x86_64 linuxdeploy AppImage; never copy a hash from this run. Required before any download or execution; extraction is always fresh.
+        required: true
+        type: string
+      publish:
+        description: 'Set to true to attach the assembled, checked assets to the existing tag as a GitHub release. Build-only when false.'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+permissions:
+  contents: read
+concurrency:
+  group: signed-review-${{ inputs.tag }}
+  cancel-in-progress: false
+jobs:
+  build:
+    environment: release-signing
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            platform: windows-x86_64
+          - os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            platform: linux-x86_64
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+      RELEASE_TARGET: ${{ matrix.target }}
+      CARGO_TARGET_DIR: ${{ github.workspace }}/build-target
+      BUNDLE_DIR: ${{ github.workspace }}/build-target/${{ matrix.target }}/release/bundle
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: refs/tags/${{ inputs.tag }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.22.0'
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: '1.4.2'
+      - uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c
+        with:
+          toolchain: '1.94.0'
+          targets: ${{ matrix.target }}
+      - name: Verify exact tag and version before using signing material
+        id: identity
+        run: node scripts/verify_release_version.js
+      - name: Record the selected commit
+        run: echo "RELEASE_COMMIT=${{ steps.identity.outputs.commit }}" >> "$GITHUB_ENV"
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential curl wget file libxdo-dev libssl-dev libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev fakeroot dpkg-dev
+      - run: bun install --frozen-lockfile --ignore-scripts
+      - run: node node_modules/@quasar/app-vite/bin/quasar.js prepare
+      - run: bun run typecheck && bun run lint && bun run test && bun run test:release
+      - name: Check dependency advisories (including build tooling)
+        run: bun audit --audit-level=high
+      - name: Inject public updater configuration
+        run: node scripts/inject_pubkey.js
+        env:
+          TAURI_UPDATER_PUBLIC_KEY: ${{ secrets.TAURI_UPDATER_PUBLIC_KEY }}
+          TAURI_UPDATER_ENDPOINT: 'https://mourn.bio/update/{{target}}/{{current_version}}'
+      - name: Verify reviewed linuxdeploy input and prepare a fresh extraction
+        if: runner.os == 'Linux'
+        run: |
+          set -euo pipefail
+          # The GStreamer bundling adapter installed here re-checks the digest when
+          # the signed build runs it, so the reviewed value must outlive this step.
+          # Publishing it to $GITHUB_ENV is that hand-off; it is not a secret.
+          bash scripts/pin_linuxdeploy_for_bundling.sh
+          printf 'LINUXDEPLOY_SHA256=%s\n' "$LINUXDEPLOY_SHA256" >> "$GITHUB_ENV"
+        env:
+          LINUXDEPLOY_SHA256: ${{ inputs.linuxdeploy_sha256 }}
+      - name: Build and validate signed packages in a fresh target directory
+        run: bun run tauri:build-signed
+        env:
+          # Also set explicitly: the bundle runs the GStreamer adapter, which refuses
+          # to run without the reviewed digest (tests/releaseWorkflowEnv.test.mjs).
+          LINUXDEPLOY_SHA256: ${{ inputs.linuxdeploy_sha256 }}
+          MOURN_ISOLATED_BUILD: '1'
+          MOURN_ENABLE_UPDATER: 'true'
+          VITE_API_BASE: https://mourn.bio
+          VITE_WS_BASE: https://mourn.bio
+          VITE_CAP_API_ENDPOINT: ${{ secrets.VITE_CAP_API_ENDPOINT || vars.VITE_CAP_API_ENDPOINT }}
+          VITE_DISCORD_RPC_CLIENT_ID: ${{ vars.VITE_DISCORD_RPC_CLIENT_ID }}
+          VITE_KLIPY_API_KEY: ${{ secrets.VITE_KLIPY_API_KEY || vars.VITE_KLIPY_API_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          # Off by default in code; the shipped builds enable customization.
+          VITE_CLIENT_THEMES: 'true'
+      - run: node scripts/generate_updater_manifest.js && node scripts/stage_release_assets.js
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: release-${{ matrix.platform }}
+          path: artifacts/release-${{ matrix.platform }}/
+          if-no-files-found: error
+  assemble:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: refs/tags/${{ inputs.tag }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.22.0'
+      - name: Verify exact tag and versions again before assembly
+        id: identity
+        run: node scripts/verify_release_version.js
+      - name: Record exact checkout
+        run: echo "RELEASE_COMMIT=${{ steps.identity.outputs.commit }}" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: release-*
+          path: artifacts/shards
+      - name: Validate every shard before exposing one combined draft
+        run: node scripts/assemble_release.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reviewed-release-draft
+          path: artifacts/draft-release/
+          if-no-files-found: error
+
+  # Publishing is a separate job so the write token exists for exactly one step.
+  # It runs only when a maintainer explicitly asks for it on a manual run; tag
+  # pushes still never publish on their own.
+  publish:
+    needs: assemble
+    if: github.event_name == 'workflow_dispatch' && inputs.publish == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    environment: release-signing
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: reviewed-release-draft
+          path: artifacts/draft-release
+      - name: Refuse to publish from a non-default branch or a tag that moved
+        run: |
+          set -euo pipefail
+          [ "${GITHUB_REF}" = "refs/heads/${GITHUB_EVENT_REPOSITORY_DEFAULT_BRANCH}" ] || {
+            echo "::error::Publish runs must be dispatched from the default branch."; exit 1; }
+          git init -q .
+          git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+          git fetch -q --depth=1 origin "refs/tags/${RELEASE_TAG}:refs/tags/${RELEASE_TAG}"
+          echo "publishing tag ${RELEASE_TAG} at $(git rev-parse "refs/tags/${RELEASE_TAG}")"
+      - name: Require every asset and its manifest
+        run: |
+          set -euo pipefail
+          test -s artifacts/draft-release/SHA256SUMS
+          while read -r sum name; do
+            [ -n "${name}" ] || continue
+            test -f "artifacts/draft-release/${name}" || {
+              echo "::error::Manifest lists ${name} but the file is missing."; exit 1; }
+            echo "${sum}  artifacts/draft-release/${name}" | sha256sum -c --strict -
+          done < artifacts/draft-release/SHA256SUMS
+      - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ inputs.tag }}
+          draft: false
+          prerelease: false
+          fail_on_unmatched_files: true
+          files: artifacts/draft-release/*

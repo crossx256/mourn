@@ -1,0 +1,32 @@
+flatpak-cargo-generator.py — upstream MIT declaration
+
+Source: https://github.com/flatpak/flatpak-builder-tools/blob/41c20aa10819cdb2a4f3ca171758a96d1955c018/cargo/flatpak-cargo-generator.py
+Verified unchanged Git blob: 0b5744a366d0750fb6a04811db6d52f1f74df95b
+
+Upstream declares __license__ = "MIT"; the inspected Cargo-generator project
+metadata also declares MIT. The inspected upstream file and Cargo-generator
+directory supply no copyright-holder notice. This companion reproduces the
+standard MIT permission and warranty text for that declaration, without
+inventing a holder or transplanting another project's copyright. Upstream
+copyright attribution remains incomplete; preserve any notice later supplied.
+This explanatory preface is not an additional permission grant by Mourn.
+
+MIT permission and warranty text:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

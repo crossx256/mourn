@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-clear-link-expiry-notifications"
+description = "Enables the clear_link_expiry_notifications command without any pre-configured scope."
+commands.allow = ["clear_link_expiry_notifications"]
+
+[[permission]]
+identifier = "deny-clear-link-expiry-notifications"
+description = "Denies the clear_link_expiry_notifications command without any pre-configured scope."
+commands.deny = ["clear_link_expiry_notifications"]

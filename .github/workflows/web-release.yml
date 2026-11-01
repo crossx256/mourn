@@ -1,0 +1,179 @@
+name: MOURN manual Web (SSR) build
+
+# Build an existing reviewed tag for inspection only; no release publication or
+# deployment. The artifact contains the SSR tarball, checksum and build provenance.
+# It does not require a desktop release or feed the live deployment channel.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing reviewed version tag to build (review artifact only)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mourn-web-review-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  web:
+    name: Build SSR web bundle
+    environment: release-signing
+    runs-on: ubuntu-latest
+
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          # A manual run builds the code AT THE EXISTING TAG, not the branch it was run from.
+          ref: refs/tags/${{ inputs.tag }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.22.0
+
+      - name: Verify exact tag, checkout commit and versions before dependencies
+        run: node scripts/verify_release_version.js
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.4.2
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+          key: ${{ runner.os }}-bun-web-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-web-
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies without lifecycle scripts
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Install isolated SSR dependencies without lifecycle scripts
+        working-directory: src-ssr
+        run: bun install --frozen-lockfile --ignore-scripts
+      - run: bun audit --audit-level=high
+      - name: Audit isolated SSR dependencies
+        working-directory: src-ssr
+        run: bun audit --audit-level=high
+      - name: Prepare Quasar metadata explicitly
+        run: node node_modules/@quasar/app-vite/bin/quasar.js prepare
+
+      - name: Verify frontend before packaging
+        run: bun run typecheck && bun run lint && bun run test && bun run test:release
+
+      # Public build-time configuration, baked into the bundle. Keep the existing
+      # secrets-first lookup with Actions variables as fallback; never use private
+      # credentials as VITE_* values, regardless of where they are configured.
+      - name: Verify build-time configuration
+        env:
+          VITE_API_BASE: 'https://mourn.bio'
+          VITE_WS_BASE: 'https://mourn.bio'
+          VITE_CAP_API_ENDPOINT: ${{ secrets.VITE_CAP_API_ENDPOINT || vars.VITE_CAP_API_ENDPOINT }}
+          VITE_KLIPY_API_KEY: ${{ secrets.VITE_KLIPY_API_KEY || vars.VITE_KLIPY_API_KEY }}
+        run: |
+          set -euo pipefail
+          missing=0
+          for name in VITE_API_BASE VITE_WS_BASE VITE_CAP_API_ENDPOINT; do
+            value="${!name:-}"
+            if [ -z "$value" ]; then
+              echo "::error::$name is empty - every build would ship without it (set it as an Actions secret)"
+              missing=1
+            else
+              echo "$name: set (${#value} chars)"
+            fi
+          done
+          if [ -z "${VITE_KLIPY_API_KEY:-}" ]; then
+            echo "::warning::VITE_KLIPY_API_KEY is empty - Klipy GIF search will be disabled in this build"
+          else
+            echo "VITE_KLIPY_API_KEY: set (${#VITE_KLIPY_API_KEY} chars)"
+          fi
+          exit "$missing"
+
+      - name: Build SSR bundle
+        run: bunx quasar build -m ssr
+        env:
+          MOURN_ISOLATED_BUILD: '1'
+          VITE_API_BASE: 'https://mourn.bio'
+          VITE_WS_BASE: 'https://mourn.bio'
+          VITE_CAP_API_ENDPOINT: ${{ secrets.VITE_CAP_API_ENDPOINT || vars.VITE_CAP_API_ENDPOINT }}
+          VITE_KLIPY_API_KEY: ${{ secrets.VITE_KLIPY_API_KEY || vars.VITE_KLIPY_API_KEY }}
+          VITE_CLIENT_THEMES: 'true'
+
+      # Quasar emits a package.json with RANGES for the runtime deps (e.g. "dompurify": "^3.4.13")
+      # but no lockfile, so `npm install` on the server would resolve a different tree on every
+      # deploy. Pin it here instead and the server installs with `npm ci`.
+      #
+      # --legacy-peer-deps is required, not cosmetic: ts-mls declares an OPTIONAL peer on
+      # @hpke/chacha20poly1305@1.8.0 while the app pins 1.7.1 (root package.json overrides),
+      # and plain resolution aborts with ERESOLVE. The server uses the same flag so its
+      # `npm ci` validates against the tree this lockfile actually pins.
+      - name: Pin the production dependency tree
+        working-directory: dist/ssr
+        run: npm install --package-lock-only --omit=dev --legacy-peer-deps --no-audit --no-fund
+
+      # So "which commit is live on the box" is answerable from the payload itself.
+      # The commit comes from the CHECKOUT (`git rev-parse HEAD`), not GITHUB_SHA: on a
+      # workflow_dispatch run GITHUB_SHA is the dispatch ref (main), while the checkout
+      # is the tag being rebuilt - which would label the bundle with the wrong commit.
+      - name: Embed build provenance
+        run: |
+          COMMIT="$(git rev-parse HEAD)" node -e '
+            const fs = require("node:fs");
+            fs.writeFileSync(
+              "dist/ssr/BUILD_INFO.json",
+              JSON.stringify(
+                {
+                  tag: process.env.RELEASE_TAG,
+                  commit: process.env.COMMIT,
+                  ref: process.env.GITHUB_REF,
+                  builtAt: new Date().toISOString(),
+                  workflowRun: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,
+                },
+                null,
+                2
+              ) + "\n"
+            );
+          '
+
+      - name: Package bundle
+        run: |
+          set -euo pipefail
+          : "${RELEASE_TAG:?RELEASE_TAG is empty - refusing to package a nameless bundle}"
+          version="${RELEASE_TAG#v}"
+          name="mourn-web-ssr-${version}.tar.gz"
+          mkdir -p artifacts
+          # -C dist/ssr . so the archive unpacks straight into the release directory
+          # (index.js, server/, client/, package.json, package-lock.json, ...).
+          tar -czf "artifacts/${name}" --exclude=node_modules -C dist/ssr .
+          ( cd artifacts && sha256sum "${name}" > "${name}.sha256" )
+          echo "--- payload ---"
+          ls -lh artifacts
+          # NOT `tar -tzf ... | head -20`: under `set -o pipefail` head closing the pipe
+          # kills tar with SIGPIPE ("tar: stdout: write error", exit 2) and fails the step
+          # even though the archive is fine. List to a file, then head the file.
+          tar -tzf "artifacts/${name}" > "artifacts/listing.txt"
+          echo "--- contents (head) ---"
+          head -20 "artifacts/listing.txt"
+          rm -f "artifacts/listing.txt"
+
+      - name: Upload SSR bundle for review only
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: mourn-web-ssr-review
+          path: artifacts/
+          if-no-files-found: error

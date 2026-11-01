@@ -1,0 +1,208 @@
+/* Canonical message-shell styles shared by 1:1 Chains and MLS Suites. */
+.vault-msg {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  margin: 1px 0;
+  padding: 4px 8px;
+  border-radius: 0;
+  transition: background 0.12s;
+}
+.vault-msg:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+.vault-msg--sent {
+  flex-direction: row-reverse;
+}
+.vault-msg--sent .vault-msg-body {
+  align-items: flex-end;
+}
+.vault-msg--sent .vault-msg-meta {
+  flex-direction: row-reverse;
+}
+.vault-msg-avatar {
+  flex-shrink: 0;
+  margin-top: 2px;
+  border: 1px solid rgb(var(--m-border-rgb));
+  border-radius: 50%;
+}
+.vault-msg-body {
+  position: relative;
+  display: flex;
+  width: fit-content;
+  min-width: 0;
+  max-width: 70%;
+  flex-direction: column;
+  gap: 3px;
+}
+.vault-msg-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vault-msg-sender {
+  color: rgb(var(--m-textMuted-rgb));
+  font: 600 12px monospace;
+  letter-spacing: 0.04em;
+}
+.vault-msg-time {
+  color: rgba(255, 255, 255, 0.2);
+  font: 10px monospace;
+  letter-spacing: 0.02em;
+}
+.vault-msg-bubble {
+  width: fit-content;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid rgb(var(--m-border-rgb));
+  color: rgb(var(--m-text-rgb));
+  font: 13px/1.55 monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+/* Exact 1:1 chain colors: red-tinted bubble for own messages, dark card for others. */
+.vault-msg-bubble--sent {
+  border-color: rgb(var(--m-accent-rgb, 255 0 0) / 0.15);
+  background: rgb(var(--m-accent-rgb, 255 0 0) / 0.06);
+}
+.vault-msg-bubble--recv {
+  border-color: #1a1a1a;
+  background: #0c0c0c;
+}
+.vault-msg--highlight {
+  background: rgb(var(--m-accent-rgb, 255 0 0) / 0.08);
+}
+.vault-msg--reply-to-me {
+  background: rgb(var(--m-accent-rgb, 255 0 0) / 0.045);
+  box-shadow: inset 2px 0 rgb(var(--m-accent-rgb, 255 0 0) / 0.45);
+}
+.vault-msg--search-highlight {
+  animation: vault-search-pulsate 1.5s ease-in-out;
+}
+.vault-msg--search-highlight .vault-msg-bubble {
+  background: color-mix(in srgb, rgb(var(--m-accent-rgb, 255 0 0)) 40%, black) !important;
+}
+@keyframes vault-search-pulsate {
+  0%,
+  100% {
+    background: color-mix(in srgb, rgb(var(--m-accent-rgb, 255 0 0) / 0.3) 40%, color-mix(in srgb, black 30%, transparent));
+  }
+  50% {
+    background: rgb(var(--m-accent-rgb, 255 0 0) / 0.2);
+  }
+}
+
+.vault-reply-ref {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+  border: 0;
+  border-left: 2px solid rgb(var(--m-accent-rgb, 255 0 0) / 0.4);
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    border-color 0.12s;
+}
+.vault-reply-ref:hover {
+  border-left-color: rgb(var(--m-accent-rgb, 255 0 0) / 0.7);
+  background: rgba(255, 255, 255, 0.06);
+}
+.vault-reply-ref:active {
+  background: rgb(var(--m-accent-rgb, 255 0 0) / 0.06);
+}
+.vault-reply-ref-icon,
+.vault-reply-ref-name {
+  flex-shrink: 0;
+  color: rgb(var(--m-accent-rgb, 255 0 0));
+}
+.vault-reply-ref-name {
+  font: 600 10px monospace;
+}
+.vault-reply-ref-text {
+  overflow: hidden;
+  min-width: 0;
+  flex: 1 1 auto;
+  color: rgba(255, 255, 255, 0.35);
+  font: 10px monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vault-reactions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.vault-reaction-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.vault-reaction-chip:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+}
+.vault-reaction-chip--mine {
+  border-color: rgb(var(--m-accent-rgb, 255 0 0) / 0.3);
+  background: rgb(var(--m-accent-rgb, 255 0 0) / 0.08);
+}
+.vault-reaction-emoji {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.vault-reaction-count {
+  color: rgba(255, 255, 255, 0.5);
+  font: 10px monospace;
+}
+
+/* Shared emoji asset sizing (Twemoji SVG) used by reactions, quick actions and pickers. */
+.vault-emoji-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+.vault-emoji-icon--sm {
+  width: 16px;
+  height: 16px;
+}
+.vault-emoji-icon--lg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ── Mobile bubble rails ─────────────────────────────────────────────────────
+   On a phone the 40px avatar + 10px gap + row padding + list padding pushed a
+   bubble ~78px in from each edge — a wide, lopsided gutter that made the avatar
+   column dominate the width and left the bubble hugging the wrong rail. Tighten
+   and symmetrise: 30px avatar, 8px gap, slimmer row padding, wider bubble.
+   Quasar's QAvatar is 1em square with the size applied as an inline font-size,
+   so the resize needs !important. Shared so 1:1 chains and Suites match. */
+@media (max-width: 1023px) {
+  .vault-msg {
+    gap: 8px;
+    padding: 3px 4px;
+  }
+  .vault-msg-avatar {
+    font-size: 30px !important;
+  }
+  .vault-msg-body {
+    max-width: 82%;
+  }
+}
+

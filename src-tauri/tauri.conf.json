@@ -1,0 +1,101 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "mourn",
+  "version": "1.5.3",
+  "identifier": "bio.mourn.desktop",
+  "build": {
+    "beforeDevCommand": "bun run dev:spa:desktop",
+    "devUrl": "http://localhost:9001",
+    "beforeBuildCommand": "bun run build:spa:desktop",
+    "frontendDist": "../dist/spa"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "mourn",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 900,
+        "minHeight": 600,
+        "visible": false,
+        "decorations": false,
+        "center": true,
+        "resizable": true,
+        "fullscreen": false,
+        "shadow": true,
+        "devtools": false
+      },
+      {
+        "label": "tray-menu",
+        "title": "mourn",
+        "url": "tray-menu.html",
+        "width": 264,
+        "height": 376,
+        "visible": false,
+        "decorations": false,
+        "resizable": false,
+        "maximizable": false,
+        "minimizable": false,
+        "closable": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "shadow": true,
+        "devtools": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' customprotocol: asset:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' asset: data: blob: https:; media-src 'self' asset: data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' ipc: http://ipc.localhost blob: https://mourn.bio wss://mourn.bio https://captcha.mourn.bio https://api.klipy.com; worker-src 'self' blob:; frame-src 'self' blob: https://captcha.mourn.bio; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self' https://mourn.bio",
+      "devCsp": "default-src 'self' customprotocol: asset:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' asset: data: blob: https:; media-src 'self' asset: data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' ipc: http://ipc.localhost blob: https://mourn.bio wss://mourn.bio https://captcha.mourn.bio https://api.klipy.com ws://localhost:3000 ws://127.0.0.1:3000 http://localhost:3000 http://127.0.0.1:3000 http://localhost:3001 http://127.0.0.1:3001; worker-src 'self' blob:; frame-src 'self' blob: https://captcha.mourn.bio http://localhost:3001 http://127.0.0.1:3001; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self' https://mourn.bio"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "createUpdaterArtifacts": true,
+    "category": "SocialNetworking",
+    "icon": [
+      "icons/Square30x30Logo.png",
+      "icons/Square44x44Logo.png",
+      "icons/Square71x71Logo.png",
+      "icons/Square89x89Logo.png",
+      "icons/Square107x107Logo.png",
+      "icons/Square142x142Logo.png",
+      "icons/Square150x150Logo.png",
+      "icons/Square284x284Logo.png",
+      "icons/Square310x310Logo.png",
+      "icons/StoreLogo.png",
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico",
+      "icons/icon.png"
+    ],
+    "linux": {
+      "appimage": {
+        "bundleMediaFramework": true
+      },
+      "deb": {
+        "depends": [
+          "libwebkit2gtk-4.1-0",
+          "libgtk-3-0",
+          "libnotify4",
+          "libasound2",
+          "libudev1",
+          "libsoup-3.0-0",
+          "libjavascriptcoregtk-4.1-0",
+          "gstreamer1.0-plugins-good",
+          "gstreamer1.0-plugins-bad",
+          "gstreamer1.0-libav"
+        ]
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDE2QzFCMTY2RjgzRTJBNUQKUldSZEtqNzRackhCRmlMcGdIeDhvZkJjSndycnJWT0VVcTdmdWVVcVdMdW9DeERNMHBiVWgzcEQK",
+      "endpoints": ["https://mourn.bio/update/{{target}}/{{current_version}}"]
+    }
+  }
+}

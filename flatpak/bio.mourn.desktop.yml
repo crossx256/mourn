@@ -1,0 +1,64 @@
+# Local development manifest. Public submissions must replace the single dir
+# source with an accessible, reviewed archive URL and SHA-256 (see README.md).
+app-id: bio.mourn.desktop
+runtime: org.gnome.Platform
+runtime-version: '50'
+sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.node22
+  - org.freedesktop.Sdk.Extension.rust-stable
+command: mourn-desktop
+finish-args:
+  - --share=network # API and encrypted messaging; no host filesystem grant
+  - --device=dri # WebKit compositing
+  - --share=ipc # X11 fallback
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --socket=pulseaudio # User-selected audio
+  - --talk-name=org.kde.StatusNotifierWatcher # Tray integration
+  - --talk-name=org.freedesktop.secrets # OS credential storage
+  # Desktop portals are available through Flatpak's normal portal mediation.
+  # Optional Discord RPC may be enabled by the user with a narrow socket override.
+modules:
+  - name: mourn
+    buildsystem: simple
+    build-options:
+      append-path: /usr/lib/sdk/node22/bin:/usr/lib/sdk/rust-stable/bin
+      env:
+        MOURN_TARGET: desktop
+        MOURN_ENABLE_UPDATER: 'false'
+        MOURN_ISOLATED_BUILD: '1'
+        VITE_API_BASE: https://mourn.bio
+        VITE_WS_BASE: https://mourn.bio
+        VITE_CLIENT_THEMES: 'true'
+        # Required public Cap endpoint is supplied by the submission generator.
+        CARGO_NET_OFFLINE: 'true'
+        GTK_USE_PORTAL: '1'
+    build-commands:
+      # No npm ci, Bun cache emulation, lifecycle scripts, or network resolution.
+      - test -n "${VITE_CAP_API_ENDPOINT:-}" || { echo "Required public VITE_CAP_API_ENDPOINT is missing" >&2; exit 1; }
+      - node flatpak/setup-node.mjs
+      - node node_modules/@quasar/app-vite/bin/quasar.js prepare
+      - node node_modules/vue-tsc/bin/vue-tsc.js --noEmit
+      - node node_modules/@quasar/app-vite/bin/quasar.js build -m spa
+      - cargo build --frozen --release --features custom-protocol --manifest-path src-tauri/Cargo.toml
+      - install -Dm755 src-tauri/target/release/mourn-desktop /app/bin/mourn-desktop
+      - install -Dm644 flatpak/bio.mourn.desktop /app/share/applications/bio.mourn.desktop.desktop
+      - install -Dm644 flatpak/bio.mourn.desktop.metainfo.xml /app/share/metainfo/bio.mourn.desktop.metainfo.xml
+      - install -Dm644 src-tauri/icons/128x128.png /app/share/icons/hicolor/128x128/apps/bio.mourn.desktop.png
+      - install -Dm644 src-tauri/icons/128x128@2x.png /app/share/icons/hicolor/256x256/apps/bio.mourn.desktop.png
+    sources:
+      - type: dir
+        path: ..
+        skip:
+          - .git
+          - node_modules
+          - dist
+          - .quasar
+          - artifacts
+          - build-target
+          - .env*
+          - src-tauri/target
+          - src-capacitor/node_modules
+      - cargo-sources.json
+      - node-sources.json

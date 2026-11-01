@@ -1,0 +1,62 @@
+[package]
+name = "mourn-desktop"
+version = "1.5.3"
+description = "An internet revolution - Mourn Desktop"
+authors = ["psycho, cross & L"]
+edition = "2021"
+license = "AGPL-3.0-only"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+# NOTE: panic = "abort" was removed. It is a documented Tauri anti-pattern: at
+# least one runtime path uses catch_unwind around webview initialization, and
+# on abort a recoverable panic hard-kills the whole process (symptom: app sits
+# in the taskbar/task manager but never opens a window). Unwinding (default)
+# lets Tauri recover gracefully.
+strip = true
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "mourn_desktop_lib"
+crate-type = [ "staticlib", "cdylib", "rlib" ]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+devtools = ["tauri/devtools"]
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-notification = "2.0"
+tauri-plugin-updater = "2"
+tauri-plugin-opener = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-process = "2"
+# Direct keyring API preserves errors (the plugin maps failed reads to None).
+keyring = { version = "3.6", features = ["apple-native", "windows-native", "sync-secret-service"] }
+base64 = "0.22"
+tempfile = "3"
+rusqlite = { version = "0.31", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+reqwest = { version = "0.12", features = ["json", "cookies"] }
+tokio = { version = "1", features = ["time", "sync"] }
+chrono = { version = "0.4", features = ["serde"] }
+getrandom = "0.2"
+hex = "0.4"
+native-tls = "0.2"
+sha2 = "0.10"
+# Verify downloads using the updater key; installation is manual, never elevated.
+minisign-verify = "0.2"
+discord-rich-presence = "1.1.0"
+dirs = "6"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2"

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-install-linux-deb-update"
+description = "Enables the install_linux_deb_update command without any pre-configured scope."
+commands.allow = ["install_linux_deb_update"]
+
+[[permission]]
+identifier = "deny-install-linux-deb-update"
+description = "Denies the install_linux_deb_update command without any pre-configured scope."
+commands.deny = ["install_linux_deb_update"]

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-watcher-get-logs"
+description = "Enables the watcher_get_logs command without any pre-configured scope."
+commands.allow = ["watcher_get_logs"]
+
+[[permission]]
+identifier = "deny-watcher-get-logs"
+description = "Denies the watcher_get_logs command without any pre-configured scope."
+commands.deny = ["watcher_get_logs"]

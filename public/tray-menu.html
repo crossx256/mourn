@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mourn</title>
+    <script src="/theme-prepaint.js"></script>
+    <link rel="stylesheet" href="/tray-menu.css" />
+  </head>
+  <body>
+    <main class="tray-shell" aria-label="Mourn tray menu">
+      <header class="tray-header">
+        <img class="tray-mark" src="/mournLogoprot1.svg" alt="" />
+        <div>
+          <div class="tray-title">mourn</div>
+          <div class="tray-status">vita nova</div>
+        </div>
+      </header>
+
+      <nav class="tray-nav" aria-label="Quick navigation">
+        <button class="tray-action tray-action--primary" type="button" data-command="tray_open">
+          <span>open</span><span aria-hidden="true">↗</span>
+        </button>
+
+        <div class="tray-divider"><span>navigate</span></div>
+
+        <button class="tray-action" type="button" data-route="/chains">
+          <span>messages</span><span class="tray-code">01</span>
+        </button>
+        <button class="tray-action" type="button" data-route="/archives">
+          <span>archives</span><span class="tray-code">02</span>
+        </button>
+        <button class="tray-action" type="button" data-route="/graveyard">
+          <span>graveyard</span><span class="tray-code">03</span>
+        </button>
+        <button class="tray-action" type="button" data-route="/dashboard">
+          <span>dashboard</span><span class="tray-code">04</span>
+        </button>
+      </nav>
+
+      <footer class="tray-footer">
+        <span id="tray-feedback" role="status" aria-live="polite">running in background</span>
+        <button class="tray-exit" type="button" data-command="tray_exit">exit</button>
+      </footer>
+    </main>
+    <script src="/tray-menu.js"></script>
+  </body>
+</html>

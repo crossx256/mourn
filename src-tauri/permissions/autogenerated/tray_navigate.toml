@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tray-navigate"
+description = "Enables the tray_navigate command without any pre-configured scope."
+commands.allow = ["tray_navigate"]
+
+[[permission]]
+identifier = "deny-tray-navigate"
+description = "Denies the tray_navigate command without any pre-configured scope."
+commands.deny = ["tray_navigate"]

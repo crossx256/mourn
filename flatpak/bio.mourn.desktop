@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Mourn
+Comment=Profiles and end-to-end encrypted messaging
+Exec=mourn-desktop
+Icon=bio.mourn.desktop
+Terminal=false
+Categories=Network;InstantMessaging;Chat;
+StartupNotify=true
+# Compositor association needs verification on GNOME and KDE.
+StartupWMClass=mourn-desktop

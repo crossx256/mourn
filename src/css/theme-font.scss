@@ -1,0 +1,43 @@
+// Unmodified upstream faces; copyright/license: public/fonts/opendyslexic/OFL.txt.
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/opendyslexic/OpenDyslexic-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/opendyslexic/OpenDyslexic-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/opendyslexic/OpenDyslexic-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/opendyslexic/OpenDyslexic-Bold-Italic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+// Explicit monospace declarations inside client chrome need overriding; never
+// replace the icon fonts or the monospace face used to read code/preformatted text.
+html[data-client-theme='on'][data-font='opendyslexic']
+  :is(.dashboard-page, .vault-page, .header, .q-dialog)
+  :where(:not(.q-icon, .q-icon *, code, code *, pre, pre *)) {
+  font-family: 'OpenDyslexic', sans-serif !important;
+}
+
+html[data-client-theme='on'][data-font='opendyslexic']
+  :is(.dashboard-page, .vault-page, .header, .q-dialog) {
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}

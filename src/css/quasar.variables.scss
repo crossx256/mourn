@@ -1,0 +1,83 @@
+// Quasar SCSS (& Sass) Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+
+// Check documentation for full list of Quasar variables
+
+// Your own variables (that are declared here) and Quasar's own
+// ones will be available out of the box in your .vue/.scss/.sass files
+
+// It's highly recommended to change the default colors
+// to match your app's branding.
+// Tip: Use the "Theme Builder" on Quasar's documentation website.
+
+// Migration report brand tokens
+$primary: #ff0000; // Deep Crimson
+$secondary: #bdbdbd; // Ghost White/Off-Grey
+$accent: #f85149;
+
+$dark: #000000; // Pure Black
+$dark-page: #000000;
+$accent-secondary: #f78166;
+$bg-primary: #0d1117;
+$text-primary: #ff0000;
+$border-color: #2e2e2f;
+$warning: #d29922;
+$danger: #f85149;
+
+// Fallbacks / Quasar-friendly mappings
+$positive: #21ba45;
+$negative: $danger;
+$info: #31ccec;
+
+// Expose CSS custom properties so plain CSS files can use them
+:root {
+  --bg-primary: #{$bg-primary};
+  --text-primary: #{$text-primary};
+  --accent: #{$accent};
+  --accent-secondary: #{$accent-secondary};
+  --border: #{$border-color};
+  --warning: #{$warning};
+  --danger: #{$danger};
+
+  /* Legacy terminal theme variables for pre-migration look */
+  --black: #000;
+  --white: #eeeeee;
+  --off-white: #ffffffaa;
+  --primary: #f00;
+  --bg: var(--black);
+  --panel: #0d0d0d;
+  --card: #101010;
+  --border-legacy: #1a1a1a;
+  --text: var(--white);
+  --muted: #b3b3b3;
+  --hella-muted: #736f6f;
+  --hellamuted: #666666;
+  --accent-strong: #cc0000;
+  --shadow: 0 18px 35px rgba(0, 0, 0, 0.45);
+  --radius: 0;
+
+  /* Dashboard theme — must match UnoCSS theme colors */
+  --dash-bg: #000000;
+  --dash-sidebar: #0a0a0a;
+  --dash-panel: #0d0d0d;
+  --dash-card: #101010;
+  --dash-border: #1a1a1a;
+  --dash-border-hover: #2a2a2a;
+  --dash-text: #eeeeee;
+  --dash-muted: #888888;
+  --dash-accent: #ff0000;
+  --dash-accent-dim: rgba(255, 0, 0, 0.15);
+  --dash-success: #00ff00;
+  --dash-warning: #ffaa00;
+
+  /* Modal / surface variables (used by ChangePasswordModal, DeleteAccountModal) */
+  --dash-surface: #0d0d0d;
+  --dash-text-primary: #eeeeee;
+  --dash-text-secondary: #888888;
+  --dash-text-muted: #666666;
+  --dash-error: #ff0000;
+  --dash-accent-rgb: 255, 0, 0;
+  --dash-hover: #1a1a1a;
+}

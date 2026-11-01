@@ -1,0 +1,10 @@
+# Lock commitments use canonical UTF-8/LF bytes on every platform.
+/bun.lock text eol=lf
+/src-tauri/Cargo.lock text eol=lf
+/src-capacitor/bun.lock text eol=lf
+/flatpak/*.json text eol=lf
+/flatpak/*.py text eol=lf
+/flatpak/*.mjs text eol=lf
+/flatpak/*.sh text eol=lf
+/scripts/*.sh text eol=lf
+/headers.txt text eol=lf

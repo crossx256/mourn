@@ -1,0 +1,82 @@
+// Opt-in only: default crimson and the effects-off cascade remain untouched.
+html[data-client-theme='on'][data-backdrop-active] {
+  .q-layout {
+    position: relative;
+    z-index: 1;
+    background: transparent !important;
+  }
+
+  :is(
+    .q-page-container,
+    .q-page,
+    .dashboard-page,
+    .dashboard-main,
+    .messaging-page-root,
+    .vault-page,
+    .vault-center,
+    .group-chat-window
+  ) {
+    background: transparent !important;
+  }
+
+  // A surface tint, not element opacity: glyphs remain fully opaque above z0.
+  :is(.dashboard-page .dash-card, .dashboard-sidebar, .vault-left, .vault-input-area,
+    .group-chat-header, .group-chat-input, .notice-card) {
+    background: rgb(var(--m-surface-rgb) / 0.92) !important;
+  }
+
+  // The landing vignette otherwise darkens precisely the outer area these effects occupy.
+  .index-bg-vignette {
+    background: none;
+  }
+}
+
+@mixin frosted-surfaces {
+  html[data-client-theme='on'][data-frosted='on']
+    body.theme-frosted
+    :is(.dashboard-page .dash-card, .dashboard-sidebar, .vault-left, .vault-input-area) {
+    @content;
+  }
+}
+
+// Opaque is the baseline, even on engines that cannot parse @supports.
+@include frosted-surfaces {
+  background: rgb(var(--m-surface-rgb)) !important;
+}
+
+@supports ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
+  @include frosted-surfaces {
+    background: rgb(var(--m-surface-rgb) / 0.88) !important;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+
+@supports not ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
+  @include frosted-surfaces {
+    background: rgb(var(--m-surface-rgb)) !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+// Styling only: the canonical message renderer and stored colors are untouched.
+html[data-client-theme='on']:is(:not([data-theme='crimson']), [data-theme-accent]) {
+  .vault-input-field .q-field__control {
+    background: rgb(var(--m-inputBg-rgb)) !important;
+  }
+  .vault-input-field .q-field__native {
+    color: rgb(var(--m-inputText-rgb)) !important;
+    caret-color: rgb(var(--m-accent-rgb));
+  }
+  .vault-send-btn:not(:disabled) {
+    background: rgb(var(--m-sendBg-rgb)) !important;
+    color: rgb(var(--m-sendText-rgb)) !important;
+    border-color: rgb(var(--m-sendBg-rgb));
+  }
+  .vault-msg-bubble--sent:not(.vault-msg-bubble--unsafe):not(.vault-msg-bubble--failed) {
+    background: rgb(var(--m-bubbleBg-rgb));
+    color: rgb(var(--m-bubbleText-rgb));
+    border-color: rgb(var(--m-accent-rgb) / 0.25);
+  }
+}

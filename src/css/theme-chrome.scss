@@ -1,0 +1,76 @@
+// Chrome surfaces must not retain fixed black utility backgrounds in tinted palettes.
+html[data-client-theme='on'] {
+  body :is(.logo, .logo a, .brand-word) {
+    color: rgb(var(--m-accent-rgb));
+    text-shadow: 0 0 6px rgb(var(--m-accent-rgb) / 0.18);
+  }
+
+  body .header-logo-svg {
+    color: rgb(var(--m-accent-rgb));
+    filter: drop-shadow(0 0 4px rgb(var(--m-accent-rgb) / 0.25));
+  }
+
+  body :is(.group-chat-header, .group-chat-input, .words-overlay-card) {
+    background-color: rgb(var(--m-surface-rgb));
+    border-color: rgb(var(--m-border-rgb));
+  }
+
+  body :is(.header, .footer, .mobile-bottom-nav) {
+    background-color: rgb(var(--m-bg-rgb)) !important;
+    border-color: rgb(var(--m-borderStrong-rgb));
+  }
+
+  body :is(.q-drawer.global-drawer, .q-drawer.master-navigator-drawer,
+    .global-drawer-inner, .global-drawer-head, .global-drawer-footer) {
+    background-color: rgb(var(--m-elevated-rgb)) !important;
+    color: rgb(var(--m-text-rgb));
+  }
+
+  body :is(.header, .footer, .mobile-bottom-nav, .dashboard-page, .q-drawer) {
+    scrollbar-color: rgb(var(--m-accent-rgb) / 0.6) rgb(var(--m-bg-rgb));
+  }
+
+  &::-webkit-scrollbar-thumb,
+  body::-webkit-scrollbar-thumb,
+  body ::-webkit-scrollbar-thumb {
+    background: rgb(var(--m-accent-rgb) / 0.6);
+  }
+}
+
+// These pages declare local brand aliases that otherwise shadow the root palette.
+// Crimson "keeps" them purely so its existing cascade is untouched, but crimson's
+// accent IS this same red, so the swap is a pixel no-op there.
+html[data-client-theme='on'] {
+  body .archives-index {
+    --archive-red: rgb(var(--m-accent-rgb));
+    --archive-ink-rgb: var(--m-accent-rgb);
+    --archive-text: rgb(var(--m-text-rgb));
+    --archive-muted: rgb(var(--m-textMuted-rgb));
+  }
+  body .leaderboard-page {
+    --lb-red: rgb(var(--m-accent-rgb));
+    --lb-ink-rgb: var(--m-accent-rgb);
+    --lb-text: rgb(var(--m-text-rgb));
+    --lb-muted: rgb(var(--m-textMuted-rgb));
+  }
+  body .archive-filters button.is-active {
+    border-color: rgb(var(--m-accent-rgb) / 0.4);
+  }
+  body .archive-card__offline {
+    background: rgb(var(--m-accent-rgb));
+    color: rgb(var(--m-onAccent-rgb));
+  }
+  body .archive-open:not(:hover):not(:focus-visible) {
+    color: rgb(var(--m-onAccent-rgb));
+  }
+  body :is(.leaderboard-tabs button.is-active, .leaderboard-tabs button:hover,
+    .leaderboard-tabs button:focus-visible, .leaderboard-message button) {
+    border-color: rgb(var(--m-accent-rgb) / 0.45);
+    background: rgb(var(--m-accent-rgb) / 0.12);
+  }
+}
+
+html[data-client-theme='on']:not([data-backdrop-active])
+  :is(.q-layout, .q-page-container, .dashboard-page, .group-chat-window, .notice-card) {
+  background-color: rgb(var(--m-bg-rgb)) !important;
+}

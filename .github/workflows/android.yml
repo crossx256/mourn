@@ -1,0 +1,210 @@
+name: MOURN manual Android build
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing reviewed version tag to build (no release upload)
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  android:
+    name: Build signed Android artifact
+    environment: release-signing
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+      MOURN_ISOLATED_BUILD: '1'
+      MOURN_ENABLE_UPDATER: 'false'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: refs/tags/${{ inputs.tag }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.22.0
+
+      - name: Verify strict tag, exact commit, and versions before dependencies or secrets
+        id: identity
+        run: node scripts/verify_release_version.js
+
+      - name: Record reviewed source commit
+        run: echo "RELEASE_COMMIT=${{ steps.identity.outputs.commit }}" >> "$GITHUB_ENV"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.4.2
+
+      # Capacitor's plugin toolchains pin Java 21; Gradle 8.14 + AGP 8.13.
+      - name: Setup JDK 21
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+            src-capacitor/node_modules
+          key: ${{ runner.os }}-bun-android-${{ hashFiles('bun.lock', 'src-capacitor/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-android-
+
+      - name: Install web app dependencies
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      # src-capacitor carries its own package.json/bun.lock (the Capacitor plugins the
+      # native project links against). Quasar's `-m capacitor` verb needs them present.
+      - name: Install mobile shell dependencies
+        working-directory: src-capacitor
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Prepare Quasar explicitly without dependency lifecycle scripts
+        run: node node_modules/@quasar/app-vite/bin/quasar.js prepare
+
+      # Deliberately NOT using android-actions/setup-android. Its v3 release shells out to
+      # sdkmanager for the LEGACY `tools` package, which the cmdline-tools 16 shipped on the
+      # ubuntu runners no longer provides, so the whole job died inside the action before a
+      # single one of our steps ran:
+      #   Warning: Failed to find package 'tools'  ->  sdkmanager exited 1
+      # The runner image already ships the SDK plus cmdline-tools, so locate sdkmanager
+      # ourselves and install only the platform/build-tools we pin.
+      - name: Install Android SDK platform and build tools
+        run: |
+          set -euo pipefail
+          sdk="${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}"
+          if [ ! -d "$sdk" ]; then
+            echo "::error::No Android SDK at $sdk"
+            exit 1
+          fi
+          # The cmdline-tools directory name is not stable across runner images
+          # (.../cmdline-tools/latest vs .../cmdline-tools/16.0), so find the binary.
+          sm="$(find "$sdk/cmdline-tools" -name sdkmanager -type f 2>/dev/null | sort -V | tail -1)"
+          if [ -z "$sm" ]; then
+            echo "::warning::sdkmanager not found under $sdk/cmdline-tools — relying on whatever the runner image already has"
+          else
+            echo "using $sm"
+            export PATH="$(dirname "$sm"):$PATH"
+            # A first-time install blocks on the interactive licence prompt in a non-TTY
+            # shell; accept them first.
+            yes | "$sm" --licenses >/dev/null 2>&1 || true
+            "$sm" --install "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+          fi
+          echo "ANDROID_SDK_ROOT=$sdk" >> "$GITHUB_ENV"
+          echo "ANDROID_HOME=$sdk" >> "$GITHUB_ENV"
+          echo "$sdk/platform-tools" >> "$GITHUB_PATH"
+
+      # `--skip-pkg` stops Quasar from shelling out to Gradle itself (it would run
+      # assembleRelease unsigned). This step does the web build + `cap sync`; the next
+      # step runs Gradle with the signing env vars in place.
+      - name: Build web bundle and sync Capacitor
+        run: bunx quasar build -m capacitor -T android --skip-pkg
+        env:
+          MOURN_ISOLATED_BUILD: '1'
+          VITE_CLIENT_THEMES: 'true'
+          VITE_API_BASE: 'https://mourn.bio'
+          VITE_WS_BASE: 'https://mourn.bio'
+          VITE_CAP_API_ENDPOINT: ${{ secrets.VITE_CAP_API_ENDPOINT || vars.VITE_CAP_API_ENDPOINT }}
+          VITE_KLIPY_API_KEY: ${{ secrets.VITE_KLIPY_API_KEY || vars.VITE_KLIPY_API_KEY }}
+
+      # The keystore is never committed. The workflow holds it as a base64 secret and
+      # app/build.gradle picks it up through MOURN_KEYSTORE_PATH + MOURN_KEYSTORE_PASSWORD
+      # (see the signing block in src-capacitor/android/app/build.gradle).
+      - name: Decode release keystore
+        env:
+          MOURN_KEYSTORE_BASE64: ${{ secrets.MOURN_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$MOURN_KEYSTORE_BASE64" ]; then
+            echo "::error::Secret MOURN_KEYSTORE_BASE64 is not set. Generate it with: base64 -w0 ~/.mourn-signing/mourn-release.jks"
+            exit 1
+          fi
+          printf '%s' "$MOURN_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/mourn-release.jks"
+          echo "MOURN_KEYSTORE_PATH=$RUNNER_TEMP/mourn-release.jks" >> "$GITHUB_ENV"
+
+      - name: Build signed release APK
+        working-directory: src-capacitor/android
+        env:
+          MOURN_KEYSTORE_PASSWORD: ${{ secrets.MOURN_KEYSTORE_PASSWORD }}
+          MOURN_KEY_ALIAS: ${{ vars.MOURN_KEY_ALIAS || 'mourn' }}
+          MOURN_KEY_PASSWORD: ${{ secrets.MOURN_KEY_PASSWORD }}
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon clean assembleRelease
+
+      # Hard gate, not a warning. A build signed with the WRONG key produces an APK that
+      # can never update an install of the real app (Android refuses mismatched
+      # signatures), so an APK that does not carry the published certificate must never
+      # reach the release. The digest below is the public certificate fingerprint from
+      # ~/.mourn-signing/README.md (SHA-256), not a secret.
+      - name: Verify the APK carries the Mourn release certificate
+        run: |
+          set -euo pipefail
+          sdk="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          apk="src-capacitor/android/app/build/outputs/apk/release/app-release.apk"
+          test -f "$apk" || { echo "::error::No APK at $apk"; exit 1; }
+          build_tools="$(find "$sdk/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
+          apksigner="$build_tools/apksigner"
+          aapt2="$build_tools/aapt2"
+          echo "--- aapt2 badging ---"
+          "$aapt2" dump badging "$apk" | node scripts/verify_android_metadata.mjs
+          echo "--- apksigner verify ---"
+          certs="$("$apksigner" verify --print-certs "$apk")"
+          printf '%s\n' "$certs"
+          # This gate reads apksigner's OUTPUT, and apksigner's label prefix has already
+          # changed between build-tools versions once:
+          #   local 36.1.0 -> "Signer #1 certificate SHA-256 digest: ..."
+          #   runner       -> "V3.0 Signer: certificate SHA-256 digest: ..."
+          # Matching a fixed prefix made $actual EMPTY and FALSE-FAILED a correctly signed APK
+          # on the first v1.4.5 run (the log showed the right cert all along). So read it two
+          # independent ways and accept either:
+          #   1. the line naming the CERTIFICATE digest, matched by field name (precise, and
+          #      "public key SHA-256 digest" is a different field so it cannot be confused);
+          #   2. membership - the expected fingerprint appearing anywhere in the output.
+          # 2 cannot false-pass: a wrong-key APK never prints the real certificate's digest.
+          expected="ff927d583260be209d4e73c4ca2717004e662fe39f6e6cb21bb3179cef0bbf79"
+          set +e
+          actual="$(printf '%s\n' "$certs" | grep -i 'certificate SHA-256 digest' | tr -d ':' | grep -oiE '[0-9a-f]{64}' | head -1 | tr 'A-F' 'a-f')"
+          if [ -z "$actual" ] && printf '%s\n' "$certs" | tr -d ':' | grep -oiE '[0-9a-f]{64}' | tr 'A-F' 'a-f' | grep -qx "$expected"; then
+            actual="$expected"
+            echo "(read by value-match: apksigner's label format is not the one this gate expects)"
+          fi
+          set -e
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::APK is NOT signed with the Mourn release certificate - read '${actual:-<no certificate digest found in the apksigner output above>}', expected $expected"
+            exit 1
+          fi
+          echo "APK is signed with the Mourn release certificate ($actual)."
+
+      - name: Name the release APK
+        id: apk
+        run: |
+          set -euo pipefail
+          version="${RELEASE_TAG#v}"
+          name="Mourn-mobile-${version}.apk"
+          mkdir -p artifacts
+          cp src-capacitor/android/app/build/outputs/apk/release/app-release.apk "artifacts/${name}"
+          ls -l "artifacts/${name}"
+          echo "name=${name}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload APK as a workflow artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: mourn-android-apk
+          path: artifacts/*.apk
+
+      # Artifact upload only. Publishing and backend routing remain separate manual actions.

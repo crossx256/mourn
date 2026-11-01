@@ -1,0 +1,1008 @@
+/* Main layout styles — only styles that cannot be UnoCSS utilities */
+
+/* ──────────────────────────────────────────────────────────────────────────
+   TERMINAL HEADER STYLING (matches NoticeCard/GraveyardRitual aesthetic)
+   ────────────────────────────────────────────────────────────────────────── */
+
+.logo,
+.logo a {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--primary);
+  text-decoration: none;
+  font-family: 'Courier New', 'Consolas', monospace;
+  line-height: 1;
+
+  text-shadow:
+    1px 0 0 rgb(var(--m-accent-rgb, 255 0 0) / 0.3),
+    -1px 0 0 rgb(var(--m-accentAlt-rgb, 0 255 255) / 0.2);
+  animation: logoPulse 3s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.header-logo-svg {
+  height: 24px;
+  width: 24px;
+  display: block;
+  color: inherit;
+  filter: drop-shadow(0 0 4px rgb(var(--m-accent-rgb, 255 0 0) / 0.25));
+  animation: logoPulse 3s ease-in-out infinite;
+}
+
+.header-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-word {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.header {
+  box-shadow: none;
+  background-color: var(--black);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: visible;
+}
+
+/* Header scanlines overlay */
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgb(var(--m-bg-rgb, 0 0 0) / 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  opacity: 0.5;
+}
+
+/* Header chromatic aberration */
+.header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow:
+    inset 1px 0 0 rgb(var(--m-accent-rgb, 255 0 0) / 0.05),
+    inset -1px 0 0 rgb(var(--m-accentAlt-rgb, 0 255 255) / 0.03);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   NAV ICON BUTTONS (Desktop & Mobile)
+   ────────────────────────────────────────────────────────────────────────── */
+
+.nav-icon-btn {
+  color: var(--dash-text) !important;
+  transition: all 0.25s ease;
+
+  &:hover {
+    color: var(--primary) !important;
+    text-shadow:
+      1px 0 0 rgb(var(--m-accent-rgb, 255 0 0) / 0.3),
+      -1px 0 0 rgb(var(--m-accentAlt-rgb, 0 255 255) / 0.2);
+  }
+
+  &.home-btn.router-link-exact-active,
+  &.home-btn-active {
+    color: var(--primary) !important;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   DESKTOP SEARCH BAR
+   ────────────────────────────────────────────────────────────────────────── */
+
+.desktop-search-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+.desktop-search-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(240px, 24vw, 480px);
+  z-index: 10;
+}
+
+.desktop-search-mode--left {
+  position: static;
+  left: auto;
+  transform: none;
+  width: auto;
+  margin-left: 1rem;
+  z-index: 11;
+}
+
+.desktop-search-wrapper--inline {
+  width: clamp(220px, 18vw, 320px);
+}
+
+.desktop-search-input {
+  background: var(--card);
+  border: 1px solid var(--dash-border);
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: var(--dash-text);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &:deep(.q-field__control) {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    height: 34px;
+    min-height: 34px;
+  }
+
+  &:deep(.q-field__prepend) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+  }
+
+  &:deep(.q-field__native) {
+    color: var(--dash-text);
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+
+    &::placeholder {
+      color: var(--hellamuted);
+      font-style: normal;
+    }
+  }
+
+  &:deep(.q-field--focused) {
+    .q-field__control {
+      border-color: var(--primary);
+    }
+  }
+}
+
+.desktop-search-input--inline {
+  background: transparent;
+  border-color: transparent;
+  max-width: 320px;
+
+  &:deep(.q-field__control) {
+    background: transparent;
+    border: none;
+    padding: 0 10px;
+  }
+
+  &:deep(.q-field__native)::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+}
+
+/* Focus glow on the wrapper so it surrounds the input */
+.desktop-search-wrapper:focus-within .desktop-search-input {
+  border-color: var(--primary);
+  box-shadow:
+    0 0 8px rgb(var(--m-accent-rgb, 255 0 0) / 0.15),
+    0 0 2px rgb(var(--m-accent-rgb, 255 0 0) / 0.3);
+}
+
+@media (min-width: 1800px) {
+  .desktop-search-mode--center {
+    display: flex;
+  }
+
+  .desktop-search-mode--left {
+    display: none;
+  }
+}
+
+@media (max-width: 1799px) {
+  .desktop-search-center {
+    display: none;
+  }
+
+  .desktop-search-mode--left {
+    display: flex;
+    align-items: center;
+  }
+}
+
+@media (max-width: 1366px) {
+  .desktop-search-mode--left {
+    margin-left: 0.75rem;
+  }
+
+  .desktop-search-wrapper--inline {
+    width: clamp(220px, 22vw, 340px);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   SEARCH RESULTS DROPDOWN (shared desktop/mobile)
+   ────────────────────────────────────────────────────────────────────────── */
+
+.search-results-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  border: 1px solid var(--dash-border);
+  border-top: none;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--card);
+
+  &.mobile {
+    position: fixed;
+    top: 52px;
+    left: 0;
+    right: 0;
+    border: none;
+    border-top: 1px solid var(--dash-border);
+    max-height: 60vh;
+  }
+}
+
+.search-result-item {
+  border-bottom: 1px solid var(--dash-border);
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: var(--dash-sidebar) !important;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   MOBILE SEARCH (Expandable)
+   ────────────────────────────────────────────────────────────────────────── */
+
+.mobile-search-zone {
+  transition: flex-grow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-grow: 0;
+  position: relative;
+
+  &.mobile-search-expanded {
+    flex-grow: 1;
+    margin: 0 0.5rem;
+  }
+}
+
+.mobile-search-input-wrapper {
+  animation: searchExpand 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes searchExpand {
+  from {
+    opacity: 0;
+    transform: scaleX(0.7);
+    transform-origin: right;
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+    transform-origin: right;
+  }
+}
+
+.mobile-search-input {
+  background: var(--card);
+  border: 1px solid var(--dash-border);
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.75rem;
+  color: var(--dash-text);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &:deep(.q-field__control) {
+    padding: 0 8px;
+    height: 32px;
+    min-height: 32px;
+  }
+
+  /* In a fixed-height control Quasar still reserves label space above the
+     prepend/append slots, which pushed the search and close icons off the Y
+     centre. Pin both slots to the control's height and centre them. */
+  &:deep(.q-field__prepend),
+  &:deep(.q-field__append) {
+    height: 32px;
+    min-height: 32px;
+    padding-top: 0;
+    padding-bottom: 0;
+    align-items: center;
+  }
+
+  &:deep(.q-field__append .q-btn) {
+    min-height: 0;
+  }
+
+  &:deep(.q-field__native) {
+    color: var(--dash-text);
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 0.75rem;
+
+    &::placeholder {
+      color: var(--hellamuted);
+    }
+  }
+}
+
+.mobile-search-input:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 6px rgb(var(--m-accent-rgb, 255 0 0) / 0.12);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   DESKTOP USER MENU
+   ────────────────────────────────────────────────────────────────────────── */
+
+.desktop-user-menu .q-item {
+  min-height: 36px;
+  padding: 4px 12px;
+  letter-spacing: 0.1em;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: var(--dash-sidebar) !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   GLOBAL MOBILE DRAWER
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* The QDrawer element itself defaults to WHITE in Quasar. The drawer's content
+   only covers its own box, so that white showed through as strips above and below
+   the drawer (exactly where the safe-area insets sit). Nothing in the native theme
+   could fix this — it was the drawer's own background. */
+/* Quasar's own .q-drawer rule sets this to white and outranks a plain class
+   selector here, so this needs the extra specificity (and !important) to win. */
+.q-drawer.global-drawer,
+.q-drawer.master-navigator-drawer,
+body .global-drawer,
+body .master-navigator-drawer {
+  background: #000 !important;
+}
+
+.global-drawer-inner {
+  background: #000;
+}
+
+.global-drawer-head {
+  background: #000;
+}
+
+.global-drawer-list {
+  .q-item {
+    min-height: 40px;
+    padding: 6px 16px;
+    letter-spacing: 0.1em;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: var(--dash-sidebar) !important;
+    }
+  }
+
+  .q-item-label--header {
+    padding: 12px 16px 4px;
+  }
+}
+
+.global-drawer-footer {
+  border-top: 1px solid var(--border);
+  background: #000;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   DRAWER CLOSE "X" — Vertical, outer-right edge
+   ────────────────────────────────────────────────────────────────────────── */
+
+.drawer-close-x {
+  position: absolute;
+  right: -36px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  z-index: 9999;
+
+  background: var(--card);
+  border: 1px solid var(--dash-border);
+  border-left: none;
+  color: var(--dash-muted);
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 8px 6px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  line-height: 1;
+
+  &:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    box-shadow: 0 0 6px rgb(var(--m-accent-rgb, 255 0 0) / 0.2);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   MOBILE BOTTOM NAV
+   ────────────────────────────────────────────────────────────────────────── */
+
+.mobile-bottom-nav {
+  --mobile-bottom-nav-height: calc(52px + env(safe-area-inset-bottom, 0px));
+  box-shadow: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2000;
+  min-height: var(--mobile-bottom-nav-height);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--black);
+  border: none !important;
+  border-top: 1px solid var(--dash-border) !important;
+}
+
+.mobile-bottom-nav .q-footer__content,
+.mobile-bottom-nav > div {
+  min-height: 52px;
+}
+
+/* A conversation is a full-viewport layer inside the messaging page (see
+   MessagingPage's `.is-mobile-chat-open > :not(.vault-left)` rule), so the
+   global brand header and bottom nav sit *behind* it. They are deliberately
+   NOT display:none'd any more: hiding them reflowed the whole app by the
+   header's height when a chat closed, which read as the UI sliding down. */
+
+/* Nav links - terminal style (kept for login/register links) */
+.nav a {
+  color: var(--dash-text);
+  text-decoration: none !important;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+
+  transition: all 0.25s ease;
+  cursor: pointer;
+  font-family: 'Courier New', 'Consolas', monospace;
+  position: relative;
+}
+
+.nav a:hover {
+  color: var(--primary);
+  text-shadow:
+    1px 0 0 rgb(var(--m-accent-rgb, 255 0 0) / 0.3),
+    -1px 0 0 rgb(var(--m-accentAlt-rgb, 0 255 255) / 0.2);
+}
+
+/* Active nav link indicator */
+.nav a.router-link-active {
+  color: var(--primary);
+}
+
+.nav a.router-link-active::after {
+  content: '_';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--primary);
+  font-size: 10px;
+  animation: cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Nav link box styling (used in desktop nav for login/register) */
+.nav-link-box {
+  color: var(--dash-text);
+  text-decoration: none !important;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+
+  transition: all 0.25s ease;
+  cursor: pointer;
+  font-family: 'Courier New', 'Consolas', monospace;
+  position: relative;
+}
+
+.nav-link-box:hover {
+  color: var(--primary);
+  text-shadow:
+    1px 0 0 rgb(var(--m-accent-rgb, 255 0 0) / 0.3),
+    -1px 0 0 rgb(var(--m-accentAlt-rgb, 0 255 255) / 0.2);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   NAV BUTTONS - Terminal style
+   ────────────────────────────────────────────────────────────────────────── */
+
+.nav-login,
+.nav-register {
+  padding: 0.4rem 1rem;
+  font-weight: 600;
+  font-family: 'Courier New', 'Consolas', monospace;
+  letter-spacing: 2px;
+
+  font-size: 0.7rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.nav-login {
+  background: var(--black);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.nav-login:hover {
+  background: var(--primary);
+  color: var(--white) !important;
+  box-shadow: 0 0 12px rgb(var(--m-accent-rgb, 255 0 0) / 0.3);
+}
+
+.nav-register {
+  background: transparent;
+  border: 1px solid var(--dash-muted);
+  color: var(--dash-text);
+}
+
+.nav-register:hover {
+  background: var(--dash-text);
+  color: var(--black);
+  border-color: var(--dash-text);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   TERMINAL FOOTER STYLING (matches NoticeCard/GraveyardRitual aesthetic)
+   ────────────────────────────────────────────────────────────────────────── */
+
+.footer {
+  display: flex;
+  height: fit-content;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  background-color: var(--black);
+  border-top: 1px solid var(--border);
+  color: var(--dash-muted);
+  position: relative;
+  overflow: hidden;
+  font-family: 'Courier New', 'Consolas', monospace;
+}
+
+/* Footer scanlines */
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgb(var(--m-bg-rgb, 0 0 0) / 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  opacity: 0.3;
+}
+
+.footer-copyright {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--dash-muted);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-links a {
+  color: var(--dash-text);
+  text-decoration: none !important;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  transition: all 0.25s ease;
+  position: relative;
+  font-family: 'Courier New', 'Consolas', monospace;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+  text-shadow:
+    1px 0 0 rgb(var(--m-accent-rgb, 255 0 0) / 0.3),
+    -1px 0 0 rgb(var(--m-accentAlt-rgb, 0 255 255) / 0.2);
+}
+
+/* Footer prompt indicator */
+.footer-links a::before {
+  content: '[';
+  color: var(--primary);
+  opacity: 0;
+  margin-right: 4px;
+  transition: opacity 0.2s;
+}
+
+.footer-links a::after {
+  content: ']';
+  color: var(--primary);
+  opacity: 0;
+  margin-left: 4px;
+  transition: opacity 0.2s;
+}
+
+.footer-links a:hover::before,
+.footer-links a:hover::after {
+  opacity: 0.7;
+}
+
+.desktop-download-promo {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.desktop-download-promo--top {
+  position: fixed;
+  top: 64px;
+  right: 1.2rem;
+  z-index: 1900;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.desktop-download-promo-btn {
+  min-width: 220px;
+  text-align: center;
+  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  background: transparent !important;
+  color: var(--dash-text) !important;
+  border: 1px solid var(--dash-muted);
+}
+
+.desktop-download-promo-btn:hover {
+  background: color-mix(in srgb, var(--dash-text) 10%, transparent) !important;
+  border-color: var(--dash-text);
+  color: var(--dash-text) !important;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   NOTIFICATION / ANNOUNCEMENTS DROPDOWN (NoticeCard-style)
+   ────────────────────────────────────────────────────────────────────────── */
+
+.notif-menu {
+  width: min(360px, calc(100vw - 24px)) !important;
+  min-width: 0 !important;
+  max-width: calc(100vw - 24px) !important;
+  border-radius: 0 !important;
+}
+
+/* Fixed chrome + scrollable list (desktop notifications bell) */
+.notif-menu-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* min-width:0 on every link of the flex chain: without it a flex item
+     refuses to shrink below its content's intrinsic width, so anything long
+     inside the panel pushes the panel wider than its own max-width and gets
+     clipped by the menu's `overflow: hidden`. The old code had min-width:0
+     only on .notif-menu-scroll, leaving these two as overflow escape routes. */
+  min-width: 0;
+  width: 100%;
+  max-height: min(480px, 75vh);
+  min-height: 0;
+}
+
+.notif-menu-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  min-height: 0;
+  max-height: min(480px, 75vh);
+}
+
+.notif-menu-scroll {
+  box-sizing: border-box;
+  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+}
+
+.notif-menu-scroll > * {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  /* Final guarantee against horizontal clipping: with `overflow-x: hidden` on
+     the container, any descendant wider than the panel has its line ends cut
+     off with no scrollbar to reach them. `anywhere` lets a long unbroken token
+     (id, URL, hash) wrap instead of forcing the line wider than the panel. */
+  overflow-wrap: anywhere;
+}
+
+.notif-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgb(var(--m-bg-rgb, 0 0 0) / 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  animation: notifScanScroll 10s steps(4, end) infinite;
+}
+
+@keyframes notifScanScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 4px, 0);
+  }
+}
+
+.notif-chr {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: screen;
+}
+
+.notif-chr--red {
+  box-shadow: inset 1px 0 0 rgb(var(--m-accent-rgb, 255 0 0) / 0.08);
+  animation: notifChrRed 5s ease-in-out infinite;
+}
+
+.notif-chr--cyan {
+  box-shadow: inset -1px 0 0 rgb(var(--m-accentAlt-rgb, 0 255 255) / 0.05);
+  animation: notifChrCyan 5s ease-in-out infinite;
+}
+
+@keyframes notifChrRed {
+  0%,
+  100% {
+    transform: translate(0.5px, 0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(2px, -0.5px);
+    opacity: 1;
+  }
+}
+
+@keyframes notifChrCyan {
+  0%,
+  100% {
+    transform: translate(-0.5px, 0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translate(-1.5px, 0.5px);
+    opacity: 0.8;
+  }
+}
+
+.notif-header-pulse {
+  animation: notifHeaderPulse 3s ease-in-out infinite;
+}
+
+@keyframes notifHeaderPulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.notif-cursor {
+  color: var(--primary);
+  animation: notifCursorBlink 0.8s step-end infinite;
+}
+
+@keyframes notifCursorBlink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.notif-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(var(--m-accent-rgb, 255 0 0) / 0.3) 20%,
+    rgb(var(--m-accent-rgb, 255 0 0) / 0.3) 80%,
+    transparent
+  );
+  margin: 8px 0 12px;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgb(var(--m-accent-rgb, 255 0 0) / 0.6), transparent);
+    animation: notifDividerSweep 4s ease-in-out infinite;
+  }
+}
+
+@keyframes notifDividerSweep {
+  0% {
+    left: -40%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.notif-empty {
+  animation: notifEmptyPulse 2s ease-in-out infinite;
+}
+
+@keyframes notifEmptyPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+// Resetting Quasar defaults that might interfere
+.q-menu {
+  border-radius: 0 !important; // Brutalist square corners
+}
+
+/* Responsive footer */
+@media (max-width: 700px) {
+  .logo {
+    font-size: 1.25rem;
+    letter-spacing: 3px;
+  }
+}
+
+/* Mobile menu separator styling */
+.mobile-menu-separator {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(var(--m-accent-rgb, 255 0 0) / 0.3) 20%,
+    rgb(var(--m-accent-rgb, 255 0 0) / 0.3) 80%,
+    transparent
+  ) !important;
+  height: 1px !important;
+}
+
+/* Dashboard mobile drawer */
+.dash-drawer-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #000;
+}
+
+.dash-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #000;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Remove padding from page container */
+.page-cont {
+  padding: 0 !important;
+}
+
+.dashboard-route-content {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.dashboard-route-content > * {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Add bottom padding on mobile so content isn't hidden behind the sticky bottom nav */
+@media (max-width: 1023px) {
+  .page-cont {
+    padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .page-cont--tauri,
+  .page-cont--chains {
+    padding-bottom: 0 !important;
+  }
+
+  /* The chains LIST still renders under the fixed bottom nav, so its last row
+     needs the strip reserved. Unconditional: the nav is always present now (a
+     conversation covers it as a layer instead of hiding it), and toggling this
+     padding on chat close moved the list by the nav's height. */
+  .page-cont--chains {
+    padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .desktop-download-promo {
+    display: none;
+  }
+}

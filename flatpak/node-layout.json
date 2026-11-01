@@ -1,0 +1,6039 @@
+{
+  "schema": 2,
+  "packages": [
+    {
+      "path": "node_modules/@antfu/install-pkg",
+      "name": "@antfu/install-pkg",
+      "version": "2.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@aparajita/capacitor-secure-storage",
+      "name": "@aparajita/capacitor-secure-storage",
+      "version": "8.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@babel/code-frame",
+      "name": "@babel/code-frame",
+      "version": "7.29.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@babel/helper-string-parser",
+      "name": "@babel/helper-string-parser",
+      "version": "8.0.8",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@babel/helper-validator-identifier",
+      "name": "@babel/helper-validator-identifier",
+      "version": "7.29.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@babel/parser",
+      "name": "@babel/parser",
+      "version": "7.29.11",
+      "bin": {
+        "parser": "./bin/babel-parser.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@babel/parser/node_modules/@babel/types",
+      "name": "@babel/types",
+      "version": "7.29.11",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@babel/parser/node_modules/@babel/types/node_modules/@babel/helper-string-parser",
+      "name": "@babel/helper-string-parser",
+      "version": "7.29.11",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@babel/types",
+      "name": "@babel/types",
+      "version": "8.0.8",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@babel/types/node_modules/@babel/helper-validator-identifier",
+      "name": "@babel/helper-validator-identifier",
+      "version": "8.0.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@bufbuild/protobuf",
+      "name": "@bufbuild/protobuf",
+      "version": "2.16.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/android",
+      "name": "@capacitor/android",
+      "version": "8.5.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/app",
+      "name": "@capacitor/app",
+      "version": "8.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/camera",
+      "name": "@capacitor/camera",
+      "version": "8.2.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/core",
+      "name": "@capacitor/core",
+      "version": "8.5.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/filesystem",
+      "name": "@capacitor/filesystem",
+      "version": "8.1.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/haptics",
+      "name": "@capacitor/haptics",
+      "version": "8.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/ios",
+      "name": "@capacitor/ios",
+      "version": "8.5.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/keyboard",
+      "name": "@capacitor/keyboard",
+      "version": "8.0.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/local-notifications",
+      "name": "@capacitor/local-notifications",
+      "version": "8.3.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/push-notifications",
+      "name": "@capacitor/push-notifications",
+      "version": "8.1.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/share",
+      "name": "@capacitor/share",
+      "version": "8.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/status-bar",
+      "name": "@capacitor/status-bar",
+      "version": "8.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capacitor/synapse",
+      "name": "@capacitor/synapse",
+      "version": "1.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@capawesome/capacitor-badge",
+      "name": "@capawesome/capacitor-badge",
+      "version": "8.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@clack/core",
+      "name": "@clack/core",
+      "version": "1.5.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@clack/prompts",
+      "name": "@clack/prompts",
+      "version": "1.8.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@dimforge/rapier3d-compat",
+      "name": "@dimforge/rapier3d-compat",
+      "version": "0.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@dual-bundle/import-meta-resolve",
+      "name": "@dual-bundle/import-meta-resolve",
+      "version": "4.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@eslint-community/eslint-utils",
+      "name": "@eslint-community/eslint-utils",
+      "version": "4.10.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@eslint-community/eslint-utils/node_modules/eslint-visitor-keys",
+      "name": "eslint-visitor-keys",
+      "version": "3.4.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@eslint-community/regexpp",
+      "name": "@eslint-community/regexpp",
+      "version": "4.12.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@eslint/config-array",
+      "name": "@eslint/config-array",
+      "version": "0.21.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@eslint/config-helpers",
+      "name": "@eslint/config-helpers",
+      "version": "0.4.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@eslint/core",
+      "name": "@eslint/core",
+      "version": "0.17.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@eslint/eslintrc",
+      "name": "@eslint/eslintrc",
+      "version": "3.3.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@eslint/eslintrc/node_modules/globals",
+      "name": "globals",
+      "version": "14.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@eslint/js",
+      "name": "@eslint/js",
+      "version": "9.39.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@eslint/object-schema",
+      "name": "@eslint/object-schema",
+      "version": "2.1.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@eslint/plugin-kit",
+      "name": "@eslint/plugin-kit",
+      "version": "0.4.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@fingerprintjs/fingerprintjs",
+      "name": "@fingerprintjs/fingerprintjs",
+      "version": "5.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@fortawesome/fontawesome-free",
+      "name": "@fortawesome/fontawesome-free",
+      "version": "7.3.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@hpke/chacha20poly1305",
+      "name": "@hpke/chacha20poly1305",
+      "version": "1.7.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@hpke/common",
+      "name": "@hpke/common",
+      "version": "1.10.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@hpke/core",
+      "name": "@hpke/core",
+      "version": "1.9.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@hpke/ml-kem",
+      "name": "@hpke/ml-kem",
+      "version": "0.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@humanfs/core",
+      "name": "@humanfs/core",
+      "version": "0.19.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@humanfs/node",
+      "name": "@humanfs/node",
+      "version": "0.16.8",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@humanfs/types",
+      "name": "@humanfs/types",
+      "version": "0.15.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@humanwhocodes/module-importer",
+      "name": "@humanwhocodes/module-importer",
+      "version": "1.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@humanwhocodes/retry",
+      "name": "@humanwhocodes/retry",
+      "version": "0.4.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@iconify/types",
+      "name": "@iconify/types",
+      "version": "2.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@iconify/utils",
+      "name": "@iconify/utils",
+      "version": "3.1.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@jridgewell/gen-mapping",
+      "name": "@jridgewell/gen-mapping",
+      "version": "0.3.13",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@jridgewell/remapping",
+      "name": "@jridgewell/remapping",
+      "version": "2.3.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@jridgewell/resolve-uri",
+      "name": "@jridgewell/resolve-uri",
+      "version": "3.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@jridgewell/source-map",
+      "name": "@jridgewell/source-map",
+      "version": "0.3.11",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@jridgewell/sourcemap-codec",
+      "name": "@jridgewell/sourcemap-codec",
+      "version": "1.6.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@jridgewell/trace-mapping",
+      "name": "@jridgewell/trace-mapping",
+      "version": "0.3.31",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@noble/ciphers",
+      "name": "@noble/ciphers",
+      "version": "2.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@noble/curves",
+      "name": "@noble/curves",
+      "version": "2.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@noble/hashes",
+      "name": "@noble/hashes",
+      "version": "2.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@noble/post-quantum",
+      "name": "@noble/post-quantum",
+      "version": "0.5.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@nodelib/fs.scandir",
+      "name": "@nodelib/fs.scandir",
+      "version": "2.1.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@nodelib/fs.stat",
+      "name": "@nodelib/fs.stat",
+      "version": "2.0.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@nodelib/fs.walk",
+      "name": "@nodelib/fs.walk",
+      "version": "1.2.8",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@oxc-parser/binding-linux-arm64-gnu",
+      "name": "@oxc-parser/binding-linux-arm64-gnu",
+      "version": "0.153.0",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@oxc-parser/binding-linux-arm64-musl",
+      "name": "@oxc-parser/binding-linux-arm64-musl",
+      "version": "0.153.0",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@oxc-parser/binding-linux-x64-gnu",
+      "name": "@oxc-parser/binding-linux-x64-gnu",
+      "version": "0.153.0",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/@oxc-parser/binding-linux-x64-musl",
+      "name": "@oxc-parser/binding-linux-x64-musl",
+      "version": "0.153.0",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/@oxc-project/types",
+      "name": "@oxc-project/types",
+      "version": "0.155.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@parcel/watcher",
+      "name": "@parcel/watcher",
+      "version": "2.6.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@parcel/watcher-linux-arm64-glibc",
+      "name": "@parcel/watcher-linux-arm64-glibc",
+      "version": "2.6.0",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@parcel/watcher-linux-arm64-musl",
+      "name": "@parcel/watcher-linux-arm64-musl",
+      "version": "2.6.0",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@parcel/watcher-linux-x64-glibc",
+      "name": "@parcel/watcher-linux-x64-glibc",
+      "version": "2.6.0",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/@parcel/watcher-linux-x64-musl",
+      "name": "@parcel/watcher-linux-x64-musl",
+      "version": "2.6.0",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/asn1-cms",
+      "name": "@peculiar/asn1-cms",
+      "version": "2.11.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/asn1-csr",
+      "name": "@peculiar/asn1-csr",
+      "version": "2.11.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/asn1-ecc",
+      "name": "@peculiar/asn1-ecc",
+      "version": "2.11.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/asn1-pfx",
+      "name": "@peculiar/asn1-pfx",
+      "version": "2.11.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/asn1-pkcs8",
+      "name": "@peculiar/asn1-pkcs8",
+      "version": "2.11.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/asn1-pkcs9",
+      "name": "@peculiar/asn1-pkcs9",
+      "version": "2.11.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/asn1-rsa",
+      "name": "@peculiar/asn1-rsa",
+      "version": "2.11.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/asn1-schema",
+      "name": "@peculiar/asn1-schema",
+      "version": "2.11.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/asn1-x509",
+      "name": "@peculiar/asn1-x509",
+      "version": "2.11.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/asn1-x509-attr",
+      "name": "@peculiar/asn1-x509-attr",
+      "version": "2.11.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/utils",
+      "name": "@peculiar/utils",
+      "version": "2.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@peculiar/x509",
+      "name": "@peculiar/x509",
+      "version": "1.14.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@pkgr/core",
+      "name": "@pkgr/core",
+      "version": "0.3.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@pmndrs/pointer-events",
+      "name": "@pmndrs/pointer-events",
+      "version": "6.6.32",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@quansync/fs",
+      "name": "@quansync/fs",
+      "version": "1.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@quansync/fs/node_modules/quansync",
+      "name": "quansync",
+      "version": "1.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@quasar/app-vite",
+      "name": "@quasar/app-vite",
+      "version": "3.10.3",
+      "bin": {
+        "quasar": "./bin/quasar.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@quasar/art",
+      "name": "@quasar/art",
+      "version": "1.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@quasar/extras",
+      "name": "@quasar/extras",
+      "version": "1.18.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@quasar/render-ssr-error",
+      "name": "@quasar/render-ssr-error",
+      "version": "2.2.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@quasar/ssl-certificate",
+      "name": "@quasar/ssl-certificate",
+      "version": "2.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@quasar/vite-plugin",
+      "name": "@quasar/vite-plugin",
+      "version": "2.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@rolldown/binding-linux-arm64-gnu",
+      "name": "@rolldown/binding-linux-arm64-gnu",
+      "version": "1.2.15",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@rolldown/binding-linux-arm64-musl",
+      "name": "@rolldown/binding-linux-arm64-musl",
+      "version": "1.2.15",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@rolldown/binding-linux-x64-gnu",
+      "name": "@rolldown/binding-linux-x64-gnu",
+      "version": "1.2.15",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/@rolldown/binding-linux-x64-musl",
+      "name": "@rolldown/binding-linux-x64-musl",
+      "version": "1.2.15",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/@rolldown/pluginutils",
+      "name": "@rolldown/pluginutils",
+      "version": "1.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@standard-schema/spec",
+      "name": "@standard-schema/spec",
+      "version": "1.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tauri-apps/api",
+      "name": "@tauri-apps/api",
+      "version": "2.11.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tauri-apps/cli",
+      "name": "@tauri-apps/cli",
+      "version": "2.12.4",
+      "bin": {
+        "tauri": "tauri.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tauri-apps/cli-linux-arm64-gnu",
+      "name": "@tauri-apps/cli-linux-arm64-gnu",
+      "version": "2.12.4",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tauri-apps/cli-linux-arm64-musl",
+      "name": "@tauri-apps/cli-linux-arm64-musl",
+      "version": "2.12.4",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tauri-apps/cli-linux-x64-gnu",
+      "name": "@tauri-apps/cli-linux-x64-gnu",
+      "version": "2.12.4",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/@tauri-apps/cli-linux-x64-musl",
+      "name": "@tauri-apps/cli-linux-x64-musl",
+      "version": "2.12.4",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/@tauri-apps/plugin-dialog",
+      "name": "@tauri-apps/plugin-dialog",
+      "version": "2.7.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tauri-apps/plugin-fs",
+      "name": "@tauri-apps/plugin-fs",
+      "version": "2.5.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tauri-apps/plugin-opener",
+      "name": "@tauri-apps/plugin-opener",
+      "version": "2.5.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tauri-apps/plugin-process",
+      "name": "@tauri-apps/plugin-process",
+      "version": "2.3.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tauri-apps/plugin-updater",
+      "name": "@tauri-apps/plugin-updater",
+      "version": "2.10.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tresjs/cientos",
+      "name": "@tresjs/cientos",
+      "version": "5.10.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tresjs/core",
+      "name": "@tresjs/core",
+      "version": "5.10.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tresjs/post-processing",
+      "name": "@tresjs/post-processing",
+      "version": "3.11.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@tweenjs/tween.js",
+      "name": "@tweenjs/tween.js",
+      "version": "23.1.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/body-parser",
+      "name": "@types/body-parser",
+      "version": "1.19.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/chai",
+      "name": "@types/chai",
+      "version": "5.2.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/chrome",
+      "name": "@types/chrome",
+      "version": "0.3.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/compression",
+      "name": "@types/compression",
+      "version": "1.8.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/connect",
+      "name": "@types/connect",
+      "version": "3.4.38",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/cordova",
+      "name": "@types/cordova",
+      "version": "11.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/deep-eql",
+      "name": "@types/deep-eql",
+      "version": "4.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/draco3d",
+      "name": "@types/draco3d",
+      "version": "1.4.10",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/estree",
+      "name": "@types/estree",
+      "version": "1.0.9",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/express",
+      "name": "@types/express",
+      "version": "5.0.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/express-serve-static-core",
+      "name": "@types/express-serve-static-core",
+      "version": "5.1.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/har-format",
+      "name": "@types/har-format",
+      "version": "1.2.16",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/http-errors",
+      "name": "@types/http-errors",
+      "version": "2.0.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/json-schema",
+      "name": "@types/json-schema",
+      "version": "7.0.15",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/libsodium-wrappers",
+      "name": "@types/libsodium-wrappers",
+      "version": "0.8.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/node",
+      "name": "@types/node",
+      "version": "22.20.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/offscreencanvas",
+      "name": "@types/offscreencanvas",
+      "version": "2019.7.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/qs",
+      "name": "@types/qs",
+      "version": "6.15.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/range-parser",
+      "name": "@types/range-parser",
+      "version": "1.2.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/send",
+      "name": "@types/send",
+      "version": "1.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/serve-static",
+      "name": "@types/serve-static",
+      "version": "2.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/stats.js",
+      "name": "@types/stats.js",
+      "version": "0.17.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/three",
+      "name": "@types/three",
+      "version": "0.182.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/trusted-types",
+      "name": "@types/trusted-types",
+      "version": "2.0.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/vanilla-tilt",
+      "name": "@types/vanilla-tilt",
+      "version": "1.6.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/web-bluetooth",
+      "name": "@types/web-bluetooth",
+      "version": "0.0.21",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@types/webxr",
+      "name": "@types/webxr",
+      "version": "0.5.24",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/eslint-plugin",
+      "name": "@typescript-eslint/eslint-plugin",
+      "version": "8.72.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/eslint-plugin/node_modules/ignore",
+      "name": "ignore",
+      "version": "7.0.14",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/parser",
+      "name": "@typescript-eslint/parser",
+      "version": "8.72.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/project-service",
+      "name": "@typescript-eslint/project-service",
+      "version": "8.72.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/scope-manager",
+      "name": "@typescript-eslint/scope-manager",
+      "version": "8.72.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/tsconfig-utils",
+      "name": "@typescript-eslint/tsconfig-utils",
+      "version": "8.72.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/type-utils",
+      "name": "@typescript-eslint/type-utils",
+      "version": "8.72.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/types",
+      "name": "@typescript-eslint/types",
+      "version": "8.72.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/typescript-estree",
+      "name": "@typescript-eslint/typescript-estree",
+      "version": "8.72.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch",
+      "name": "minimatch",
+      "version": "10.2.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/node_modules/brace-expansion",
+      "name": "brace-expansion",
+      "version": "5.0.12",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match",
+      "name": "balanced-match",
+      "version": "4.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/utils",
+      "name": "@typescript-eslint/utils",
+      "version": "8.72.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/visitor-keys",
+      "name": "@typescript-eslint/visitor-keys",
+      "version": "8.72.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@typescript-eslint/visitor-keys/node_modules/eslint-visitor-keys",
+      "name": "eslint-visitor-keys",
+      "version": "5.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/autocomplete",
+      "name": "@unocss/autocomplete",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/cli",
+      "name": "@unocss/cli",
+      "version": "66.12.0",
+      "bin": {
+        "unocss": "./bin/unocss.mjs"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/cli/node_modules/magic-string",
+      "name": "magic-string",
+      "version": "1.4.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/config",
+      "name": "@unocss/config",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/core",
+      "name": "@unocss/core",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/extractor-arbitrary-variants",
+      "name": "@unocss/extractor-arbitrary-variants",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/inspector",
+      "name": "@unocss/inspector",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/preset-attributify",
+      "name": "@unocss/preset-attributify",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/preset-icons",
+      "name": "@unocss/preset-icons",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/preset-mini",
+      "name": "@unocss/preset-mini",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/preset-tagify",
+      "name": "@unocss/preset-tagify",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/preset-typography",
+      "name": "@unocss/preset-typography",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/preset-uno",
+      "name": "@unocss/preset-uno",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/preset-web-fonts",
+      "name": "@unocss/preset-web-fonts",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/preset-wind",
+      "name": "@unocss/preset-wind",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/preset-wind3",
+      "name": "@unocss/preset-wind3",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/preset-wind4",
+      "name": "@unocss/preset-wind4",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/rollup",
+      "name": "@unocss/rollup",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/rollup/node_modules/magic-string",
+      "name": "magic-string",
+      "version": "1.4.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/rule-utils",
+      "name": "@unocss/rule-utils",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/rule-utils/node_modules/magic-string",
+      "name": "magic-string",
+      "version": "1.4.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/transformer-attributify-jsx",
+      "name": "@unocss/transformer-attributify-jsx",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/transformer-compile-class",
+      "name": "@unocss/transformer-compile-class",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/transformer-directives",
+      "name": "@unocss/transformer-directives",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/transformer-variant-group",
+      "name": "@unocss/transformer-variant-group",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/vite",
+      "name": "@unocss/vite",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@unocss/vite/node_modules/magic-string",
+      "name": "magic-string",
+      "version": "1.4.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vitejs/plugin-vue",
+      "name": "@vitejs/plugin-vue",
+      "version": "6.0.10",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/expect",
+      "name": "@vitest/expect",
+      "version": "4.1.12",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/mocker",
+      "name": "@vitest/mocker",
+      "version": "4.1.12",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/pretty-format",
+      "name": "@vitest/pretty-format",
+      "version": "4.1.12",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/runner",
+      "name": "@vitest/runner",
+      "version": "4.1.12",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/snapshot",
+      "name": "@vitest/snapshot",
+      "version": "4.1.12",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/spy",
+      "name": "@vitest/spy",
+      "version": "4.1.12",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/utils",
+      "name": "@vitest/utils",
+      "version": "4.1.12",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@volar/language-core",
+      "name": "@volar/language-core",
+      "version": "2.4.28",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@volar/source-map",
+      "name": "@volar/source-map",
+      "version": "2.4.28",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@volar/typescript",
+      "name": "@volar/typescript",
+      "version": "2.4.28",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue-macros/common",
+      "name": "@vue-macros/common",
+      "version": "3.1.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/compiler-core",
+      "name": "@vue/compiler-core",
+      "version": "3.5.44",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/compiler-core/node_modules/entities",
+      "name": "entities",
+      "version": "7.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/compiler-core/node_modules/estree-walker",
+      "name": "estree-walker",
+      "version": "2.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/compiler-dom",
+      "name": "@vue/compiler-dom",
+      "version": "3.5.44",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/compiler-sfc",
+      "name": "@vue/compiler-sfc",
+      "version": "3.5.44",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/compiler-sfc/node_modules/estree-walker",
+      "name": "estree-walker",
+      "version": "2.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/compiler-ssr",
+      "name": "@vue/compiler-ssr",
+      "version": "3.5.44",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/devtools-api",
+      "name": "@vue/devtools-api",
+      "version": "8.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/devtools-kit",
+      "name": "@vue/devtools-kit",
+      "version": "8.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/devtools-shared",
+      "name": "@vue/devtools-shared",
+      "version": "8.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/eslint-config-prettier",
+      "name": "@vue/eslint-config-prettier",
+      "version": "10.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/eslint-config-typescript",
+      "name": "@vue/eslint-config-typescript",
+      "version": "14.9.0",
+      "bin": {
+        "vue-eslint-config-typescript": "./dist/bin.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/language-core",
+      "name": "@vue/language-core",
+      "version": "3.3.10",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/reactivity",
+      "name": "@vue/reactivity",
+      "version": "3.5.44",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/runtime-core",
+      "name": "@vue/runtime-core",
+      "version": "3.5.44",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/runtime-dom",
+      "name": "@vue/runtime-dom",
+      "version": "3.5.44",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/server-renderer",
+      "name": "@vue/server-renderer",
+      "version": "3.5.44",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vue/shared",
+      "name": "@vue/shared",
+      "version": "3.5.44",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vueuse/core",
+      "name": "@vueuse/core",
+      "version": "15.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vueuse/metadata",
+      "name": "@vueuse/metadata",
+      "version": "15.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@vueuse/shared",
+      "name": "@vueuse/shared",
+      "version": "15.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/@webgpu/types",
+      "name": "@webgpu/types",
+      "version": "0.1.74",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/acorn",
+      "name": "acorn",
+      "version": "8.19.0",
+      "bin": {
+        "acorn": "bin/acorn"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/acorn-jsx",
+      "name": "acorn-jsx",
+      "version": "5.3.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/agent-base",
+      "name": "agent-base",
+      "version": "6.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ajv",
+      "name": "ajv",
+      "version": "6.15.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/alien-signals",
+      "name": "alien-signals",
+      "version": "3.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ansi-styles",
+      "name": "ansi-styles",
+      "version": "4.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/argparse",
+      "name": "argparse",
+      "version": "2.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/asn1js",
+      "name": "asn1js",
+      "version": "3.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/assertion-error",
+      "name": "assertion-error",
+      "version": "2.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ast-kit",
+      "name": "ast-kit",
+      "version": "2.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ast-walker-scope",
+      "name": "ast-walker-scope",
+      "version": "0.10.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ast-walker-scope/node_modules/@babel/parser",
+      "name": "@babel/parser",
+      "version": "8.0.8",
+      "bin": {
+        "parser": "./bin/babel-parser.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ast-walker-scope/node_modules/ast-kit",
+      "name": "ast-kit",
+      "version": "3.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/asynckit",
+      "name": "asynckit",
+      "version": "0.4.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/autoprefixer",
+      "name": "autoprefixer",
+      "version": "10.6.2",
+      "bin": {
+        "autoprefixer": "bin/autoprefixer"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/axios",
+      "name": "axios",
+      "version": "1.21.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/balanced-match",
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/baseline-browser-mapping",
+      "name": "baseline-browser-mapping",
+      "version": "2.11.34",
+      "bin": {
+        "baseline-browser-mapping": "dist/cli.cjs"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/birpc",
+      "name": "birpc",
+      "version": "2.9.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/boolbase",
+      "name": "boolbase",
+      "version": "1.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/brace-expansion",
+      "name": "brace-expansion",
+      "version": "1.1.21",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/braces",
+      "name": "braces",
+      "version": "3.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/browserslist",
+      "name": "browserslist",
+      "version": "4.29.5",
+      "bin": {
+        "browserslist": "cli.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/buffer-from",
+      "name": "buffer-from",
+      "version": "1.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/bundle-name",
+      "name": "bundle-name",
+      "version": "4.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/bytestreamjs",
+      "name": "bytestreamjs",
+      "version": "2.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/cac",
+      "name": "cac",
+      "version": "7.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/call-bind-apply-helpers",
+      "name": "call-bind-apply-helpers",
+      "version": "1.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/callsites",
+      "name": "callsites",
+      "version": "3.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/camel-case",
+      "name": "camel-case",
+      "version": "4.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/camera-controls",
+      "name": "camera-controls",
+      "version": "3.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/caniuse-lite",
+      "name": "caniuse-lite",
+      "version": "1.0.30001819",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/cap-widget",
+      "name": "cap-widget",
+      "version": "0.1.57",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/chai",
+      "name": "chai",
+      "version": "6.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/chalk",
+      "name": "chalk",
+      "version": "4.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/chalk/node_modules/supports-color",
+      "name": "supports-color",
+      "version": "7.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/chokidar",
+      "name": "chokidar",
+      "version": "5.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ci-info",
+      "name": "ci-info",
+      "version": "4.4.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/classnames",
+      "name": "classnames",
+      "version": "2.5.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/clean-css",
+      "name": "clean-css",
+      "version": "5.3.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/clone-deep",
+      "name": "clone-deep",
+      "version": "4.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/color-convert",
+      "name": "color-convert",
+      "version": "2.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/color-name",
+      "name": "color-name",
+      "version": "1.1.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/colorette",
+      "name": "colorette",
+      "version": "2.0.20",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/colorjs.io",
+      "name": "colorjs.io",
+      "version": "0.7.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/combined-stream",
+      "name": "combined-stream",
+      "version": "1.0.8",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/commander",
+      "name": "commander",
+      "version": "10.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/concat-map",
+      "name": "concat-map",
+      "version": "0.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/confbox",
+      "name": "confbox",
+      "version": "0.3.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/consola",
+      "name": "consola",
+      "version": "3.4.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/convert-source-map",
+      "name": "convert-source-map",
+      "version": "2.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/copy-anything",
+      "name": "copy-anything",
+      "version": "4.1.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/cross-spawn",
+      "name": "cross-spawn",
+      "version": "7.0.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/crossws",
+      "name": "crossws",
+      "version": "0.4.17",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/css-tree",
+      "name": "css-tree",
+      "version": "3.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/cssesc",
+      "name": "cssesc",
+      "version": "3.0.0",
+      "bin": {
+        "cssesc": "bin/cssesc"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/csstype",
+      "name": "csstype",
+      "version": "3.2.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/debounce",
+      "name": "debounce",
+      "version": "1.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/debug",
+      "name": "debug",
+      "version": "4.4.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/deep-is",
+      "name": "deep-is",
+      "version": "0.1.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/default-browser",
+      "name": "default-browser",
+      "version": "5.5.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/default-browser-id",
+      "name": "default-browser-id",
+      "version": "5.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/define-lazy-prop",
+      "name": "define-lazy-prop",
+      "version": "3.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/defu",
+      "name": "defu",
+      "version": "6.1.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/delayed-stream",
+      "name": "delayed-stream",
+      "version": "1.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/depd",
+      "name": "depd",
+      "version": "2.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/destr",
+      "name": "destr",
+      "version": "2.0.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/detect-libc",
+      "name": "detect-libc",
+      "version": "2.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/devframe",
+      "name": "devframe",
+      "version": "1.2.6",
+      "bin": {
+        "devframe": "./bin/devframe.mjs"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/dompurify",
+      "name": "dompurify",
+      "version": "3.4.17",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/dot-case",
+      "name": "dot-case",
+      "version": "3.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/dot-prop",
+      "name": "dot-prop",
+      "version": "10.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/dotenv",
+      "name": "dotenv",
+      "version": "17.4.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/dotenv-expand",
+      "name": "dotenv-expand",
+      "version": "13.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/draco3d",
+      "name": "draco3d",
+      "version": "1.5.9",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/dunder-proto",
+      "name": "dunder-proto",
+      "version": "1.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/easy-bem",
+      "name": "easy-bem",
+      "version": "1.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ee-first",
+      "name": "ee-first",
+      "version": "1.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/electron-to-chromium",
+      "name": "electron-to-chromium",
+      "version": "1.5.466",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/elementtree",
+      "name": "elementtree",
+      "version": "0.1.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/encodeurl",
+      "name": "encodeurl",
+      "version": "2.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/entities",
+      "name": "entities",
+      "version": "4.5.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/es-define-property",
+      "name": "es-define-property",
+      "version": "1.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/es-errors",
+      "name": "es-errors",
+      "version": "1.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/es-module-lexer",
+      "name": "es-module-lexer",
+      "version": "2.3.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/es-object-atoms",
+      "name": "es-object-atoms",
+      "version": "1.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/es-set-tostringtag",
+      "name": "es-set-tostringtag",
+      "version": "2.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/escalade",
+      "name": "escalade",
+      "version": "3.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/escape-html",
+      "name": "escape-html",
+      "version": "1.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/escape-string-regexp",
+      "name": "escape-string-regexp",
+      "version": "4.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/eslint",
+      "name": "eslint",
+      "version": "9.39.5",
+      "bin": {
+        "eslint": "bin/eslint.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/eslint-config-prettier",
+      "name": "eslint-config-prettier",
+      "version": "10.1.8",
+      "bin": {
+        "eslint-config-prettier": "bin/cli.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/eslint-plugin-prettier",
+      "name": "eslint-plugin-prettier",
+      "version": "5.5.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/eslint-plugin-vue",
+      "name": "eslint-plugin-vue",
+      "version": "10.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/eslint-scope",
+      "name": "eslint-scope",
+      "version": "8.4.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/eslint-visitor-keys",
+      "name": "eslint-visitor-keys",
+      "version": "4.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/espree",
+      "name": "espree",
+      "version": "10.4.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/esquery",
+      "name": "esquery",
+      "version": "1.7.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/esrecurse",
+      "name": "esrecurse",
+      "version": "4.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/estraverse",
+      "name": "estraverse",
+      "version": "5.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/estree-walker",
+      "name": "estree-walker",
+      "version": "3.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/esutils",
+      "name": "esutils",
+      "version": "2.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/etag",
+      "name": "etag",
+      "version": "1.8.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/expect-type",
+      "name": "expect-type",
+      "version": "1.4.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/exsolve",
+      "name": "exsolve",
+      "version": "1.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fast-deep-equal",
+      "name": "fast-deep-equal",
+      "version": "3.1.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fast-diff",
+      "name": "fast-diff",
+      "version": "1.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fast-glob",
+      "name": "fast-glob",
+      "version": "3.3.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fast-glob/node_modules/glob-parent",
+      "name": "glob-parent",
+      "version": "5.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fast-json-stable-stringify",
+      "name": "fast-json-stable-stringify",
+      "version": "2.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fast-levenshtein",
+      "name": "fast-levenshtein",
+      "version": "2.0.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fast-string-truncated-width",
+      "name": "fast-string-truncated-width",
+      "version": "3.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fast-string-width",
+      "name": "fast-string-width",
+      "version": "3.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fast-wrap-ansi",
+      "name": "fast-wrap-ansi",
+      "version": "0.2.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fastq",
+      "name": "fastq",
+      "version": "1.20.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fdir",
+      "name": "fdir",
+      "version": "6.5.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fflate",
+      "name": "fflate",
+      "version": "0.8.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/file-entry-cache",
+      "name": "file-entry-cache",
+      "version": "8.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fill-range",
+      "name": "fill-range",
+      "version": "7.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/find-up",
+      "name": "find-up",
+      "version": "5.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/flat",
+      "name": "flat",
+      "version": "5.0.2",
+      "bin": {
+        "flat": "cli.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/flat-cache",
+      "name": "flat-cache",
+      "version": "4.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/flatted",
+      "name": "flatted",
+      "version": "3.4.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/follow-redirects",
+      "name": "follow-redirects",
+      "version": "1.16.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/form-data",
+      "name": "form-data",
+      "version": "4.0.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fraction.js",
+      "name": "fraction.js",
+      "version": "5.3.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fresh",
+      "name": "fresh",
+      "version": "2.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fs-extra",
+      "name": "fs-extra",
+      "version": "11.4.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/function-bind",
+      "name": "function-bind",
+      "version": "1.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/fzf",
+      "name": "fzf",
+      "version": "0.5.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/get-intrinsic",
+      "name": "get-intrinsic",
+      "version": "1.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/get-proto",
+      "name": "get-proto",
+      "version": "1.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/glob-parent",
+      "name": "glob-parent",
+      "version": "6.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/globals",
+      "name": "globals",
+      "version": "16.5.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/gopd",
+      "name": "gopd",
+      "version": "1.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/graceful-fs",
+      "name": "graceful-fs",
+      "version": "4.2.11",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/h3",
+      "name": "h3",
+      "version": "2.0.8",
+      "bin": {
+        "h3": "./bin/h3.mjs"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/has-flag",
+      "name": "has-flag",
+      "version": "4.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/has-symbols",
+      "name": "has-symbols",
+      "version": "1.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/has-tostringtag",
+      "name": "has-tostringtag",
+      "version": "1.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/hasown",
+      "name": "hasown",
+      "version": "2.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/hookable",
+      "name": "hookable",
+      "version": "5.5.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/html-minifier-terser",
+      "name": "html-minifier-terser",
+      "version": "7.2.0",
+      "bin": {
+        "html-minifier-terser": "cli.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/http-errors",
+      "name": "http-errors",
+      "version": "2.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/https-proxy-agent",
+      "name": "https-proxy-agent",
+      "version": "5.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/idb-keyval",
+      "name": "idb-keyval",
+      "version": "6.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ignore",
+      "name": "ignore",
+      "version": "5.3.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/immutable",
+      "name": "immutable",
+      "version": "5.1.9",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/import-fresh",
+      "name": "import-fresh",
+      "version": "3.3.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/import-meta-resolve",
+      "name": "import-meta-resolve",
+      "version": "4.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/imurmurhash",
+      "name": "imurmurhash",
+      "version": "0.1.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/inherits",
+      "name": "inherits",
+      "version": "2.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/is-docker",
+      "name": "is-docker",
+      "version": "3.0.0",
+      "bin": {
+        "is-docker": "cli.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/is-extglob",
+      "name": "is-extglob",
+      "version": "2.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/is-glob",
+      "name": "is-glob",
+      "version": "4.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/is-in-ssh",
+      "name": "is-in-ssh",
+      "version": "1.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/is-inside-container",
+      "name": "is-inside-container",
+      "version": "1.0.0",
+      "bin": {
+        "is-inside-container": "cli.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/is-number",
+      "name": "is-number",
+      "version": "7.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/is-plain-object",
+      "name": "is-plain-object",
+      "version": "2.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/is-wsl",
+      "name": "is-wsl",
+      "version": "3.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/isexe",
+      "name": "isexe",
+      "version": "2.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/isobject",
+      "name": "isobject",
+      "version": "3.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/isomorphic-ws",
+      "name": "isomorphic-ws",
+      "version": "5.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/jiti",
+      "name": "jiti",
+      "version": "2.7.0",
+      "bin": {
+        "jiti": "lib/jiti-cli.mjs"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/js-tokens",
+      "name": "js-tokens",
+      "version": "4.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/js-yaml",
+      "name": "js-yaml",
+      "version": "4.3.2",
+      "bin": {
+        "js-yaml": "bin/js-yaml.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/json-buffer",
+      "name": "json-buffer",
+      "version": "3.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/json-schema-traverse",
+      "name": "json-schema-traverse",
+      "version": "0.4.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/json-stable-stringify-without-jsonify",
+      "name": "json-stable-stringify-without-jsonify",
+      "version": "1.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/jsonfile",
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/keyv",
+      "name": "keyv",
+      "version": "4.5.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/kind-of",
+      "name": "kind-of",
+      "version": "6.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/kolorist",
+      "name": "kolorist",
+      "version": "1.8.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/levn",
+      "name": "levn",
+      "version": "0.4.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/libsodium",
+      "name": "libsodium",
+      "version": "0.8.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/libsodium-wrappers",
+      "name": "libsodium-wrappers",
+      "version": "0.8.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/lightningcss",
+      "name": "lightningcss",
+      "version": "1.33.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/lightningcss-linux-arm64-gnu",
+      "name": "lightningcss-linux-arm64-gnu",
+      "version": "1.33.0",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/lightningcss-linux-arm64-musl",
+      "name": "lightningcss-linux-arm64-musl",
+      "version": "1.33.0",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/lightningcss-linux-x64-gnu",
+      "name": "lightningcss-linux-x64-gnu",
+      "version": "1.33.0",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/lightningcss-linux-x64-musl",
+      "name": "lightningcss-linux-x64-musl",
+      "version": "1.33.0",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/local-pkg",
+      "name": "local-pkg",
+      "version": "1.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/local-pkg/node_modules/pkg-types",
+      "name": "pkg-types",
+      "version": "2.4.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/locate-path",
+      "name": "locate-path",
+      "version": "6.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/lodash.merge",
+      "name": "lodash.merge",
+      "version": "4.6.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/lower-case",
+      "name": "lower-case",
+      "version": "2.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/lru-cache",
+      "name": "lru-cache",
+      "version": "11.5.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/magic-string",
+      "name": "magic-string",
+      "version": "0.30.21",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/magic-string-ast",
+      "name": "magic-string-ast",
+      "version": "1.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/marked",
+      "name": "marked",
+      "version": "18.1.2",
+      "bin": {
+        "marked": "bin/marked.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/math-intrinsics",
+      "name": "math-intrinsics",
+      "version": "1.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/mdn-data",
+      "name": "mdn-data",
+      "version": "2.27.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/merge2",
+      "name": "merge2",
+      "version": "1.4.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/meshoptimizer",
+      "name": "meshoptimizer",
+      "version": "0.22.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/micromatch",
+      "name": "micromatch",
+      "version": "4.0.8",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/micromatch/node_modules/picomatch",
+      "name": "picomatch",
+      "version": "2.3.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/mime-db",
+      "name": "mime-db",
+      "version": "1.52.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/mime-types",
+      "name": "mime-types",
+      "version": "2.1.35",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/minimatch",
+      "name": "minimatch",
+      "version": "3.1.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/mitt",
+      "name": "mitt",
+      "version": "3.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/mlkem",
+      "name": "mlkem",
+      "version": "2.7.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/mlly",
+      "name": "mlly",
+      "version": "1.8.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ms",
+      "name": "ms",
+      "version": "2.1.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/muggle-string",
+      "name": "muggle-string",
+      "version": "0.4.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/n8ao",
+      "name": "n8ao",
+      "version": "2.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/nanoid",
+      "name": "nanoid",
+      "version": "3.3.20",
+      "bin": {
+        "nanoid": "bin/nanoid.cjs"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/natural-compare",
+      "name": "natural-compare",
+      "version": "1.4.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/no-case",
+      "name": "no-case",
+      "version": "3.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/node-addon-api",
+      "name": "node-addon-api",
+      "version": "7.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/node-fetch-native",
+      "name": "node-fetch-native",
+      "version": "1.6.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/node-releases",
+      "name": "node-releases",
+      "version": "2.0.60",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/nostics",
+      "name": "nostics",
+      "version": "1.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/npm-run-path",
+      "name": "npm-run-path",
+      "version": "6.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/npm-run-path/node_modules/path-key",
+      "name": "path-key",
+      "version": "4.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/nth-check",
+      "name": "nth-check",
+      "version": "2.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/obug",
+      "name": "obug",
+      "version": "2.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ofetch",
+      "name": "ofetch",
+      "version": "1.5.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/on-finished",
+      "name": "on-finished",
+      "version": "2.4.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/open",
+      "name": "open",
+      "version": "11.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/optionator",
+      "name": "optionator",
+      "version": "0.9.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/oxc-parser",
+      "name": "oxc-parser",
+      "version": "0.153.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/oxc-parser/node_modules/@oxc-project/types",
+      "name": "@oxc-project/types",
+      "version": "0.153.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/oxc-walker",
+      "name": "oxc-walker",
+      "version": "1.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/p-limit",
+      "name": "p-limit",
+      "version": "3.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/p-locate",
+      "name": "p-locate",
+      "version": "5.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/package-manager-detector",
+      "name": "package-manager-detector",
+      "version": "1.9.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/param-case",
+      "name": "param-case",
+      "version": "3.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/parent-module",
+      "name": "parent-module",
+      "version": "1.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/parseurl",
+      "name": "parseurl",
+      "version": "1.3.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pascal-case",
+      "name": "pascal-case",
+      "version": "3.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/path-browserify",
+      "name": "path-browserify",
+      "version": "1.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/path-exists",
+      "name": "path-exists",
+      "version": "4.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/path-key",
+      "name": "path-key",
+      "version": "3.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pathe",
+      "name": "pathe",
+      "version": "2.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/perfect-debounce",
+      "name": "perfect-debounce",
+      "version": "2.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/picocolors",
+      "name": "picocolors",
+      "version": "1.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/picomatch",
+      "name": "picomatch",
+      "version": "4.0.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pinia",
+      "name": "pinia",
+      "version": "3.0.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pinia/node_modules/@vue/devtools-api",
+      "name": "@vue/devtools-api",
+      "version": "7.7.10",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pinia/node_modules/@vue/devtools-api/node_modules/@vue/devtools-kit",
+      "name": "@vue/devtools-kit",
+      "version": "7.7.10",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pinia/node_modules/@vue/devtools-api/node_modules/@vue/devtools-kit/node_modules/@vue/devtools-shared",
+      "name": "@vue/devtools-shared",
+      "version": "7.7.10",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pinia/node_modules/@vue/devtools-api/node_modules/@vue/devtools-kit/node_modules/perfect-debounce",
+      "name": "perfect-debounce",
+      "version": "1.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pkg-types",
+      "name": "pkg-types",
+      "version": "1.3.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pkg-types/node_modules/confbox",
+      "name": "confbox",
+      "version": "0.1.8",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pkijs",
+      "name": "pkijs",
+      "version": "3.4.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/postcss",
+      "name": "postcss",
+      "version": "8.5.32",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/postcss-selector-parser",
+      "name": "postcss-selector-parser",
+      "version": "7.1.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/postcss-value-parser",
+      "name": "postcss-value-parser",
+      "version": "4.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/postprocessing",
+      "name": "postprocessing",
+      "version": "6.39.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/potpack",
+      "name": "potpack",
+      "version": "1.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/powershell-utils",
+      "name": "powershell-utils",
+      "version": "0.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/prelude-ls",
+      "name": "prelude-ls",
+      "version": "1.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/prettier",
+      "name": "prettier",
+      "version": "3.9.10",
+      "bin": {
+        "prettier": "bin/prettier.cjs"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/prettier-linter-helpers",
+      "name": "prettier-linter-helpers",
+      "version": "1.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/proxy-from-env",
+      "name": "proxy-from-env",
+      "version": "2.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/punycode",
+      "name": "punycode",
+      "version": "2.3.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pvtsutils",
+      "name": "pvtsutils",
+      "version": "1.3.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/pvutils",
+      "name": "pvutils",
+      "version": "1.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/quansync",
+      "name": "quansync",
+      "version": "0.2.11",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/quasar",
+      "name": "quasar",
+      "version": "2.35.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/queue-microtask",
+      "name": "queue-microtask",
+      "version": "1.2.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/radashi",
+      "name": "radashi",
+      "version": "12.9.8",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/range-parser",
+      "name": "range-parser",
+      "version": "1.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/readdirp",
+      "name": "readdirp",
+      "version": "5.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/reflect-metadata",
+      "name": "reflect-metadata",
+      "version": "0.2.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/relateurl",
+      "name": "relateurl",
+      "version": "0.2.7",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/resolve-from",
+      "name": "resolve-from",
+      "version": "4.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/reusify",
+      "name": "reusify",
+      "version": "1.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/rfdc",
+      "name": "rfdc",
+      "version": "1.4.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/rolldown",
+      "name": "rolldown",
+      "version": "1.2.15",
+      "bin": {
+        "rolldown": "./bin/cli.mjs"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/rou3",
+      "name": "rou3",
+      "version": "1.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/run-applescript",
+      "name": "run-applescript",
+      "version": "7.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/run-parallel",
+      "name": "run-parallel",
+      "version": "1.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/rxjs",
+      "name": "rxjs",
+      "version": "7.8.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/sass",
+      "name": "sass",
+      "version": "1.106.1",
+      "bin": {
+        "sass": "sass.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/sass-embedded",
+      "name": "sass-embedded",
+      "version": "1.106.1",
+      "bin": {
+        "sass": "dist/bin/sass.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/sass-embedded-linux-arm64",
+      "name": "sass-embedded-linux-arm64",
+      "version": "1.106.1",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/sass-embedded-linux-musl-arm64",
+      "name": "sass-embedded-linux-musl-arm64",
+      "version": "1.106.1",
+      "bin": {},
+      "arches": [
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/sass-embedded-linux-musl-x64",
+      "name": "sass-embedded-linux-musl-x64",
+      "version": "1.106.1",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/sass-embedded-linux-x64",
+      "name": "sass-embedded-linux-x64",
+      "version": "1.106.1",
+      "bin": {},
+      "arches": [
+        "x86_64"
+      ]
+    },
+    {
+      "path": "node_modules/sax",
+      "name": "sax",
+      "version": "1.1.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/scule",
+      "name": "scule",
+      "version": "1.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/selfsigned",
+      "name": "selfsigned",
+      "version": "5.5.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/semver",
+      "name": "semver",
+      "version": "7.8.5",
+      "bin": {
+        "semver": "bin/semver.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/send",
+      "name": "send",
+      "version": "1.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/send/node_modules/mime-types",
+      "name": "mime-types",
+      "version": "3.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/send/node_modules/mime-types/node_modules/mime-db",
+      "name": "mime-db",
+      "version": "1.54.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/serialize-javascript",
+      "name": "serialize-javascript",
+      "version": "7.1.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/serve-static",
+      "name": "serve-static",
+      "version": "2.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/setprototypeof",
+      "name": "setprototypeof",
+      "version": "1.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/shallow-clone",
+      "name": "shallow-clone",
+      "version": "3.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/shebang-command",
+      "name": "shebang-command",
+      "version": "2.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/shebang-regex",
+      "name": "shebang-regex",
+      "version": "3.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/siginfo",
+      "name": "siginfo",
+      "version": "2.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/sisteransi",
+      "name": "sisteransi",
+      "version": "1.0.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/source-map",
+      "name": "source-map",
+      "version": "0.6.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/source-map-js",
+      "name": "source-map-js",
+      "version": "1.2.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/source-map-support",
+      "name": "source-map-support",
+      "version": "0.5.21",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/speakingurl",
+      "name": "speakingurl",
+      "version": "14.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/srvx",
+      "name": "srvx",
+      "version": "1.0.8",
+      "bin": {
+        "srvx": "./bin/srvx.mjs"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/stack-trace",
+      "name": "stack-trace",
+      "version": "1.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/stackback",
+      "name": "stackback",
+      "version": "0.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/stats-gl",
+      "name": "stats-gl",
+      "version": "4.2.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/stats.js",
+      "name": "stats.js",
+      "version": "0.17.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/statuses",
+      "name": "statuses",
+      "version": "2.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/std-env",
+      "name": "std-env",
+      "version": "4.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/strip-json-comments",
+      "name": "strip-json-comments",
+      "version": "3.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/superjson",
+      "name": "superjson",
+      "version": "2.2.6",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/supports-color",
+      "name": "supports-color",
+      "version": "8.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/sync-child-process",
+      "name": "sync-child-process",
+      "version": "1.1.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/sync-message-port",
+      "name": "sync-message-port",
+      "version": "1.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/synckit",
+      "name": "synckit",
+      "version": "0.12.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/tagged-tag",
+      "name": "tagged-tag",
+      "version": "1.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/terser",
+      "name": "terser",
+      "version": "5.51.2",
+      "bin": {
+        "terser": "bin/terser"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/terser/node_modules/commander",
+      "name": "commander",
+      "version": "2.20.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/three",
+      "name": "three",
+      "version": "0.182.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/three-custom-shader-material",
+      "name": "three-custom-shader-material",
+      "version": "6.4.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/three-mesh-bvh",
+      "name": "three-mesh-bvh",
+      "version": "0.9.16",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/three-stdlib",
+      "name": "three-stdlib",
+      "version": "2.36.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/three-stdlib/node_modules/fflate",
+      "name": "fflate",
+      "version": "0.6.11",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/tiny-invariant",
+      "name": "tiny-invariant",
+      "version": "1.3.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/tinybench",
+      "name": "tinybench",
+      "version": "2.9.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/tinyexec",
+      "name": "tinyexec",
+      "version": "1.3.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/tinyglobby",
+      "name": "tinyglobby",
+      "version": "0.2.17",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/tinyrainbow",
+      "name": "tinyrainbow",
+      "version": "3.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/to-regex-range",
+      "name": "to-regex-range",
+      "version": "5.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/toidentifier",
+      "name": "toidentifier",
+      "version": "1.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ts-api-utils",
+      "name": "ts-api-utils",
+      "version": "2.5.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ts-essentials",
+      "name": "ts-essentials",
+      "version": "10.2.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ts-mls",
+      "name": "ts-mls",
+      "version": "1.6.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/tslib",
+      "name": "tslib",
+      "version": "2.8.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/tsyringe",
+      "name": "tsyringe",
+      "version": "4.10.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/tsyringe/node_modules/tslib",
+      "name": "tslib",
+      "version": "1.14.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/type-check",
+      "name": "type-check",
+      "version": "0.4.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/type-fest",
+      "name": "type-fest",
+      "version": "5.10.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/typescript",
+      "name": "typescript",
+      "version": "5.9.3",
+      "bin": {
+        "tsc": "bin/tsc",
+        "tsserver": "bin/tsserver"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/typescript-eslint",
+      "name": "typescript-eslint",
+      "version": "8.72.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ufo",
+      "name": "ufo",
+      "version": "1.6.4",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/unconfig",
+      "name": "unconfig",
+      "version": "7.5.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/unconfig-core",
+      "name": "unconfig-core",
+      "version": "7.5.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/unconfig-core/node_modules/quansync",
+      "name": "quansync",
+      "version": "1.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/unconfig/node_modules/quansync",
+      "name": "quansync",
+      "version": "1.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/undici-types",
+      "name": "undici-types",
+      "version": "6.21.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/unicorn-magic",
+      "name": "unicorn-magic",
+      "version": "0.3.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/universalify",
+      "name": "universalify",
+      "version": "2.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/unocss",
+      "name": "unocss",
+      "version": "66.12.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/unplugin",
+      "name": "unplugin",
+      "version": "3.6.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/unplugin-utils",
+      "name": "unplugin-utils",
+      "version": "0.3.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/update-browserslist-db",
+      "name": "update-browserslist-db",
+      "version": "1.3.4",
+      "bin": {
+        "update-browserslist-db": "cli.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/uri-js",
+      "name": "uri-js",
+      "version": "4.4.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/util-deprecate",
+      "name": "util-deprecate",
+      "version": "1.0.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vanilla-tilt",
+      "name": "vanilla-tilt",
+      "version": "1.8.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/varint",
+      "name": "varint",
+      "version": "6.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vite",
+      "name": "vite",
+      "version": "8.3.5",
+      "bin": {
+        "vite": "bin/vite.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vite-plugin-checker",
+      "name": "vite-plugin-checker",
+      "version": "0.11.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vite-plugin-checker/node_modules/chokidar",
+      "name": "chokidar",
+      "version": "4.0.3",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vite-plugin-checker/node_modules/chokidar/node_modules/readdirp",
+      "name": "readdirp",
+      "version": "4.1.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vitest",
+      "name": "vitest",
+      "version": "4.1.12",
+      "bin": {
+        "vitest": "./vitest.mjs"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vscode-uri",
+      "name": "vscode-uri",
+      "version": "3.2.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vue",
+      "name": "vue",
+      "version": "3.5.44",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vue-advanced-cropper",
+      "name": "vue-advanced-cropper",
+      "version": "2.8.9",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vue-eslint-parser",
+      "name": "vue-eslint-parser",
+      "version": "10.4.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vue-router",
+      "name": "vue-router",
+      "version": "5.4.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vue-router/node_modules/magic-string",
+      "name": "magic-string",
+      "version": "1.4.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/vue-tsc",
+      "name": "vue-tsc",
+      "version": "3.3.10",
+      "bin": {
+        "vue-tsc": "bin/vue-tsc.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/webpack-merge",
+      "name": "webpack-merge",
+      "version": "6.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/webpack-virtual-modules",
+      "name": "webpack-virtual-modules",
+      "version": "0.6.2",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/which",
+      "name": "which",
+      "version": "2.0.2",
+      "bin": {
+        "node-which": "./bin/node-which"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/why-is-node-running",
+      "name": "why-is-node-running",
+      "version": "2.3.0",
+      "bin": {
+        "why-is-node-running": "cli.js"
+      },
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/wildcard",
+      "name": "wildcard",
+      "version": "2.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/word-wrap",
+      "name": "word-wrap",
+      "version": "1.2.5",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/ws",
+      "name": "ws",
+      "version": "8.22.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/wsl-utils",
+      "name": "wsl-utils",
+      "version": "1.0.1",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/xml-name-validator",
+      "name": "xml-name-validator",
+      "version": "5.0.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
+      "path": "node_modules/yocto-queue",
+      "name": "yocto-queue",
+      "version": "0.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    }
+  ],
+  "binOwners": {
+    "node_modules/.bin/sass": {
+      "owner": "node_modules/sass-embedded",
+      "contenders": [
+        "node_modules/sass",
+        "node_modules/sass-embedded"
+      ],
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "file": "src/css/profile.scss",
+      "reason": "Public-profile appearance is user-owned, explicitly outside client chrome theming; never sweep this file.",
+      "exclude": true
+    },
+    {
+      "file": "src/components/icons/MournLogoInline.vue",
+      "literal": "#ff0000",
+      "max": 1,
+      "reason": "The Mourn brand mark retains canonical red independently of the client palette. Only this existing occurrence is exempt."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-prepare-linux-deb-update"
+description = "Enables the prepare_linux_deb_update command without any pre-configured scope."
+commands.allow = ["prepare_linux_deb_update"]
+
+[[permission]]
+identifier = "deny-prepare-linux-deb-update"
+description = "Denies the prepare_linux_deb_update command without any pre-configured scope."
+commands.deny = ["prepare_linux_deb_update"]

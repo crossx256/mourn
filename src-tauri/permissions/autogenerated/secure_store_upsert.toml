@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-secure-store-upsert"
+description = "Enables the secure_store_upsert command without any pre-configured scope."
+commands.allow = ["secure_store_upsert"]
+
+[[permission]]
+identifier = "deny-secure-store-upsert"
+description = "Denies the secure_store_upsert command without any pre-configured scope."
+commands.deny = ["secure_store_upsert"]

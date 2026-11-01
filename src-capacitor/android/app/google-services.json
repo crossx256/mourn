@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "541025026939",
+    "project_id": "mourn--new-life",
+    "storage_bucket": "mourn--new-life.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541025026939:android:1839b0a584ba6c102f33de",
+        "android_client_info": {
+          "package_name": "bio.mourn.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzV4xCVFeULgVzbmgfI--rBATcexCk57c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

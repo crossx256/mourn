@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-vault-key-remove"
+description = "Enables the vault_key_remove command without any pre-configured scope."
+commands.allow = ["vault_key_remove"]
+
+[[permission]]
+identifier = "deny-vault-key-remove"
+description = "Denies the vault_key_remove command without any pre-configured scope."
+commands.deny = ["vault_key_remove"]

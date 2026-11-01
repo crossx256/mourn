@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBarLaunch"
+            android:launchMode="singleTask"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
+        <!-- Push display defaults. The channel id must match ANDROID_CHANNEL_ID in
+             src/services/mobilePush.ts (created at runtime) and the channel_id the
+             backend sends. The icon is a white-on-transparent status-bar glyph;
+             Android tints it. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_mourn" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="mourn_default" />
+    </application>
+
+    <!-- Permissions -->
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Android 13+ (API 33+): required before notifications can be posted at all.
+         The @capacitor/push-notifications plugin declares no permissions of its own,
+         so targetSdk 36 without this line means silent, undeliverable notifications. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Without this Android puts the app in a restricted standby bucket after a
+         period of no use and then delivers no FCM messages at all until the app is
+         opened again (no background/killed notifications). -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- Camera capture from the composer ("Take photo"). @capacitor/camera does NOT
+         declare this itself, so without it Camera.getPhoto({source: CAMERA}) fails:
+         the plugin's runtime request can never be granted for a permission the app
+         never declared in the manifest. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+</manifest>

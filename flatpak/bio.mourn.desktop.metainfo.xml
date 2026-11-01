@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AppStream metadata. REQUIRED for Flathub — a submission without this is
+  rejected outright, so this is not optional polish.
+
+  Before submitting, verify:
+    * <id> matches the manifest app-id exactly.
+    * At least one <screenshot> whose <image> URL returns HTTP 200 over HTTPS.
+      Flathub downloads it at build time; a 404 fails the build.
+    * <launchable> names the desktop file that actually gets installed.
+    * Verify repository ownership and the bugtracker URL before submission.
+-->
+<component type="desktop-application">
+  <id>bio.mourn.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0-only</project_license>
+  <developer id="bio.mourn">
+    <name>Mourn Team</name>
+  </developer>
+
+  <name>Mourn</name>
+  <summary>Profiles and end-to-end encrypted messaging</summary>
+
+  <description>
+    <p>Mourn is a client for the Mourn identity platform, with public profiles and end-to-end encrypted direct and Suite messaging. Messaging requires an account and the Mourn service.</p>
+    <ul>
+      <li>End-to-end encrypted Suites built on MLS</li>
+      <li>Zero-trust server that only routes ciphertext</li>
+      <li>Per-device keys with cross-device recovery</li>
+      <li>Vault storage for encrypted attachments</li>
+    </ul>
+  </description>
+
+  <url type="homepage">https://mourn.bio</url>
+  <url type="bugtracker">https://github.com/crossx256/mourn/issues</url>
+
+  <screenshots>
+    <screenshot type="default">
+      <image type="source">https://mourn.bio/assets/screenshot-main.png</image>
+      <caption>The Mourn main interface</caption>
+    </screenshot>
+  </screenshots>
+
+  <categories>
+    <category>Network</category>
+    <category>InstantMessaging</category>
+    <category>Chat</category>
+  </categories>
+
+  <keywords>
+    <keyword>chat</keyword>
+    <keyword>messaging</keyword>
+    <keyword>encryption</keyword>
+    <keyword>e2ee</keyword>
+
+    <keyword>privacy</keyword>
+  </keywords>
+
+  <launchable type="desktop-id">bio.mourn.desktop.desktop</launchable>
+
+  <content_rating type="oars-1.1"/>
+
+  <releases>
+    <!-- Date from local Git tag v1.5.3 (2026-10-21); public availability remains a gate. -->
+    <release version="1.5.3" date="2026-10-21">
+      <description><p>Desktop security and Flatpak source preparation.</p></description>
+    </release>
+  </releases>
+</component>

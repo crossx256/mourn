@@ -1,0 +1,11 @@
+# Synthetic response-header example, not a production capture or deployment policy.
+# Never paste Cookie, Set-Cookie, Authorization, tokens, or request identifiers here.
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Referrer-Policy: no-referrer
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=()
+Cache-Control: no-store
