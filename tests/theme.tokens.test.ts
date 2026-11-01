@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { runInNewContext } from 'node:vm';
 vi.mock('quasar', () => ({ setCssVar: vi.fn() }));
 import { DEFAULT_THEME } from '../src/theme/tokens';
@@ -356,7 +357,7 @@ describe('theme token defaults when the client theme is OFF', () => {
             referenced.add(m[1]);
       }
     };
-    walk(new URL('../src', import.meta.url).pathname);
+    walk(fileURLToPath(new URL('../src', import.meta.url)));
     // Derived accent slots are only referenced inside [data-client-theme='on'] rules and are
     // always written by applyTheme(); their contrast matrix is covered by dedicated tests.
     const derived = new Set([

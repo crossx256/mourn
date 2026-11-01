@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { compileString } from 'sass';
 import { describe, expect, it } from 'vitest';
 
@@ -20,7 +21,9 @@ import { describe, expect, it } from 'vitest';
  */
 const RUNTIME_PREFIXES = ['--m-', '--vault-', '--dash-', '--suite-', '--quasar-', '--q-'];
 
-const root = new URL('..', import.meta.url).pathname;
+// fileURLToPath, not URL.pathname: on Windows the latter yields '/D:/...'
+// which readdir then fails to open.
+const root = fileURLToPath(new URL('..', import.meta.url));
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {

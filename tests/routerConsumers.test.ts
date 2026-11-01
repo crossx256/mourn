@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 /**
@@ -11,7 +12,9 @@ import { describe, expect, it } from 'vitest';
  * routes resolve to a real page and component files have a consumer.
  */
 
-const root = new URL('..', import.meta.url).pathname;
+// fileURLToPath, not URL.pathname: on Windows the latter yields '/D:/...'
+// which readdir then fails to open.
+const root = fileURLToPath(new URL('..', import.meta.url));
 const read = (rel: string) => readFileSync(join(root, rel), 'utf8');
 
 function walk(dir: string, out: string[] = []): string[] {
