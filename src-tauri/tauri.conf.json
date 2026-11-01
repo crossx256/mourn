@@ -94,8 +94,10 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDE2QzFCMTY2RjgzRTJBNUQKUldSZEtqNzRackhCRmlMcGdIeDhvZkJjSndycnJWT0VVcTdmdWVVcVdMdW9DeERNMHBiVWgzcEQK",
-      "endpoints": ["https://mourn.bio/update/{{target}}/{{current_version}}"]
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEZDMkI4QUY1NjUzMkM1QzUKUldURnhUSmw5WW9yL0xmMHJ1ZlpnNWlBTE8xMTk0YW5JMFdhNFpBWHpMbkVZTXFobkhxdGpiRzcK",
+      "endpoints": [
+        "https://mourn.bio/update/{{target}}/{{current_version}}"
+      ]
     }
   }
 }

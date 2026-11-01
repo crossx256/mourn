@@ -45,8 +45,24 @@ try {
 
 // Key rotation must be a reviewed source change, not a secret-only CI change.
 // Assembly independently reads this same committed trust key.
+//
+// Rotating the key is therefore an explicit, committed decision: set
+// MOURN_ALLOW_UPDATER_KEY_ROTATION=1 in addition to the new key. Without it,
+// a key that differs from the committed one is refused, so CI can never swap
+// the trust anchor silently.
+const allowRotation = process.env.MOURN_ALLOW_UPDATER_KEY_ROTATION === '1';
 if (!decodeTauriPublicKey(pubkey).packet.equals(decodeTauriPublicKey(cfg.plugins?.updater?.pubkey).packet)) {
-  throw new Error('Supplied updater key differs from the reviewed source key');
+  if (!allowRotation) {
+    throw new Error(
+      'Supplied updater key differs from the reviewed source key. ' +
+        'Rotating the trust anchor is a reviewed change: re-run with ' +
+        'MOURN_ALLOW_UPDATER_KEY_ROTATION=1 and commit the resulting tauri.conf.json.',
+    );
+  }
+  const oldId = decodeTauriPublicKey(cfg.plugins?.updater?.pubkey).keyId.toString('hex').toUpperCase();
+  const newId = decodeTauriPublicKey(pubkey).keyId.toString('hex').toUpperCase();
+  console.warn(`Rotating updater trust key: ${oldId} -> ${newId}`);
+  console.warn('Existing installs verify against the old key and will need one manual reinstall.');
 }
 
 if (!cfg.plugins) cfg.plugins = {};
