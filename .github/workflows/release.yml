@@ -80,7 +80,14 @@ jobs:
         working-directory: src-capacitor
         run: bun install --frozen-lockfile --ignore-scripts
       - run: node node_modules/@quasar/app-vite/bin/quasar.js prepare
-      - run: bun run typecheck && bun run lint && bun run test && bun run test:release
+      - name: Typecheck
+        run: bun run typecheck
+      - name: Lint
+        run: bun run lint
+      - name: Application tests
+        run: bun run test
+      - name: Release tooling tests
+        run: bun run test:release
       - name: Check dependency advisories (including build tooling)
         run: bun audit --audit-level=high
       - name: Inject public updater configuration

@@ -345,6 +345,27 @@ test('a snapshot of a live tree that has no index.js is refused, not reported as
 
 // ----------------------------------------------------------------- snapshot ---
 
+test('Windows archive tooling uses the native tar even when PATH has Git tar', () => {
+  const install = tempRoot();
+  try {
+    const systemRoot = path.join(install, 'Windows');
+    const nativeTar = path.join(systemRoot, 'System32', 'tar.exe');
+    fs.mkdirSync(path.dirname(nativeTar), { recursive: true });
+    fs.writeFileSync(nativeTar, 'fixture; must not be executed');
+    const result = harness(install, { systemRoot }, `
+      return deploy.resolveTar('win32', options.systemRoot);
+    `);
+    assert.equal(result, nativeTar);
+    fs.rmSync(nativeTar);
+    const missing = harness(install, { systemRoot }, `
+      return deploy.resolveTar('win32', options.systemRoot);
+    `);
+    assert.equal(missing, '', 'do not fall back to a PATH tar that misreads drive letters as remote hosts');
+  } finally {
+    clean(install);
+  }
+});
+
 // ------------------------------------------------------------ redeploy order ---
 // Full `deployOnce` through the real CLI: GitHub API + asset host + health server
 // are local doubles, npm/pm2/tar are stubs on PATH. Nothing leaves 127.0.0.1.
@@ -356,7 +377,8 @@ function bundleTarball(dir, { tag, commit, index }) {
   fs.writeFileSync(path.join(source, 'package-lock.json'), '{"lockfileVersion":3,"packages":{}}\n');
   fs.writeFileSync(path.join(source, 'BUILD_INFO.json'), JSON.stringify({ tag, commit }));
   const tarball = path.join(dir, `mourn-web-ssr-${tag.replace(/^v/, '')}.tar.gz`);
-  const tar = spawnSync('tar', ['-czf', tarball, '-C', source, '.'], { encoding: 'utf8' });
+  const tarTool = harness(dir, {}, 'return deploy.resolveTar();');
+  const tar = spawnSync(tarTool, ['-czf', path.basename(tarball), '-C', source, '.'], { cwd: dir, encoding: 'utf8' });
   assert.equal(tar.status, 0, tar.stderr);
   return { tarball, bytes: fs.readFileSync(tarball), name: path.basename(tarball) };
 }

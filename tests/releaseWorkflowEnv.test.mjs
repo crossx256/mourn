@@ -37,7 +37,7 @@ function buildJobSteps() {
 const steps = buildJobSteps();
 
 test('every Quasar workflow installs the aliased Capacitor dependencies before prepare', () => {
-  for (const name of ['release', 'verify', 'web-release', 'android']) {
+  for (const name of ['release', 'verify', 'web-release', 'android', 'windows-verify']) {
     const workflow = readFileSync(new URL(`../.github/workflows/${name}.yml`, import.meta.url), 'utf8');
     const install = workflow.search(/working-directory: src-capacitor\r?\n\s+run: bun install --frozen-lockfile --ignore-scripts/);
     const prepare = workflow.indexOf('node node_modules/@quasar/app-vite/bin/quasar.js prepare');

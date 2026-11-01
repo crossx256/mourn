@@ -1137,9 +1137,18 @@ async function main() {
   }
 }
 
+// Git's GNU tar treats C: in an archive filename as a remote-host prefix.
+// Windows ships a native bsdtar that accepts drive-letter paths; prefer it
+// explicitly rather than allowing Git Bash's PATH order to choose the tool.
+function resolveTar(platform = process.platform, systemRoot = process.env.SystemRoot || 'C:\\Windows') {
+  return platform === 'win32'
+    ? resolveCommand([], [path.join(systemRoot, 'System32', 'tar.exe')])
+    : resolveCommand(['tar']);
+}
+
 // Locate the external commands a deploy needs. Only called while holding the lock.
 function resolveToolchain() {
-  const tar = resolveCommand(['tar'], [IS_WINDOWS ? path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'tar.exe') : '']);
+  const tar = resolveTar();
   if (!tar) throw new Error('tar not found (Windows 10 1803+ / Server 2019+ ships it in System32)');
   const npm = resolveCommand(
     ['npm.cmd', 'npm'],
@@ -1185,6 +1194,7 @@ export {
   healthVerdict,
   probeOnce,
   releaseLock,
+  resolveTar,
   setCurrent,
   snapshotLive,
   waitForHealth,
