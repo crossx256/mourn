@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { decodeTauriPublicKey, verifyTauriSignature } from '../scripts/minisign_verify.mjs';
 import { verifyCheckout, verifyVersions } from '../scripts/verify_release_version.js';
 import { verifyAndroidMetadata } from '../scripts/verify_android_metadata.mjs';
-import { artifactInfo, assertUniqueNames, releaseIdentity, releaseContext, stageAtomic, verifyShard } from '../scripts/release_safety.mjs';
+import { artifactInfo, assertUniqueNames, collectArtifacts, walk, releaseIdentity, releaseContext, stageAtomic, verifyShard } from '../scripts/release_safety.mjs';
 
 test('release tags are strict SemVer, not shell/path input', () => {
   assert.equal(releaseIdentity('v1.4.8-rc.1').prerelease, true);
@@ -112,6 +112,54 @@ test('verification rejects another key, payload, key ID, trusted comment and mal
   packet[0] = 0xc5;
   unsupported[1] = packet.toString('base64');
   assert.throws(() => verifyTauriSignature(payload, envelope(unsupported.join('\n')), key.encoded), /Invalid Minisign/);
+});
+
+test('Linux artifact collection excludes Tauri AppDir but still rejects symlinked packages', { skip: process.platform !== 'linux' }, () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mourn-appdir-test-'));
+  try {
+    const bundle = path.join(root, 'bundle');
+    const appdir = path.join(bundle, 'appimage', 'mourn.AppDir');
+    fs.mkdirSync(appdir, { recursive: true });
+    fs.writeFileSync(path.join(appdir, 'icon.png'), 'intermediate fixture');
+    fs.symlinkSync('icon.png', path.join(appdir, '.DirIcon'));
+    fs.writeFileSync(path.join(appdir, 'intermediate.exe'), 'not a release artifact');
+    const image = path.join(bundle, 'appimage', 'mourn_1.4.8_amd64.AppImage');
+    const elf = Buffer.alloc(20);
+    Buffer.from([127, 69, 76, 70, 2, 1]).copy(elf);
+    elf.writeUInt16LE(62, 18);
+    fs.writeFileSync(image, elf);
+    const debSource = path.join(root, 'deb-source');
+    fs.mkdirSync(path.join(debSource, 'DEBIAN'), { recursive: true });
+    fs.writeFileSync(path.join(debSource, 'DEBIAN', 'control'),
+      'Package: mourn-fixture\nVersion: 1.4.8\nArchitecture: amd64\nMaintainer: Fixture <fixture@example.invalid>\nDescription: release regression fixture\n');
+    fs.mkdirSync(path.join(bundle, 'deb'));
+    const deb = path.join(bundle, 'deb', 'mourn_1.4.8_amd64.deb');
+    const packed = spawnSync('dpkg-deb', ['--build', debSource, deb], { encoding: 'utf8' });
+    assert.equal(packed.status, 0, packed.stderr);
+    const collect = () => collectArtifacts(bundle, context, 'x86_64-unknown-linux-gnu', false);
+    assert.deepEqual(collect(), [image, deb]);
+    assert.throws(() => walk(bundle), /Symlink forbidden/, 'staging and shard walks must remain strict');
+    const key = testKey();
+    config(root, key);
+    signedFile(path.dirname(image), path.basename(image), fs.readFileSync(image), key);
+    signedFile(path.dirname(deb), path.basename(deb), fs.readFileSync(deb), key);
+    const env = { RELEASE_TARGET: 'x86_64-unknown-linux-gnu', BUNDLE_DIR: bundle };
+    for (const script of ['generate_updater_manifest.js', 'stage_release_assets.js']) {
+      const staged = runScript(script, root, env);
+      assert.equal(staged.status, 0, staged.stderr);
+    }
+    assert.equal(fs.existsSync(path.join(root, 'artifacts/release-linux-x86_64', 'mourn.AppDir')), false);
+    fs.renameSync(image, path.join(root, 'external.AppImage'));
+    fs.symlinkSync(path.join(root, 'external.AppImage'), image);
+    assert.throws(collect, /Symlink forbidden/, 'published package symlinks must still be rejected');
+    fs.rmSync(image);
+    fs.renameSync(path.join(root, 'external.AppImage'), image);
+    fs.renameSync(appdir, path.join(root, 'external.AppDir'));
+    fs.symlinkSync(path.join(root, 'external.AppDir'), appdir, 'dir');
+    assert.throws(collect, /Symlink forbidden/, 'the excluded AppDir itself must not be a symlink');
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test('release staging verifies all packages, including MSI, before exposing output', () => {

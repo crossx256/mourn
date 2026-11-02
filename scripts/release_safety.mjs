@@ -24,13 +24,14 @@ export function regularFile(file) {
   return file;
 }
 
-export function walk(dir) {
+export function walk(dir, skipDirectory = () => false) {
   const result = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
     const file = path.join(dir, entry.name);
     if (entry.isSymbolicLink()) throw new Error(`Symlink forbidden: ${file}`);
-    if (entry.isDirectory()) result.push(...walk(file));
-    else result.push(regularFile(file));
+    if (entry.isDirectory()) {
+      if (!skipDirectory(file)) result.push(...walk(file, skipDirectory));
+    } else result.push(regularFile(file));
   }
   return result;
 }
@@ -92,7 +93,12 @@ export function assertUniqueNames(files) {
 
 export function collectArtifacts(bundleDir, identity, target, requireSignatures = true) {
   const expected = targetInfo(target);
-  const all = walk(bundleDir);
+  // Tauri retains the unpacked AppDir next to the final AppImage. Its icon and
+  // library symlinks are build intermediates, not assets to stage or sign.
+  // Exclude only that exact real directory; walk still rejects a symlink at
+  // this path, all package/signature symlinks, and every symlink in a shard.
+  const appdir = path.join(bundleDir, 'appimage', 'mourn.AppDir');
+  const all = walk(bundleDir, dir => expected.platform === 'linux-x86_64' && dir === appdir);
   const artifacts = all.filter(file => /\.(exe|msi|deb|appimage)$/i.test(file));
   assertUniqueNames(artifacts);
   const kinds = new Set();
