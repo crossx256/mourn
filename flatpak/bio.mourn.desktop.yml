@@ -41,12 +41,13 @@ modules:
       - node node_modules/@quasar/app-vite/bin/quasar.js prepare
       - node node_modules/vue-tsc/bin/vue-tsc.js --noEmit
       - node node_modules/@quasar/app-vite/bin/quasar.js build -m spa
+      - cargo test --frozen --release --features custom-protocol --manifest-path src-tauri/Cargo.toml --test glib_variant_iter
       - cargo build --frozen --release --features custom-protocol --manifest-path src-tauri/Cargo.toml
       - install -Dm755 src-tauri/target/release/mourn-desktop /app/bin/mourn-desktop
+      - install -Dm644 src-tauri/vendor/glib/LICENSE /app/share/licenses/bio.mourn.desktop/glib/LICENSE
       - install -Dm644 flatpak/bio.mourn.desktop /app/share/applications/bio.mourn.desktop.desktop
       - install -Dm644 flatpak/bio.mourn.desktop.metainfo.xml /app/share/metainfo/bio.mourn.desktop.metainfo.xml
-      - install -Dm644 src-tauri/icons/128x128.png /app/share/icons/hicolor/128x128/apps/bio.mourn.desktop.png
-      - install -Dm644 src-tauri/icons/128x128@2x.png /app/share/icons/hicolor/256x256/apps/bio.mourn.desktop.png
+      - install -Dm644 src-tauri/icons/icon.svg /app/share/icons/hicolor/scalable/apps/bio.mourn.desktop.svg
     sources:
       - type: dir
         path: ..

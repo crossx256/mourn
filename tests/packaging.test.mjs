@@ -79,6 +79,17 @@ const config = {
   capEndpoint: 'https://cap.example.org/public-site-key/',
 };
 
+test('Flatpak installs the approved vector logo as its scalable application icon', () => {
+  const file = path.join(root, 'src-tauri/icons/icon.svg');
+  assert.ok(fs.existsSync(file), 'retain the supplied SVG instead of only generated PNGs');
+  const svg = fs.readFileSync(file);
+  assert.equal(createHash('sha256').update(svg).digest('hex'), '7437647f9d30cb48e84bf12fb39c5189f9fddfad59be644f982fac0ef83c0eb9');
+  assert.match(svg.toString('utf8'), /<svg\b/);
+  assert.doesNotMatch(svg.toString('utf8'), /<(?:script|image|foreignObject)\b/i);
+  assert.ok(template.includes('install -Dm644 src-tauri/icons/icon.svg /app/share/icons/hicolor/scalable/apps/bio.mourn.desktop.svg'));
+  assert.doesNotMatch(template, /install[^\n]*src-tauri\/icons\/[^\n]*\.png[^\n]*\/icons\//);
+});
+
 test('submission generator replaces local source and pins explicit inputs without changing permissions', () => {
   const output = submissionManifest(template, config, archive);
   assert.doesNotMatch(output, /type: dir|path: \.\./);

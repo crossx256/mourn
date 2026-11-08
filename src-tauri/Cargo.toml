@@ -1,6 +1,6 @@
 [package]
 name = "mourn-desktop"
-version = "1.5.3"
+version = "1.5.4"
 description = "An internet revolution - Mourn Desktop"
 authors = ["psycho, cross & L"]
 edition = "2021"
@@ -60,3 +60,10 @@ dirs = "6"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 libc = "0.2"
+
+[target.'cfg(target_os = "linux")'.dev-dependencies]
+glib = "=0.18.5"
+
+# GTK3 requires glib 0.18; retain its API and backport the upstream safety fix.
+[patch.crates-io]
+glib = { path = "vendor/glib" }

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Generate Flatpak dependency sources from lockfiles, without network or installs.
 
-Only registry packages with cryptographic checksums are admitted. This emits a
-Node resolution tree from Bun's locked package keys; it does not resolve versions
-again or use package-lock.json. Review changes before publishing.
+Registry packages require cryptographic checksums. The single reviewed local
+GLib backport is admitted only with its pinned provenance and complete file
+inventory. Node resolution uses Bun's locked package keys; it does not resolve
+versions again or use package-lock.json. Review changes before publishing.
 """
 import argparse
 import base64
@@ -159,11 +160,63 @@ def node_sources(lock, package):
     return sources, {'schema': 2, 'packages': layout, 'binOwners': bin_owners(layout)}
 
 
-def cargo_sources(lock):
+REVIEWED_GLIB_PROVENANCE_SHA256 = '6fe7c8775ac126cc52f79cdc994d5abe421d92899ed3914cccd5eb9bc68a235b'
+
+
+def validate_local_cargo(root, lock):
+    manifest = tomllib.loads((root / 'src-tauri/Cargo.toml').read_text(encoding='utf-8'))
+    if manifest.get('patch') != {'crates-io': {'glib': {'path': 'vendor/glib'}}}:
+        raise ValueError('Unreviewed local Cargo patch configuration')
+    application = manifest['package']
+    roots = [pkg for pkg in lock['package'] if 'source' not in pkg
+             and pkg['name'] == application['name']]
+    if len(roots) != 1 or roots[0]['version'] != application['version']:
+        raise ValueError('Unreviewed local Cargo application identity')
+    glib = [pkg for pkg in lock['package'] if pkg['name'] == 'glib']
+    if len(glib) != 1 or 'source' in glib[0]:
+        raise ValueError('Unreviewed registry GLib bypasses the local Cargo backport')
+    local = [pkg for pkg in lock['package']
+             if 'source' not in pkg and pkg['name'] != application['name']]
+    if (len(local) != 1 or local[0]['name'] != 'glib' or
+            local[0]['version'] != '0.18.5' or 'checksum' in local[0]):
+        raise ValueError('Unreviewed local Cargo dependency identity')
+    for relative in ('src-tauri', 'src-tauri/vendor', 'src-tauri/vendor/glib',
+                     'src-tauri/vendor/glib.provenance.json'):
+        if (root / relative).is_symlink():
+            raise ValueError('Symlink in reviewed local Cargo source')
+    provenance_path = root / 'src-tauri/vendor/glib.provenance.json'
+    if not provenance_path.is_file():
+        raise ValueError('Missing local Cargo provenance')
+    raw = canonical_lock_bytes(provenance_path)
+    digest = hashlib.sha256(raw).hexdigest()
+    if digest != REVIEWED_GLIB_PROVENANCE_SHA256:
+        raise ValueError('Unreviewed local Cargo provenance checksum')
+    provenance = json.loads(raw)
+    if (provenance.get('schema') != 1 or provenance.get('name') != 'glib' or
+            provenance.get('version') != '0.18.5' or
+            provenance.get('path') != 'src-tauri/vendor/glib'):
+        raise ValueError('Invalid local Cargo provenance identity')
+    directory = root / provenance['path']
+    actual = {}
+    for file in sorted(directory.rglob('*')):
+        if file.is_symlink() or not (file.is_file() or file.is_dir()):
+            raise ValueError('Unsafe entry in reviewed local Cargo source')
+        if file.is_file():
+            actual[file.relative_to(directory).as_posix()] = hashlib.sha256(file.read_bytes()).hexdigest()
+    if not actual or actual != provenance['files']:
+        raise ValueError('Reviewed local Cargo files do not match provenance')
+    package = tomllib.loads((directory / 'Cargo.toml').read_text(encoding='utf-8'))['package']
+    if package['name'] != 'glib' or package['version'] != '0.18.5':
+        raise ValueError('Invalid reviewed local Cargo package identity')
+    return {'glib': {'version': '0.18.5', 'path': provenance['path'], 'provenance_sha256': digest}}
+
+
+def cargo_sources(lock, root=ROOT):
+    local = validate_local_cargo(root, lock)
     sources = []
     for pkg in sorted(lock['package'], key=lambda p: (p['name'], p['version'])):
         if 'source' not in pkg:
-            if pkg['name'] != 'mourn-desktop':
+            if pkg['name'] != 'mourn-desktop' and pkg['name'] not in local:
                 raise ValueError('Unreviewed local Cargo dependency')
             continue
         if pkg['source'] != 'registry+https://github.com/rust-lang/crates.io-index':
@@ -181,17 +234,18 @@ def cargo_sources(lock):
         ]
     sources.append({'type': 'inline', 'dest': '.cargo', 'dest-filename': 'config.toml',
                     'contents': '[source.crates-io]\nreplace-with = "vendored-sources"\n[source.vendored-sources]\ndirectory = "cargo/vendor"\n[net]\noffline = true\n'})
-    return sources
+    return sources, local
 
 
 def generate(root=ROOT):
     bun_bytes = canonical_lock_bytes(root / 'bun.lock')
     cargo_bytes = canonical_lock_bytes(root / 'src-tauri/Cargo.lock')
     node, layout = node_sources(jsonc(bun_bytes.decode()), json.loads((root / 'package.json').read_text()))
-    cargo = cargo_sources(tomllib.loads(cargo_bytes.decode()))
-    commitment = {'schema': 2, 'lockfile_encoding': 'utf-8-lf',
-                      'bun_lock_sha256': hashlib.sha256(bun_bytes).hexdigest(),
-                  'cargo_lock_sha256': hashlib.sha256(cargo_bytes).hexdigest()}
+    cargo, local = cargo_sources(tomllib.loads(cargo_bytes.decode()), root)
+    commitment = {'schema': 3, 'lockfile_encoding': 'utf-8-lf',
+                  'bun_lock_sha256': hashlib.sha256(bun_bytes).hexdigest(),
+                  'cargo_lock_sha256': hashlib.sha256(cargo_bytes).hexdigest(),
+                  'local_cargo_sources': local}
     return {'node-sources.json': node, 'node-layout.json': layout, 'cargo-sources.json': cargo, 'source-locks.json': commitment}
 
 

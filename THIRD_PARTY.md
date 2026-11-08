@@ -78,11 +78,23 @@ external registry as part of this licensing change.
   audio/video pipelines, but use a synthetic dependency resolver and host shared
   libraries: they are not full AppImage or binary-license clearance.
 
+## Vendored GLib wrapper
+
+`src-tauri/vendor/glib` contains the MIT-licensed published GLib Rust wrapper
+`0.18.5` with the upstream `VariantStrIter` safety fix backported. Its original
+package metadata, authorship and license are retained; Mourn does not claim
+ownership of the upstream implementation. See `src-tauri/vendor/README.md`, the
+original upstream patch, and `glib.provenance.json` for exact source revisions,
+archive checksum, modifications and the complete file-hash inventory. The local
+Flatpak recipe installs `glib/LICENSE` with the package notices.
+
 ## Retained effects and artwork
 
-The starfield background and the embedded default cursor effect are original
-project artwork and are covered by the AGPL-3.0-only license governing this
-repository.
+The origin, authorship and redistribution permissions for the starfield
+background and the embedded default cursor effect are **UNKNOWN**. These
+retained effects are not claimed as original project artwork or covered by
+Mourn's project license. Their appearance is unchanged; this entry records
+unresolved rights, not permission to redistribute them.
 
 The wallet/donation artwork at the paths listed in [NOTICE.md](NOTICE.md) is
 project-original work covered by that license statement.

@@ -54,6 +54,18 @@ test('unused GSAP is absent from the distribution dependency graph', () => {
   }
 });
 
+test('retained starfield and cursor effects have unknown rights without a project-ownership claim', () => {
+  const attribution = read('THIRD_PARTY.md');
+  assert.match(attribution, /starfield[\s\S]*?UNKNOWN/);
+  assert.doesNotMatch(attribution, /starfield background and the embedded default cursor effect are original/);
+  const inventory = read('THIRD_PARTY_INVENTORY.md');
+  for (const asset of ['src/composables/useCursorEffect.ts', 'public/plain_starfield_less_blue_2.png']) {
+    const row = inventory.split('\n').find(line => line.startsWith('| `') && line.includes(asset));
+    assert.ok(row?.includes('UNKNOWN'), asset);
+    assert.doesNotMatch(row, /Original project artwork/);
+  }
+});
+
 test('notices preserve ownership limits and separate trademark rights', () => {
   assert.match(read('NOTICE.md'), /Copyright \(C\) Mourn Team/);
   assert.match(read('NOTICE.md'), /does not claim ownership of third-party work/);

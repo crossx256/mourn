@@ -132,6 +132,12 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
           # Off by default in code; the shipped builds enable customization.
           VITE_CLIENT_THEMES: 'true'
+      - name: Verify optimized Linux GLib regression
+        if: runner.os == 'Linux'
+        run: cargo test --locked --release --target "${{ matrix.target }}" --features custom-protocol --manifest-path src-tauri/Cargo.toml --test glib_variant_iter
+        env:
+          MOURN_ISOLATED_BUILD: '1'
+          MOURN_ENABLE_UPDATER: 'true'
       - run: node scripts/generate_updater_manifest.js && node scripts/stage_release_assets.js
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

@@ -14,3 +14,7 @@
 /flatpak/*.sh text eol=lf
 /scripts/*.sh text eol=lf
 /headers.txt text eol=lf
+
+# Preserve upstream bytes, including whitespace in the reviewed source and patch.
+/src-tauri/vendor/glib/** -text -whitespace
+/src-tauri/vendor/glib-variant-str-iter.patch -text -whitespace

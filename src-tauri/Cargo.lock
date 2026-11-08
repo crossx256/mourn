@@ -1453,8 +1453,6 @@ dependencies = [
 [[package]]
 name = "glib"
 version = "0.18.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "233daaf6e83ae6a12a52055f568f9d7cf4671dabb78ff9560ab6da230ce00ee5"
 dependencies = [
  "bitflags 2.13.1",
  "futures-channel",
@@ -2358,13 +2356,14 @@ dependencies = [
 
 [[package]]
 name = "mourn-desktop"
-version = "1.5.3"
+version = "1.5.4"
 dependencies = [
  "base64 0.22.1",
  "chrono",
  "dirs",
  "discord-rich-presence",
  "getrandom 0.2.17",
+ "glib",
  "hex",
  "keyring",
  "libc",

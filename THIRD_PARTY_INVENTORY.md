@@ -167,8 +167,8 @@ The team’s approval/ownership statement for original Mourn logos and sounds is
 | `public/mournLogoprot1.svg` | Logo/icon candidate; map team-original approval to this exact file and record derivation/third-party inputs. Trademark rights separate. |
 | `public/mourn_notification.mp3` | Sound; possible team-original statement coverage, but author/source and third-party samples need path-specific confirmation. |
 | `src/utils/notificationSoundData.ts:13` | Embedded base64 representation of `public/mourn_notification.mp3`; decoded bytes are identical, SHA-256 `81511fa51b7d9576f60d393943ad62e85406f762776a9a5cc37c068cc322fd23`. Same outstanding team-original/source/samples confirmation as the MP3, not a separate ownership finding. |
-| `src/composables/useCursorEffect.ts` embedded default PNG | Original project artwork, covered by the repository license. |
-| `public/plain_starfield_less_blue_2.png` | Original project artwork, covered by the repository license. |
+| `src/composables/useCursorEffect.ts` embedded default PNG | UNKNOWN — origin, authorship, license and redistribution permission not established; retained unchanged. |
+| `public/plain_starfield_less_blue_2.png` | UNKNOWN — origin, authorship, license and redistribution permission not established; retained unchanged. |
 | `public/theme-prepaint.js` | Public code/template asset; team license only to extent team-authored. Copied snippets/upstream provenance not established here. |
 | `public/tray-menu.css` | Public code/template asset; team license only to extent team-authored. Copied snippets/upstream provenance not established here. |
 | `public/tray-menu.html` | Public code/template asset; team license only to extent team-authored. Copied snippets/upstream provenance not established here. |

@@ -1,6 +1,13 @@
 {
-  "schema": 2,
+  "schema": 3,
   "lockfile_encoding": "utf-8-lf",
   "bun_lock_sha256": "5082694ad904da90d52397717daaab650e0fb891b81fc4b4b8ca623af3ef6a6e",
-  "cargo_lock_sha256": "a55297e61ffbc660c23bdbf7065d694e6bae4ba85634ac48472a56c4f3baf289"
+  "cargo_lock_sha256": "facfe1af4f9d5c28f87cc350f5563df5092a714454ba66f3cb7b0e4ccc5c066a",
+  "local_cargo_sources": {
+    "glib": {
+      "version": "0.18.5",
+      "path": "src-tauri/vendor/glib",
+      "provenance_sha256": "6fe7c8775ac126cc52f79cdc994d5abe421d92899ed3914cccd5eb9bc68a235b"
+    }
+  }
 }
