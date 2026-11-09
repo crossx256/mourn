@@ -1,163 +1,161 @@
-# Flatpak preparation and release gates
+# Experimental Flatpak packaging (work in progress)
 
-This is a **candidate build recipe**, not a verified Flathub submission. No
-Flatpak was built, installed, or launched during Windows remediation. A Linux
-maintainer must complete every unchecked step below before claiming readiness.
+This directory contains Mourn's local Flatpak recipe. It is not a ready-to-submit
+Flathub package. Keep packaging validation separate from account, media, portal,
+keyring, architecture and redistribution-rights checks.
 
-## What changed
+The GNOME 51 recipe has not been built or runtime-validated. Secret portal
+integration is unfinished, so direct Secret Service access remains necessary.
+Credential namespace isolation is also incomplete: the Vault commands still use
+the native keyring service. Test only with synthetic credentials in an isolated
+environment; do not install this branch as a release or use native saved secrets.
 
-- One application module installs the actual `mourn-desktop` binary and the
-  desktop/AppStream/icon files from that same source tree.
-- `MOURN_TARGET=desktop`, `custom-protocol`, and `dist/spa` select the native
-  renderer and embed assets; no dev server, sidecar, or prebuilt frontend is used.
-- Node dependencies come from **Bun's locked graph**, not the stale npm lock/cache.
-  Flatpak extracts integrity-pinned npm tarballs directly to their locked
-  `node_modules` paths. `setup-node.mjs` checks identities and creates executable
-  links; it does not run package lifecycle scripts. This is a project-specific
-  preparation path and must be exercised with an offline Linux build.
-- Cargo crates use Cargo.lock checksums and a generated `.cargo/config.toml`
-  pointing to `cargo/vendor`; `cargo build --frozen` cannot access the network.
-- Native self-updates are disabled/rejected in Flatpak. Updates belong to Flatpak.
-- No home/host filesystem grant, privileged installer, or default Discord-socket
-  grant. File saving uses an explicitly selected dialog path; desktop portals
-  and keyring integration require runtime testing.
+## Dependencies
 
-## Generate dependency sources (offline; no installs)
-
-From the frontend root, with Python 3.11+:
+Use Python 3.11+, Flatpak and flatpak-builder on Linux. The manifest selects
+GNOME 51 and the Node 22 / Rust stable SDK extensions. Install compatible runtime,
+SDK and extension branches, and record their exact OSTree commits before building.
 
 ```sh
-python -B flatpak/prepare-sources.py
-python -B flatpak/prepare-sources.py --check
-python -B flatpak/test_sources.py
+flatpak --user info org.gnome.Platform//51
+flatpak --user info org.gnome.Sdk//51
+flatpak run --command=pkg-config --devel org.gnome.Sdk//51 --modversion gtk+-3.0 webkit2gtk-4.1 libsoup-3.0 openssl
 ```
 
-Commit `cargo-sources.json`, `node-sources.json`, `node-layout.json`, and
-`source-locks.json` together with lockfile changes. The generator rejects
-non-registry/unhashed inputs and dependency/override drift. It supports the current
-Bun lock format and Linux x86_64/aarch64; new formats/platforms require review.
-Lock commitments explicitly use canonical UTF-8/LF text (`source-locks.json`
-schema 2); `.gitattributes` enforces LF in distributed checkouts. They are not
-hashes of arbitrary Windows CRLF worktree bytes. The only current bin collision,
-`sass`, has a reviewed `sass-embedded` owner; new contenders fail closed.
-`package-lock.json` is legacy and is not a Flatpak input. Do not run `npm ci`.
-The old upstream generator is retained as reference, not executed by this recipe.
+The GNOME runtime does not supply the AppIndicator library loaded by Tauri's tray.
+The recipe builds pinned Ayatana dependencies from `shared-modules/`, including
+libdbusmenu and the build-only intltool dependency. See
+[shared-modules/README.md](shared-modules/README.md) for provenance and local changes.
+Runtime notices are installed under `/app/share/licenses/bio.mourn.newlife/`.
 
-## Linux environment validation (not performed here)
+## Generate dependency sources
 
-GNOME 50 and its Node/Rust SDK extensions are **candidate requirements**, not a
-claim that all required libraries are available. Resolve/install the matching
-runtime, SDK and extension refs on a Linux builder under your normal policy;
-record their exact OSTree commits. Before building, verify:
+From the frontend root:
 
 ```sh
-flatpak --user info org.gnome.Platform//50
-flatpak --user info org.gnome.Sdk//50
-flatpak run --command=pkg-config --devel org.gnome.Sdk//50 --modversion gtk+-3.0 webkit2gtk-4.1 libsoup-3.0 openssl
+python3 -B flatpak/prepare-sources.py
+python3 -B flatpak/prepare-sources.py --check
+python3 -B flatpak/test_sources.py
+node --test tests/packaging.test.mjs
 ```
 
-Also check `cargo --version`, `rustc --version`, and `node --version` inside a
-builder configured with the manifest's SDK extensions. Verify runtime shared
-libraries (including tray/notification dependencies), not just SDK pkg-config
-metadata. If WebKitGTK 4.1 or GTK3 is absent, choose a supported compatible runtime
-or add a reviewed checksum-pinned module. Do not guess archive hashes.
+Commit `cargo-sources.json`, `node-sources.json`, `node-layout.json` and
+`source-locks.json` with lockfile changes. JavaScript sources come from Bun's
+locked graph; the legacy npm lockfile is not an input. Integrity-pinned tarballs
+are extracted into their locked paths. `setup-node.mjs` validates package
+identities and creates executable links without running dependency lifecycle code.
+Quasar's Capacitor-mode alias points to this same root tree, including in desktop
+SPA builds. Do not copy host dependencies or run an online package install.
 
-## Local build, then offline rebuild
+Cargo sources use lockfile checksums and `cargo/vendor`; compilation uses
+`cargo build --frozen`. Canonical lock commitments use UTF-8/LF text, not arbitrary
+Windows CRLF worktree bytes. Both x86_64 and aarch64 source layouts are generated;
+this does not prove either architecture has compiled or run.
 
-The checked-in manifest deliberately uses a local `type: dir` development source
-and excludes `.git`, `.env*`, node_modules, and generated outputs. It is **not**
-a public-source manifest. In a disposable Linux workspace:
+## Reviewed GLib backport
+
+GTK3 pins the Rust GLib wrapper to `0.18`. The local compatibility backport in
+`src-tauri/vendor/glib` retains upstream `0.18.5` with the `VariantStrIter`
+safety fix; see `src-tauri/vendor/README.md` for the exact source and patch.
+Its version is not relabeled as an upstream fixed release. Optimized iterator
+regressions run after frontend compilation in the offline recipe.
+
+`source-locks.json` schema 3 commits the reviewed local source alongside the
+canonical lockfiles. The generator checks a pinned provenance manifest and every
+vendored file, rejecting source drift, symlinks, extra/missing files, unexpected
+local packages and reintroduced registry GLib. Source code is part of the audited
+application archive; no local dependency is fetched or patched during compilation.
+The upstream MIT notice remains separate from the project's license and is
+installed in the package.
+
+## Isolated build
+
+The checked-in manifest uses a development `type: dir`, `path: ..` source. A
+network-isolated `--sandbox` builder rejects a directory outside the manifest's
+folder. Export a reviewed, committed source ref with `make-source-archive.sh` into
+a separate workspace, beside a disposable manifest. Replace only its application
+source block with `type: archive`, the local archive path, its measured SHA-256,
+and `strip-components: 0`. Retain the dependency JSON files and `shared-modules/`
+next to that manifest. Never copy a working tree's `.env`, credentials, dependency
+trees or generated outputs into the archive.
+
+Set `VITE_CAP_API_ENDPOINT` explicitly in the disposable manifest's application
+build environment, using the reviewed public Cap endpoint and public site key.
+Do not read private environment files to populate a public recipe. Production
+builds use the production API/WebSocket URLs; staging/offline tests must override
+them explicitly. Native self-updates remain disabled; Flatpak owns updates.
+
+From the disposable workspace:
 
 ```sh
-flatpak-builder --user --download-only build-dir flatpak/bio.mourn.desktop.yml
-flatpak-builder --user --disable-download --force-clean build-dir flatpak/bio.mourn.desktop.yml
+flatpak-builder --user --jobs=1 --state-dir=state --download-only --force-clean build-dir flatpak/bio.mourn.newlife.yml
+flatpak-builder --user --jobs=1 --state-dir=state --sandbox --disable-download --force-clean --keep-build-dirs --repo=repo build-dir flatpak/bio.mourn.newlife.yml
+flatpak build-bundle repo mourn-test.flatpak bio.mourn.newlife
 ```
 
-Downloads occur only in the first step and require separate network approval.
-Run the second step with network access disabled at the builder/container boundary
-to establish a real offline build. Preserve logs, SDK commits, architecture,
-source commitments and artifact hashes. Repeat with a fresh build directory;
-compare outputs and explain nondeterministic metadata before claiming byte-for-byte
-reproducibility. Hash-pinned inputs alone are not that proof.
+Download sources first, then compile with downloads and build-time network access
+disabled. Preserve `state/` across retries. Limit Cargo workers and Node's heap
+when the builder has limited memory. Pinning inputs does not establish
+byte-for-byte reproducibility; that requires independent rebuild comparison.
 
-After reviewing finish-args, install only into a test user/profile, then launch
-with a **mock/staging backend and synthetic accounts**, never production saved
-credentials. The checked-in production URLs/CSP need an explicitly reviewed test
-override for a runtime test. Validate:
+## Runtime validation
 
-- Wayland and X11 startup, embedded assets, reload, icon/window association.
-- GTK/WebKit/GStreamer audio/video, Mesa/NVIDIA paths and accessibility zoom.
-- Dialog portal save/cancel; no unrestricted home or host access.
-- Locked, absent, and available Secret Service; restart/stay-logged-in without
-  replacing keys or falling back to plaintext on failure.
-- Notifications, permission denial, tray presence/absence and minimize/restore.
-- Same-user relaunch raises the original process; different OS users are isolated.
-- Offline boot and reconnection; no request storm; updater never requests or installs.
-- Account switch during sends/history/uploads; retention, account wipes, and
-  migration failure recovery using fixtures. Do not infer backend controls from UI.
-- x86_64 and aarch64 separately. Windows Cargo checks do not compile Linux-only code.
+Install into an isolated test environment. Flatpak uses `bio.mourn.newlife`, while
+the native client keeps `bio.mourn.desktop`. This does not yet establish complete
+credential isolation; the Vault keyring service is still shared.
+Use temporary app data, synthetic accounts, and staging or explicitly reviewed
+production read-only checks. Never reuse saved production credentials for a test.
 
-Discord presence is optional: a user may grant the specific `xdg-run/discord-ipc-0`
-socket if desired. It is not a reason to grant all of `xdg-run` or the home folder.
-There is currently no registered deep-link handler; the desktop launcher therefore
-passes no `%U`/`%F` arguments. Add a handler only with scheme-validation tests.
+Verify the finished app, not only SDK pkg-config or `ldd`: dynamically loaded
+libraries can still be missing. Required checks include:
 
-## Public-source / Flathub gate
+- Rendered UI, X11 and Wayland, icons, reload and same-user relaunch behavior.
+- Offline startup and reconnection without a request storm.
+- Account sign-in/out/switching and encrypted storage with synthetic accounts.
+- Available, locked and absent Secret Service; no plaintext fallback or key loss.
+- Audio/video, notifications, tray behavior and graphics-driver compatibility.
+- File-dialog portal save/cancel, with no host/home filesystem permission grant.
+- No native updater download/install attempt inside Flatpak.
+- Separate x86_64 and aarch64 builds and runtime checks.
 
-1. The project declares AGPL-3.0-only. Resolve remaining custom asset/font
-   provenance and review the attribution ledger; the SPDX declaration alone
-   does not establish third-party redistribution rights.
-2. Verify repository/bugtracker ownership and publish real screenshots. Record the
-   release's actual date/version and OARS rating after product-owner review.
-3. Review and commit all fixes. Audit the **exact** intended source ref:
-   `python -B scripts/source_audit.py COMMIT`. Before committing, scan the exact
-   index with `python -B scripts/source_audit.py --staged`; this intentionally
-   excludes unstaged/untracked bytes. Investigate findings privately.
-   This does not audit all historical Git objects or certify legal clearance.
-4. Create a local audited archive using
-   `flatpak/make-source-archive.sh COMMIT EXISTING_DIR/source.tar.gz`.
-   Review its contents and SHA-256. Publishing requires a separate manual action.
-5. Replace the local `type: dir` source in a submission copy with that publicly
-   accessible archive URL plus its actual SHA-256 (and `strip-components: 0`
-   for the archive tool's root-level layout). Include generated dependency sources.
-   Never substitute an invented URL/hash or a private clone URL.
-6. Run `desktop-file-validate` and `appstreamcli validate --pedantic` against the
-   installed files, then Flathub's manifest/AppStream permission linting on both
-   architectures. Review any portal or filesystem permission request explicitly.
+A private session bus without service activation can isolate startup tests from
+host keyring and portal services. This intentionally cannot validate real host
+portal/keyring integration. Test those separately. Remove temporary installations
+when finished; do not leave a loopback-only test package installed as a release.
 
-No submission, package install, release publication, tagging, or deployment is
-automated by these preparation scripts.
+```sh
+desktop-file-validate flatpak/bio.mourn.newlife.desktop
+appstreamcli validate --pedantic flatpak/bio.mourn.newlife.metainfo.xml
+```
 
-## Offline public manifest preparation (no build or download)
+Validate hosted screenshots and metadata with network access as well. Metadata
+syntax validation does not prove a screenshot URL exists, ownership, licensing
+clearance, or that the declared release has been published.
 
-`node flatpak/submission-manifest.mjs CONFIG.json VERIFIED_ARCHIVE OUTPUT.yml`
-creates a new file only (refuses overwrite). Keep it alongside the dependency
-JSON files, since their relative references are preserved. The archive must contain
-all reviewed source and packaging files at the expected archive root layout.
+## Public distribution
 
-Supply JSON keys `archiveUrl`, `archiveSha256`, `publicArchiveVerified: true`,
-`runtimeVersion`, `runtimeCommit`, `sdkCommit`, `nodeVersion`, `rustVersion`, and
-`capEndpoint`. There are deliberately no guessed defaults. `runtimeCommit` and
-`sdkCommit` are exact 64-character OSTree commits; extension versions are explicit
-branches, **not immutable extension commits**. Record and independently verify
-extension OSTree commits on the builder too. The generator checks the local archive
-SHA-256 and requires HTTPS URLs without embedded credentials or query strings.
-It performs no network access: the acknowledgement is operator-supplied evidence,
-not proof that the remote URL exists or serves the same bytes. Verify anonymous
-public retrieval, checksum, archive layout and source audit separately. Domain
-validation is syntactic, not a DNS/public reachability or ownership attestation.
+Audit the exact intended source ref with `scripts/source_audit.py`; a pattern
+scan is not a complete secret, history, privacy or licensing audit. The archive
+helper creates a local audited source archive and never uploads it. Publishing,
+tagging, pushing and deployment remain separate actions.
 
-No concrete public Cap endpoint was found in tracked documentation. Do not read a
-private `.env` to populate a public recipe: obtain a reviewed documented public
-endpoint including its public site key. The local manifest fails before dependency
-setup when it is absent; generated manifests supply it explicitly. Client themes
-remain enabled, matching the current desktop release configuration.
+The existing `submission-manifest.mjs` utility can replace a local source with an
+explicit HTTPS archive URL and measured checksum for external distribution. It
+requires independently verified public retrieval and explicit runtime/SDK/extension
+configuration. Its acknowledgement flag is not remote verification. It does not
+make a package eligible for Flathub and must not be used to misrepresent one.
 
-Publication gates for Flathub: the screenshot URL
-`https://mourn.bio/assets/screenshot-main.png` was previously reported 404 and has
-not been replaced with a placeholder; supply a real screenshot. Repository and
-bugtracker details, custom asset/font provenance and OARS review are also
-outstanding (the project SPDX declaration is already AGPL-3.0-only).
-AppStream release date 2026-10-21 matches the `v1.5.3` Git tag. Runtime/SDK library compatibility,
-extension commits, both architecture builds, offline rebuild and all runtime smoke
-tests above remain unverified. Do not infer readiness from offline metadata checks.
+Flathub's [current requirements](https://docs.flathub.org/docs/for-app-authors/requirements)
+prohibit generated or assisted manifests and automated submission interactions.
+They also prohibit application IDs ending in generic terms such as `.desktop`.
+This local package uses `bio.mourn.newlife`. Its build-only Tauri configuration
+override and `MOURN_FLATPAK_APP_ID` must agree. Native Windows/AppImage installs
+retain `bio.mourn.desktop`; Android retains its existing package identity.
+Flatpak account secrets, internal keys, graphics preferences and instance locks
+use its separate namespace rather than importing or overwriting native storage.
+A Flathub submission needs independently authored compliant packaging,
+appropriate provenance disclosures and review of all current requirements.
+
+Do not distribute until custom asset/font rights and attribution are established.
+Keep real, publicly accessible screenshots and accurate release/OARS metadata;
+never invent an archive URL, screenshot, checksum or release date to pass a gate.

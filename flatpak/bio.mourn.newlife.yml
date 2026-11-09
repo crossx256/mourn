@@ -1,8 +1,8 @@
 # Local development manifest. Public submissions must replace the single dir
 # source with an accessible, reviewed archive URL and SHA-256 (see README.md).
-app-id: bio.mourn.desktop
+app-id: bio.mourn.newlife
 runtime: org.gnome.Platform
-runtime-version: '50'
+runtime-version: '51'
 sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.node22
@@ -17,15 +17,21 @@ finish-args:
   - --socket=pulseaudio # User-selected audio
   - --talk-name=org.kde.StatusNotifierWatcher # Tray integration
   - --talk-name=org.freedesktop.secrets # OS credential storage
+  - --filesystem=xdg-run/app/com.discordapp.Discord:create # Discord Flatpak RPC, including late startup
   # Desktop portals are available through Flatpak's normal portal mediation.
-  # Optional Discord RPC may be enabled by the user with a narrow socket override.
+  # Native Discord or other clients may need their own narrow socket override.
 modules:
+  # Flathub shared-modules d1ab132e6480acefc5c510ee13d8d586d36cab19,
+  # with explicit Flatpak library install paths; see shared-modules/README.md.
+  - shared-modules/libayatana-appindicator/libayatana-appindicator-gtk3.json
   - name: mourn
     buildsystem: simple
     build-options:
       append-path: /usr/lib/sdk/node22/bin:/usr/lib/sdk/rust-stable/bin
       env:
         MOURN_TARGET: desktop
+        MOURN_FLATPAK_APP_ID: bio.mourn.newlife
+        TAURI_CONFIG: '{"identifier":"bio.mourn.newlife"}'
         MOURN_ENABLE_UPDATER: 'false'
         MOURN_ISOLATED_BUILD: '1'
         VITE_API_BASE: https://mourn.bio
@@ -38,16 +44,19 @@ modules:
       # No npm ci, Bun cache emulation, lifecycle scripts, or network resolution.
       - test -n "${VITE_CAP_API_ENDPOINT:-}" || { echo "Required public VITE_CAP_API_ENDPOINT is missing" >&2; exit 1; }
       - node flatpak/setup-node.mjs
+      # Quasar resolves installed-mode aliases even in desktop SPA builds.
+      - ln -s ../node_modules src-capacitor/node_modules
       - node node_modules/@quasar/app-vite/bin/quasar.js prepare
       - node node_modules/vue-tsc/bin/vue-tsc.js --noEmit
       - node node_modules/@quasar/app-vite/bin/quasar.js build -m spa
       - cargo test --frozen --release --features custom-protocol --manifest-path src-tauri/Cargo.toml --test glib_variant_iter
       - cargo build --frozen --release --features custom-protocol --manifest-path src-tauri/Cargo.toml
       - install -Dm755 src-tauri/target/release/mourn-desktop /app/bin/mourn-desktop
-      - install -Dm644 src-tauri/vendor/glib/LICENSE /app/share/licenses/bio.mourn.desktop/glib/LICENSE
-      - install -Dm644 flatpak/bio.mourn.desktop /app/share/applications/bio.mourn.desktop.desktop
-      - install -Dm644 flatpak/bio.mourn.desktop.metainfo.xml /app/share/metainfo/bio.mourn.desktop.metainfo.xml
-      - install -Dm644 src-tauri/icons/icon.svg /app/share/icons/hicolor/scalable/apps/bio.mourn.desktop.svg
+      - install -Dm644 LICENSE /app/share/licenses/bio.mourn.newlife/mourn/LICENSE
+      - install -Dm644 src-tauri/vendor/glib/LICENSE /app/share/licenses/bio.mourn.newlife/glib/LICENSE
+      - install -Dm644 flatpak/bio.mourn.newlife.desktop /app/share/applications/bio.mourn.newlife.desktop
+      - install -Dm644 flatpak/bio.mourn.newlife.metainfo.xml /app/share/metainfo/bio.mourn.newlife.metainfo.xml
+      - install -Dm644 src-tauri/icons/icon.svg /app/share/icons/hicolor/scalable/apps/bio.mourn.newlife.svg
     sources:
       - type: dir
         path: ..

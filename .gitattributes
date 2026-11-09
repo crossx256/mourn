@@ -18,3 +18,5 @@
 # Preserve upstream bytes, including whitespace in the reviewed source and patch.
 /src-tauri/vendor/glib/** -text -whitespace
 /src-tauri/vendor/glib-variant-str-iter.patch -text -whitespace
+# Pinned upstream patches contain significant unified-diff context whitespace.
+/flatpak/shared-modules/**/*.patch -text -whitespace

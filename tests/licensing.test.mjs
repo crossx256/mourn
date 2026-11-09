@@ -41,7 +41,7 @@ test('verified licenses retain their exact bytes with Windows autocrlf enabled',
 test('package and AppStream metadata agree on version 3 only', () => {
   assert.equal(JSON.parse(read('package.json')).license, 'AGPL-3.0-only');
   assert.match(read('src-tauri/Cargo.toml'), /^license = "AGPL-3\.0-only"$/m);
-  const xml = read('flatpak/bio.mourn.desktop.metainfo.xml');
+  const xml = read('flatpak/bio.mourn.newlife.metainfo.xml');
   assert.match(xml, /<project_license>AGPL-3\.0-only<\/project_license>/);
   assert.match(xml, /<developer id="bio\.mourn">\s*<name>Mourn Team<\/name>\s*<\/developer>/);
   assert.match(xml, /<metadata_license>CC0-1\.0<\/metadata_license>/);

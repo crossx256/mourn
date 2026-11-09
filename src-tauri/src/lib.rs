@@ -11,6 +11,7 @@ mod atomic_file;
 mod credentials;
 mod deb_update;
 mod expiry;
+mod identity;
 mod watcher_storage;
 pub mod close_policy;
 use credentials::{
@@ -365,7 +366,7 @@ pub struct SystemStatus {
 }
 
 fn graphics_preference_path() -> Option<std::path::PathBuf> {
-    dirs::config_dir().map(|dir| dir.join("bio.mourn.desktop").join("graphics-mode"))
+    dirs::config_dir().map(|dir| dir.join(identity::application_id()).join("graphics-mode"))
 }
 
 fn hardware_acceleration_preference() -> bool {

@@ -65,7 +65,8 @@ fn save_index(path: &Path, index: &Index) -> Result<(), String> {
 }
 
 fn entry(service: &str, name: &str) -> Result<keyring::Entry, String> {
-    keyring::Entry::new(service, name).map_err(|_| "OS keychain unavailable".into())
+    let service = crate::identity::keyring_service(service);
+    keyring::Entry::new(&service, name).map_err(|_| "OS keychain unavailable".into())
 }
 fn get(service: &str, name: &str) -> Result<Option<String>, String> {
     match entry(service, name)?.get_password() {

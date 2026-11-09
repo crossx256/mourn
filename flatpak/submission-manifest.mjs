@@ -43,7 +43,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   try {
     const [configPath, archivePath, outputPath, ...extra] = process.argv.slice(2);
     if (!configPath || !archivePath || !outputPath || extra.length) throw new Error('Usage: node flatpak/submission-manifest.mjs CONFIG.json VERIFIED_ARCHIVE OUTPUT.yml');
-    const template = readFileSync(new URL('./bio.mourn.desktop.yml', import.meta.url), 'utf8');
+    const template = readFileSync(new URL('./bio.mourn.newlife.yml', import.meta.url), 'utf8');
     const output = submissionManifest(template, JSON.parse(readFileSync(configPath, 'utf8')), readFileSync(archivePath));
     writeFileSync(outputPath, output, { flag: 'wx' });
   } catch (error) { console.error(error.message); process.exitCode = 1; }

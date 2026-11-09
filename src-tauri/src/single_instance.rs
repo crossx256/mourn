@@ -79,7 +79,7 @@ mod platform {
                 "unsafe runtime directory",
             ));
         }
-        let dir = runtime.join("bio.mourn.desktop-instance");
+        let dir = runtime.join(format!("{}-instance", crate::identity::application_id()));
         private_directory(&dir, uid)?;
         let lock = OpenOptions::new()
             .read(true)
@@ -155,7 +155,7 @@ mod platform {
             drop(first);
             assert!(matches!(claim_at(dir.path()).unwrap(), Claim::Primary(_)));
             fs::set_permissions(
-                dir.path().join("bio.mourn.desktop-instance"),
+                dir.path().join(format!("{}-instance", crate::identity::application_id())),
                 fs::Permissions::from_mode(0o777),
             )
             .unwrap();
