@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { Notify } from 'quasar';
 import { api } from 'boot/axios';
 import type { ProfileLink, ProfileLinkIcon } from 'src/types/profile';
 import { useAuthStore } from './auth';
@@ -622,7 +623,14 @@ export const useDashboardStore = defineStore('dashboard', {
               const { useSecureStore } = await import('src/composables/useSecureStore');
               await useSecureStore()
                 .removeCredentials(username)
-                .catch(() => {});
+                .catch(() => {
+                  // The password changed on the server. Preserve logout and
+                  // report device cleanup separately, not as a failed change.
+                  Notify.create({
+                    type: 'warning',
+                    message: 'Password changed, but saved credentials could not be removed. Retry removing this saved account when secure storage is available.',
+                  });
+                });
             }
             await authStore.logout();
           }
@@ -775,9 +783,7 @@ export const useDashboardStore = defineStore('dashboard', {
           }
           if (deletedUsername) {
             const { useSecureStore } = await import('src/composables/useSecureStore');
-            await useSecureStore()
-              .removeCredentials(deletedUsername)
-              .catch(() => {});
+            await useSecureStore().removeCredentials(deletedUsername);
           }
           return { success: true };
         }

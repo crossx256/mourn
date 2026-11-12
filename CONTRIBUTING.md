@@ -47,6 +47,29 @@ We welcome feature suggestions! Before creating a new issue:
 
 ### Pull Requests
 
+#### What you can work on without the backend
+
+This repository contains the web, desktop and Android client. The backend and
+administration services are separate and are not included. You can contribute UI,
+customization, accessibility, client-side logic, tests, packaging and documentation
+without access to server code, production credentials or the database.
+
+`bun run test` uses the local automated-test configuration; tests requiring API
+responses use mocks or fixtures rather than requiring a production account. Add
+tests for your changes using those existing patterns. A local UI build does not
+prove that a server-dependent feature works end to end.
+
+For changes that need live API behavior, first agree with maintainers on a test
+environment and API contract. If a new server capability is required, coordinate
+the client and private backend changes before submitting a complete integration
+claim. Do not send production credentials, real user data or private backend files
+with a pull request, and do not enter real credentials into an untrusted fork.
+
+Forks and pull requests do not grant write access to this repository. Maintainers
+review submissions, request changes and decide whether to merge them. Contributors
+keep their own Git attribution and copyrights; no separate relicensing permission
+is implied by submitting work under the current project license.
+
 #### Getting Started
 
 1. **Check Issues** - Look for issues tagged with `good first issue` or `help wanted`
@@ -63,6 +86,7 @@ We welcome feature suggestions! Before creating a new issue:
 ```bash
 # Run from your clone of this repository. See README.md for pinned toolchains.
 bun install --frozen-lockfile --ignore-scripts
+bun install --cwd=src-capacitor --frozen-lockfile --ignore-scripts
 node node_modules/@quasar/app-vite/bin/quasar.js prepare
 
 # Copy environment template

@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { Notify } from 'quasar';
 import { api, mobilePreAuthApi, refreshMobileSession } from 'boot/axios';
 import type {
   ActivationRegisterCredentials,
@@ -296,6 +297,12 @@ export const useAuthStore = defineStore('auth', {
               if (import.meta.env.DEV) {
                 console.warn('Secure credential clear failed after login', err);
               }
+              // Authentication already succeeded. Warn about the privacy action
+              // separately; never invite another login or skip Vault setup.
+              if (isCurrent()) Notify.create({
+                type: 'warning',
+                message: 'Signed in, but saved credentials could not be removed. Auto-login may still be enabled. Retry removing this saved account when secure storage is available.',
+              });
             }
           }
 

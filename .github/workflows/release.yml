@@ -130,7 +130,7 @@ jobs:
           VITE_KLIPY_API_KEY: ${{ secrets.VITE_KLIPY_API_KEY || vars.VITE_KLIPY_API_KEY }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          # Off by default in code; the shipped builds enable customization.
+          # Keep customization explicitly enabled in isolated release builds.
           VITE_CLIENT_THEMES: 'true'
       - name: Verify optimized Linux GLib regression
         if: runner.os == 'Linux'
@@ -202,19 +202,30 @@ jobs:
     env:
       RELEASE_TAG: ${{ inputs.tag }}
     steps:
+      # Use the dispatch commit's reviewed guard, not code from the mutable tag.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.22.0'
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: reviewed-release-draft
           path: artifacts/draft-release
+      - name: Publication guard regression tests
+        run: node --test tests/releasePublishGuard.test.mjs
       - name: Refuse to publish from a non-default branch or a tag that moved
+        env:
+          RELEASE_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
-          [ "${GITHUB_REF}" = "refs/heads/${GITHUB_EVENT_REPOSITORY_DEFAULT_BRANCH}" ] || {
+          [ -n "${RELEASE_DEFAULT_BRANCH}" ] && [ "${GITHUB_REF}" = "refs/heads/${RELEASE_DEFAULT_BRANCH}" ] || {
             echo "::error::Publish runs must be dispatched from the default branch."; exit 1; }
-          git init -q .
-          git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
-          git fetch -q --depth=1 origin "refs/tags/${RELEASE_TAG}:refs/tags/${RELEASE_TAG}"
-          echo "publishing tag ${RELEASE_TAG} at $(git rev-parse "refs/tags/${RELEASE_TAG}")"
+          git fetch -q --no-tags --depth=1 origin "refs/tags/${RELEASE_TAG}:refs/tags/${RELEASE_TAG}"
+          node scripts/release_publish_guard.mjs
       - name: Require every asset and its manifest
         run: |
           set -euo pipefail

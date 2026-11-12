@@ -160,13 +160,16 @@ export function useSecureStore() {
 
       if (isCapacitorRuntime()) {
         const storage = getSecureStorage();
-        if (!storage) return;
+        if (!storage) throw new Error('Secure credential storage is unavailable. Saved credentials were not removed; retry local account removal.');
         await storage.remove(`${CAPACITOR_CREDENTIAL_PREFIX}${username}`);
       }
     } catch (err) {
       if (import.meta.env.DEV) {
         console.warn('[SecureStore] removeCredentials failed', err);
       }
+      // Deletion is an explicit privacy action: callers must report failure and
+      // retain the saved-account entry so the user can retry cleanup.
+      throw err;
     }
   }
 
