@@ -1,2 +1,3 @@
-# Only the maintainer's approval satisfies the required code-owner review.
-* @crossx256
+# Every maintainer reviews every change. One approval from any of them satisfies
+# the required code-owner review on the protected default branch.
+* @crossx256 @v-alpha @pagewalk
