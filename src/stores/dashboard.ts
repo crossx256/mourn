@@ -3,13 +3,14 @@ import { Notify } from 'quasar';
 import { api } from 'boot/axios';
 import type { ProfileLink, ProfileLinkIcon } from 'src/types/profile';
 import { useAuthStore } from './auth';
-import { captureAccountOperation } from 'src/utils/accountLifecycle';
+import { captureAccountOperation, nextStoreRequest } from 'src/utils/accountLifecycle';
 import { loadRandomizeFileNames, persistRandomizeFileNames } from './dashboardPreferences';
 import type { DashboardData, DashboardUser } from 'src/types/dashboard';
 import type { Profile } from 'src/types/profile';
 
 // The "anonymous notifications" privacy toggle (GET/PUT).
 const NOTIFICATION_PREFERENCES_ENDPOINT = '/api/v1/notifications/preferences';
+const DASHBOARD_LOAD_TIMEOUT_MS = 30_000;
 
 // Extended profile with frontend-only fields for dashboard customization
 interface ExtendedProfile extends Profile {
@@ -283,15 +284,26 @@ export const useDashboardStore = defineStore('dashboard', {
 
       this.isLoading = true;
       this.error = null;
+      const operation = captureAccountOperation(authStore);
+      const isLatest = nextStoreRequest(this, 'profile');
+      const controller = new AbortController();
+      let timer: ReturnType<typeof setTimeout> | undefined;
 
       try {
-        await authStore.fetchCsrfToken();
+        // This read needs the session, not a separate CSRF request. Bound the
+        // entire Axios chain, not just the transport (interceptors can await).
+        const response = await Promise.race([
+          api.get('/api/v1/profile/dashboard', { signal: controller.signal }),
+          new Promise<never>((_, reject) => {
+            timer = setTimeout(() => {
+              reject(new Error('Dashboard load timed out'));
+              controller.abort();
+            }, DASHBOARD_LOAD_TIMEOUT_MS);
+          }),
+        ]);
+        if (!isLatest() || !operation.isCurrent()) return false;
 
-        const response = await api.get('/api/v1/profile/dashboard', {
-          headers: { 'X-CSRF-Token': authStore.csrfToken },
-        });
-
-        if (response.data.success && response.data.data) {
+        if (response.data?.success && response.data.data?.user?.id === operation.uid && response.data.data.profile) {
           const data: DashboardData = response.data.data;
 
           this.applyDashboardData(data);
@@ -301,12 +313,15 @@ export const useDashboardStore = defineStore('dashboard', {
         this.error = 'Failed to load dashboard data';
         return false;
       } catch (error: unknown) {
+        if (!isLatest() || !operation.isCurrent()) return false;
         const resp = (error as { response?: { data?: { error?: string } } })?.response;
-        this.error = resp?.data?.error || 'Failed to load dashboard data';
-        console.error('Dashboard fetch error:', error);
+        this.error = controller.signal.aborted
+          ? 'Profile loading timed out. Try again.'
+          : resp?.data?.error || 'Failed to load dashboard data';
         return false;
       } finally {
-        this.isLoading = false;
+        clearTimeout(timer);
+        if (isLatest()) this.isLoading = false;
       }
     },
 

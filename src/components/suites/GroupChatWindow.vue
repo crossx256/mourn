@@ -505,12 +505,18 @@
             <button
               type="submit"
               class="group-send-btn"
+              :aria-label="isSending ? 'Sending Suite message' : 'Send message'"
               :disabled="!draftMessage.trim() || isSending || isRateLimited"
               @mousedown.prevent
             >
-              <q-icon name="mdi-send" size="18px" />
+              <q-spinner v-if="isSending" size="18px" />
+              <q-icon v-else name="mdi-send" size="18px" />
             </button>
           </q-form>
+
+          <div class="group-send-status" role="status">
+            {{ isSending ? 'Sending Suite message' : '' }}
+          </div>
 
           <div v-if="mentionSuggestions.length" class="group-mention-picker">
             <button
@@ -772,6 +778,28 @@ const draftMessage = ref('');
 const isSending = ref(false);
 const isRateLimited = computed(() => groupStore.isRateLimited());
 const replyingTo = ref<GroupReplyReference | null>(null);
+let draftRevision = 0;
+let composerScope = 0;
+watch(
+  [draftMessage, replyingTo],
+  () => {
+    draftRevision += 1;
+  },
+  { flush: 'sync' },
+);
+watch(
+  [() => groupStore.activeGroupId, () => authStore.user?.id, () => authStore.authOperationGeneration],
+  () => {
+    composerScope += 1;
+    draftMessage.value = '';
+    replyingTo.value = null;
+    isSending.value = false;
+  },
+  { flush: 'sync' },
+);
+onBeforeUnmount(() => {
+  composerScope += 1;
+});
 const hoveredMessageId = ref<string | null>(null);
 const showEmojiPicker = ref(false);
 const showGifPicker = ref(false);
@@ -1095,7 +1123,6 @@ watch(
 watch(
   () => groupStore.activeGroupId,
   async (newId) => {
-    replyingTo.value = null;
     closeContextMenu();
     closeReactionPicker();
     if (newId) await scrollToBottom(false);
@@ -1286,29 +1313,36 @@ async function sendGroupFiles(picked: File[]) {
 
 async function handleSendMessage() {
   const groupId = groupStore.activeGroupId;
-  const text = draftMessage.value.trim();
+  const draft = draftMessage.value;
+  const text = draft.trim();
   if (!text || !groupId || isSending.value || !groupStore.canSendMessages) return;
-
-  void hapticSuccess();
 
   if (isRateLimited.value) {
     $q.notify({ type: 'negative', message: 'Not cool, slow down.' });
     return;
   }
 
+  const scope = composerScope;
+  const reply = replyingTo.value;
+  draftMessage.value = '';
+  replyingTo.value = null;
+  const clearedRevision = draftRevision;
   isSending.value = true;
+  showEmojiPicker.value = false;
+  showGifPicker.value = false;
+  void hapticSuccess();
+
   try {
-    const generation = authStore.authOperationGeneration;
-    const draft = draftMessage.value;
-    const reply = replyingTo.value;
-    await groupStore.sendMessage(groupId, text, reply ? { ...reply } : null);
-    if (generation === authStore.authOperationGeneration && groupId === groupStore.activeGroupId && draft === draftMessage.value && reply === replyingTo.value) {
-      draftMessage.value = '';
-      replyingTo.value = null;
-      showEmojiPicker.value = false;
-      await scrollToBottom();
-    }
+    const id = await groupStore.sendMessage(groupId, text, reply ? { ...reply } : null);
+    if (!id) throw new Error('Suite send did not complete');
+    if (scope === composerScope) void scrollToBottom();
   } catch (error) {
+    if (scope !== composerScope) return;
+    // Even typing and then deleting counts as editing the next draft.
+    if (draftRevision === clearedRevision) {
+      draftMessage.value = draft;
+      replyingTo.value = reply;
+    }
     const msg = error instanceof Error ? error.message : '';
     if (msg === 'RATE_LIMIT') {
       $q.notify({ type: 'negative', message: 'Not cool, slow down.' });
@@ -1317,7 +1351,7 @@ async function handleSendMessage() {
     console.error('[GroupChatWindow] Failed to send message:', error);
     $q.notify({ type: 'negative', message: 'Failed to send Suite message', position: 'bottom' });
   } finally {
-    isSending.value = false;
+    if (scope === composerScope) isSending.value = false;
   }
 }
 
@@ -1399,6 +1433,7 @@ async function searchGifs(query?: string | number | null) {
 }
 
 async function sendGif(url: string) {
+  if (isSending.value) return;
   draftMessage.value = url;
   showGifPicker.value = false;
   await handleSendMessage();
@@ -1953,6 +1988,15 @@ async function pickReaction(emoji: string) {
   color: rgb(var(--m-text-rgb));
   font: 13px/20px monospace;
 }
+.group-send-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* Reply preview bar above the composer — matches the 1:1 chain styling. */
 .vault-reply-bar {
   display: flex;

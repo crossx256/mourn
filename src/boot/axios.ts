@@ -216,7 +216,10 @@ export default defineBoot(({ router, ssrContext }: any) => {
         }
 
         // Don't redirect for /auth/me — it's expected to return 401 for unauthenticated users
-        if (isUnauthorized && !url.includes('/auth/me')) {
+        // Desktop heartbeat owns invalidation so it can ignore a response
+        // issued for a previous account/session generation.
+        const desktopHeartbeat = !isMobileAuthRuntime() && url === '/api/v1/auth/heartbeat';
+        if (isUnauthorized && !url.includes('/auth/me') && !desktopHeartbeat) {
           void router.push('/login');
         }
         return Promise.reject(error instanceof Error ? error : new Error(String(error)));

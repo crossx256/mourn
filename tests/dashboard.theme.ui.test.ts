@@ -77,6 +77,7 @@ async function mount({ profileDirty = false, themeDirty = true } = {}) {
   vi.stubGlobal('requestAnimationFrame', () => 1);
   vi.stubGlobal('cancelAnimationFrame', () => {});
   const dashboard = Vue.reactive({
+    user: { id: 'alice' } as { id: string } | null,
     hasUnsavedChanges: profileDirty,
     isDirty: profileDirty,
     isLoading: false,
@@ -174,6 +175,7 @@ async function mount({ profileDirty = false, themeDirty = true } = {}) {
   await Vue.nextTick();
   const all = (n: Node): Node[] => [n, ...n.children.flatMap(all)];
   const status = () => all(root).find((n) => n.props.role === 'status')?.text;
+  const alert = () => all(root).find((n) => n.props.role === 'alert')?.text;
   const click = async (label: string) => {
     const button = all(root).find((n) => n.type === 'q-btn' && n.props.label === label);
     expect(button, label).toBeTruthy();
@@ -187,12 +189,23 @@ async function mount({ profileDirty = false, themeDirty = true } = {}) {
     notify,
     listeners,
     status,
+    alert,
     click,
     guard: (path: string) => guard({ fullPath: path }),
     sidebar: () => sidebar,
     unmount,
   };
 }
+
+it('shows a profile-load failure and lets the user retry', async () => {
+  const ui = await mount({ themeDirty: false });
+  ui.dashboard.user = null;
+  ui.dashboard.error = 'Profile loading timed out. Try again.';
+  await Vue.nextTick();
+  expect(ui.alert()).toBe(ui.dashboard.error);
+  await ui.click('Retry profile');
+  expect(ui.dashboard.fetchDashboardData).toHaveBeenCalledTimes(2);
+});
 
 describe('Dashboard theme save and leave controls', () => {
   it('shows unsaved theme changes in the header and protects browser unload', async () => {

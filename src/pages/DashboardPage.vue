@@ -16,7 +16,9 @@
                 {{
                   dashboardStore.isLoading
                     ? 'Loading profile'
-                    : dashboardStore.isSaving
+                    : !dashboardStore.user && dashboardStore.error
+                      ? 'Profile unavailable'
+                      : dashboardStore.isSaving
                       ? 'Saving changes'
                       : hasUnsavedDashboardChanges
                         ? 'Unsaved changes'
@@ -52,7 +54,11 @@
           @wheel.passive="cancelSectionNavigation"
           @touchstart.passive="cancelSectionNavigation"
         >
-          <transition name="fade" mode="out-in">
+          <div v-if="!dashboardStore.user && !dashboardStore.isLoading && dashboardStore.error" class="q-pa-md">
+            <p role="alert">{{ dashboardStore.error }}</p>
+            <q-btn outline no-caps label="Retry profile" @click="dashboardStore.fetchDashboardData()" />
+          </div>
+          <transition v-if="dashboardStore.user" name="fade" mode="out-in">
             <div :key="activeTab">
               <ProfileTab v-if="activeTab === 'profile'" />
               <AppearanceTab v-else-if="activeTab === 'appearance'" />
@@ -72,7 +78,7 @@
         </div>
       </main>
 
-      <section v-if="$q?.screen?.gt?.md" class="dashboard-preview-panel">
+      <section v-if="dashboardStore.user && $q?.screen?.gt?.md" class="dashboard-preview-panel">
         <DashboardPreview />
       </section>
 
