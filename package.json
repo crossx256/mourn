@@ -2,7 +2,7 @@
   "name": "mourn-desktop",
   "private": true,
   "license": "AGPL-3.0-only",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "type": "module",
   "packageManager": "bun@1.4.2",
   "engines": {

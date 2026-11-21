@@ -2,7 +2,7 @@
   "schema": 3,
   "lockfile_encoding": "utf-8-lf",
   "bun_lock_sha256": "5082694ad904da90d52397717daaab650e0fb891b81fc4b4b8ca623af3ef6a6e",
-  "cargo_lock_sha256": "facfe1af4f9d5c28f87cc350f5563df5092a714454ba66f3cb7b0e4ccc5c066a",
+  "cargo_lock_sha256": "06785d44f53e32765a0ac5193d1c3507a42bdc46e24d8cf20517dfba0c2883ba",
   "local_cargo_sources": {
     "glib": {
       "version": "0.18.5",

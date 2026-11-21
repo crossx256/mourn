@@ -1,6 +1,6 @@
 [package]
 name = "mourn-desktop"
-version = "1.5.4"
+version = "1.5.5"
 description = "An internet revolution - Mourn Desktop"
 authors = ["psycho, cross & L"]
 edition = "2021"
