@@ -88,8 +88,11 @@ jobs:
         run: bun run test
       - name: Release tooling tests
         run: bun run test:release
+      - name: Install Rust dependency scanner
+        run: cargo install cargo-audit --version 0.23.0 --locked
       - name: Check dependency advisories (including build tooling)
-        run: bun audit --audit-level=high
+        shell: bash
+        run: bash scripts/audit-dependencies.sh desktop
       - name: Inject public updater configuration
         run: node scripts/inject_pubkey.js
         env:
