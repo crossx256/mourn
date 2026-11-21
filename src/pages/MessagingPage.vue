@@ -4107,6 +4107,9 @@ onErrorCaptured((err, _instance, info) => {
 function syncSelectedLinkFromStore(): Link | null {
   if (!selectedLink.value) return null;
   const fresh = linksStore.links.find((link) => link.id === selectedLink.value?.id) ?? null;
+  // A cached or failed refresh can omit an open thread. Only an authoritative
+  // refresh can remove it; send guards still require a current online link.
+  if (!fresh && (linksStore.offline || linksStore.error)) return null;
   selectedLink.value = fresh;
   return fresh;
 }
@@ -5413,18 +5416,15 @@ async function addReaction(msgId: string, emoji: string) {
 
 async function retryMessage(msgId: string) {
   const snapshot = conversationSnapshot();
-  if (!snapshot) return;
-  const original = vaultStore.messages[snapshot.linkId]?.find((m) => m.id === msgId);
-  if (!original?.isSender) return;
-  const plaintext = original.plaintext;
+  if (!snapshot || !currentConversation(snapshot) || isChatUnavailable.value) return;
   try {
-    await vaultStore.retryMessage(snapshot.linkId, msgId);
-    if (!currentConversation(snapshot)) return;
     await refreshLinks();
-    if (!currentConversation(snapshot)) return;
+    if (!currentAccount(snapshot) || selectedLink.value?.id !== snapshot.linkId) return;
+    if (linksStore.offline || linksStore.error) throw new Error('RECIPIENT_REFRESH_FAILED');
+    if (!currentConversation(snapshot) || isChatUnavailable.value) return;
     const devices = recipientDevices(snapshot);
-    if (!devices.length) throw new Error('Partner has no active devices');
-    await vaultStore.sendMessage(snapshot.linkId, snapshot.recipientId, devices, plaintext, { persistLocal: false, localMessageId: msgId });
+    if (!devices.length) throw new Error('NO_PARTNER_DEVICES');
+    await vaultStore.retryMessage(snapshot.linkId, msgId, snapshot.recipientId, devices);
   } catch (error) { if (currentAccount(snapshot)) handleSendError(error); }
 }
 
@@ -6095,8 +6095,13 @@ async function sendVaultMessage() {
   try {
     await vaultStore.initialize();
     if (!currentConversation(snapshot) || linksStore.offline || isChatUnavailable.value) return;
+    // Receiving proves our own device is reachable, not that the cached link
+    // carries the peer's current device keys. Resolve them before encrypting.
+    await refreshLinks();
+    if (!currentConversation(snapshot) || isChatUnavailable.value) return;
+    if (linksStore.offline || linksStore.error) throw new Error('RECIPIENT_REFRESH_FAILED');
     const devices = recipientDevices(snapshot);
-    if (!devices.length) throw new Error('Partner has no active devices');
+    if (!devices.length) throw new Error('NO_PARTNER_DEVICES');
     dispatched = true;
     await vaultStore.sendMessage(snapshot.linkId, snapshot.recipientId, devices, envelope, {
       persistLocal: true,
@@ -6149,12 +6154,16 @@ function handleSendError(err: unknown) {
     $q.notify({ type: 'warning', message: 'Partner has zero active vault devices' });
     return;
   }
+  if (msg === 'RECIPIENT_REFRESH_FAILED') {
+    $q.notify({ type: 'warning', message: 'Could not refresh recipient devices. Try again after reconnecting.' });
+    return;
+  }
   if (msg === 'connect_failed' || msg === 'TRANSPORT_CONNECT_FAIL') {
     $q.notify({ type: 'negative', message: 'Connection failed. Secure channel not ready.' });
     return;
   }
   console.error('Failed to send message', err);
-  $q.notify({ type: 'negative', message: 'Unable to send � secure channel not ready' });
+  $q.notify({ type: 'negative', message: 'Unable to send message.' });
 }
 const respondingId = ref<string | null>(null);
 const cancellingLinkId = ref<string | null>(null);

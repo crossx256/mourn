@@ -45,7 +45,7 @@
             v-if="authStore.isLoggedIn && isTauri"
             class="desktop-search-center desktop-search-mode--center"
           >
-            <div class="desktop-search-wrapper">
+            <div class="desktop-search-wrapper" @focusin="nav.onSearchFocus()" @focusout="nav.onSearchBlur()">
               <q-input
                 v-model="nav.searchQuery.value"
                 ref="desktopSearchInputRef"
@@ -53,8 +53,6 @@
                 borderless
                 placeholder="search users..."
                 class="desktop-search-input"
-                @focus="nav.onSearchFocus()"
-                @blur="nav.onSearchBlur()"
                 @update:model-value="
                   (v: string | number | null) => nav.onSearchInput(String(v ?? ''))
                 "
@@ -67,7 +65,7 @@
 
               <!-- Search results dropdown -->
               <div
-                v-if="nav.isSearchFocused && nav.searchResults.value.length > 0"
+                v-if="nav.isSearchFocused.value && nav.searchResults.value.length > 0"
                 class="search-results-dropdown"
               >
                 <q-list class="bg-[var(--card)] text-white">
@@ -132,7 +130,7 @@
           </div>
 
           <div class="desktop-search-center desktop-search-mode--left">
-            <div class="desktop-search-wrapper desktop-search-wrapper--inline">
+            <div class="desktop-search-wrapper desktop-search-wrapper--inline" @focusin="nav.onSearchFocus()" @focusout="nav.onSearchBlur()">
               <q-input
                 v-model="nav.searchQuery.value"
                 ref="desktopSearchInputRef"
@@ -140,8 +138,6 @@
                 borderless
                 placeholder="search users..."
                 class="desktop-search-input desktop-search-input--inline"
-                @focus="nav.onSearchFocus()"
-                @blur="nav.onSearchBlur()"
                 @update:model-value="
                   (v: string | number | null) => nav.onSearchInput(String(v ?? ''))
                 "
@@ -153,7 +149,7 @@
               </q-input>
 
               <div
-                v-if="nav.isSearchFocused && nav.searchResults.value.length > 0"
+                v-if="nav.isSearchFocused.value && nav.searchResults.value.length > 0"
                 class="search-results-dropdown"
               >
                 <q-list class="bg-[var(--card)] text-white">

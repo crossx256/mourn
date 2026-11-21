@@ -459,10 +459,11 @@ export class MlsGroupClient {
     // a group created before the ChaCha20 switch is an AES-256-GCM group, and
     // joining it with the wrong impl produces a client that cannot read the
     // group's own traffic.
-    const cs = await mlsCiphersuite(
-      (welcome as { groupInfo?: { groupContext?: { cipherSuite?: unknown } } }).groupInfo
-        ?.groupContext?.cipherSuite,
-    );
+    // GroupInfo is encrypted; the ciphersuite is carried in the Welcome itself.
+    if (welcome.cipherSuite !== keyPackage.cipherSuite) {
+      throw new Error('mls: Welcome ciphersuite does not match the device key package');
+    }
+    const cs = await mlsCiphersuite(welcome.cipherSuite);
     const clientState = (await joinGroup(
       welcome,
       keyPackage,

@@ -139,9 +139,7 @@ describe('Vault lifecycle persistence boundaries', () => {
     if (step === 'engine') engine.mockRejectedValue(failure);
     if (step === 'encrypt') encryptFrame.mockRejectedValue(failure);
     if (step === 'persist') persist.mockRejectedValue(failure);
-    await vault.retryMessage('link', 'old');
-    expect(vault.messages.link[0]?.status).toBe('SENDING');
-    await expect(vault.sendMessage('link', 'bob', [{ id: 'b', devicePub: 'ab' }] as never, 'retry', { persistLocal: false, localMessageId: 'old' })).rejects.toThrow('retry preparation failed');
+    await expect(vault.retryMessage('link', 'old', 'bob', [{ id: 'b', devicePub: 'ab' }] as never)).rejects.toThrow('retry preparation failed');
     expect(vault.messages.link).toHaveLength(1);
     expect(vault.messages.link[0]?.status).toBe('FAILED_PROTOCOL');
     expect(storage.set).toHaveBeenLastCalledWith('vault_messages_link_uid_alice', [expect.objectContaining({ id: 'old', status: 'FAILED_PROTOCOL' })]);

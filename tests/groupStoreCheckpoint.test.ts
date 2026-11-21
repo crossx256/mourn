@@ -60,6 +60,49 @@ beforeEach(() => {
 });
 afterEach(() => { useGroupStore().reset(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
+it('does not spend the shared sync budget on roster reads when nothing needs validation', async () => {
+  vi.mocked(api.get).mockReset().mockImplementation(async (url) => {
+    const route = String(url);
+    if (route.endsWith('/mls/commits')) return { data: { currentEpoch: 1, commits: [] } };
+    if (route.endsWith('/messages')) return { data: { messages: [] } };
+    throw new Error('Unexpected roster read on an unchanged Suite');
+  });
+  const store = useGroupStore();
+  await store.fetchHistory('group');
+  expect(store.mlsState.group).toBe('ready');
+  expect(vi.mocked(api.get).mock.calls.map(([url]) => String(url).split('/').at(-1)))
+    .toEqual(['commits', 'messages']);
+});
+
+it('checks each Suite commit log once during reconnect catch-up', async () => {
+  const store = useGroupStore();
+  store.myGroups = [{ id: 'group', name: 'Existing Suite', myRole: 'OWNER' }] as typeof store.myGroups;
+  vi.spyOn(store, 'fetchGroupDetails').mockResolvedValue(null);
+  await store.syncOfflineMessages();
+  expect(f.after).toEqual(['m1']);
+  expect(vi.mocked(api.get).mock.calls.filter(([url]) => String(url).endsWith('/mls/commits'))).toHaveLength(1);
+});
+
+it('does not start history or membership writes when opening an unavailable Suite', async () => {
+  vi.useFakeTimers();
+  try {
+    const store = useGroupStore();
+    vi.spyOn(store, 'fetchGroupDetails').mockResolvedValue(null);
+    vi.spyOn(store, 'loadMlsClient').mockResolvedValue(false);
+    const history = vi.spyOn(store, 'fetchHistory').mockResolvedValue(undefined);
+    const departed = vi.spyOn(store, 'reconcileDepartedMembers').mockResolvedValue(undefined);
+    const missing = vi.spyOn(store, 'reconcileMissingMembers').mockResolvedValue(undefined);
+    store.setActiveGroup('group');
+    await vi.runAllTimersAsync();
+    expect(store.mlsState.group).toBe('unavailable');
+    expect(history).not.toHaveBeenCalled();
+    expect(departed).not.toHaveBeenCalled();
+    expect(missing).not.toHaveBeenCalled();
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
 it('uses ordered catch-up for a realtime m4 hint without skipping unseen m2 and m3', async () => {
   const store = useGroupStore();
   store.activeGroupId = 'group';

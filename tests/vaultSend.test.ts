@@ -296,6 +296,17 @@ describe('CS-05 delivered rows', () => {
 });
 
 describe('CS-05 retry of an undelivered build', () => {
+  it('keeps a failed row visibly failed if transport setup rejects a retry', async () => {
+    const { vault, transport } = sendVault();
+    vault.messages.link.push({ id: 'retry-connect', isSender: true, plaintext: 'hello', status: 'FAILED_NETWORK', timestamp: Date.now() });
+    vault.ensureVaultTransport.mockRejectedValueOnce(new Error('connect_failed'));
+
+    await expect(vault.retryMessage('link', 'retry-connect', 'bob', [PARTNER]))
+      .rejects.toThrow('connect_failed');
+    expect(vault.messages.link[0].status).toBe('FAILED_NETWORK');
+    expect(transport.sendEncryptedPayloadToUser).not.toHaveBeenCalled();
+  });
+
   it('replays the frames the first attempt built instead of consuming new indexes', async () => {
     const { vault, transport, sent } = sendVault();
     // Every hand-off throws: the frame was built (and its ratchet index
@@ -319,13 +330,24 @@ describe('CS-05 retry of an undelivered build', () => {
         frames.forEach((frame) => sent.push(frame.messageIndex));
       },
     );
-    await vault.sendMessage('link', 'bob', [PARTNER], 'same text', {
-      persistLocal: false,
-      localMessageId: 'local-draft',
-    });
+    await vault.retryMessage('link', 'local-draft', 'bob', [PARTNER]);
 
     // The retry re-delivered the ORIGINAL frame (index 0), not a new index 1.
     expect(sent).toEqual([0]);
     expect(vault.messages.link[0].status).toBe('SENT');
+    expect(vault.persistMessages).toHaveBeenCalledTimes(3); // append, failure, successful retry
+  });
+
+  it('does not replay a cached frame to a device removed before retry', async () => {
+    const { vault, transport } = sendVault();
+    const replacement = { id: 'new-device', devicePub: 'cc'.repeat(32) };
+    transport.sendEncryptedPayloadToUser.mockImplementation(() => { throw new Error('offline'); });
+    await expect(vault.sendMessage('link', 'bob', [PARTNER], 'hello', { localMessageId: 'rotated' })).rejects.toThrow('offline');
+
+    transport.sendEncryptedPayloadToUser.mockReset();
+    await vault.retryMessage('link', 'rotated', 'bob', [replacement]);
+    expect(transport.sendEncryptedPayloadToUser).toHaveBeenCalledWith('bob', [
+      expect.objectContaining({ targetDeviceId: replacement.id }),
+    ], expect.anything());
   });
 });

@@ -29,6 +29,10 @@ function metadata(data: unknown): Record<string, string> {
   return result;
 }
 
+function isSuiteInvite(event: string | undefined): boolean {
+  return event === 'GROUP_INVITE' || event === 'INVITE_RECEIVED';
+}
+
 async function processPush(data: unknown, navigate: boolean): Promise<void> {
   if (!isMobileAuthRuntime()) return;
 
@@ -43,6 +47,15 @@ async function processPush(data: unknown, navigate: boolean): Promise<void> {
   if (!authStore.isLoggedIn) {
     const restored = (await authStore.checkSession()) || (await authStore.autoLogin());
     if (!restored) return;
+  }
+
+  const pushMetadata = metadata(data);
+  if (isSuiteInvite(pushMetadata.event)) {
+    const groupStore = (await import('src/stores/groupStore')).useGroupStore();
+    await groupStore.fetchMyInvites();
+    // An invite is not membership; don't try to open the Suite as a chat.
+    if (navigate && activeRouter) await activeRouter.push({ name: 'chains' });
+    return;
   }
 
   const vaultStore = (await import('src/stores/vault')).useVaultStore();
@@ -68,7 +81,6 @@ async function processPush(data: unknown, navigate: boolean): Promise<void> {
   // Capture non-null for use inside the closure below (TS cannot narrow a
   // mutable module-level binding across a function boundary).
   const router = activeRouter;
-  const pushMetadata = metadata(data);
   const linkId = pushMetadata.linkId;
   const groupId = pushMetadata.groupId;
 
@@ -131,7 +143,11 @@ const GENERIC_BODY_BY_EVENT: Record<string, string> = {
   INCOMING_MESSAGE: 'You have a new message.',
   GROUP_MESSAGE_RECEIVED: 'You have a new message.',
   WATCHER_ALERT: 'A security event needs your attention.',
+  SUSPICIOUS_ACTIVITY: 'A security event needs your attention.',
+  LOGIN_SUCCESS: 'There was a new login to your account.',
+  ACCOUNT_LOGIN: 'There was a new login to your account.',
   GROUP_JOIN_REQUEST: 'You have a new Suite request.',
+  GROUP_JOIN_ACCEPTED: 'Your Suite request was accepted.',
   // Recognised-domain (link verification) decision. Mirrors services/fcmProvider.js.
   DOMAIN_DECISION: 'A link you asked us to verify was reviewed.',
   LINK_REQUEST: 'Someone wants to establish a link with you.',
@@ -183,6 +199,11 @@ async function showForegroundArrivalBanner(data: unknown): Promise<void> {
   // Visible means the app is in front of the user. When it is hidden or backgrounded
   // the tray notification already covers this, sound included.
   if (typeof document === 'undefined' || document.visibilityState !== 'visible') return;
+  const meta = metadata(data);
+  // Older servers may still send control frames. Don't display them in-app.
+  if (!Object.hasOwn(GENERIC_BODY_BY_EVENT, meta.event ?? '')) return;
+  // Direct messages already have a decrypted foreground banner in Vault.
+  if (meta.event === 'INCOMING_MESSAGE') return;
   if (banneredArrivals.seen(arrivalKeyFor(data))) return;
 
   // Honour the user's preference (settings -> app -> in-app message banner). Silence
@@ -195,17 +216,8 @@ async function showForegroundArrivalBanner(data: unknown): Promise<void> {
     console.warn('[Push] Could not read the in-app banner setting; showing it anyway', error);
   }
 
-  const meta = metadata(data);
   const linkId = meta.linkId || null;
   const groupId = meta.groupId || null;
-
-  // A normal message is announced by the vault's ingest path instead: that is where
-  // the DECRYPTED text and the real sender exist, and it runs whichever way the
-  // message actually arrives (socket, pending fetch, or this push triggering that
-  // fetch). Announcing here too would double up, so this path keeps to non-message
-  // arrivals — link requests, Suite invitations, watcher alerts — which never
-  // produce a vault message.
-  if (linkId) return;
 
   const body = genericNotificationBody(data);
 
@@ -335,9 +347,13 @@ export async function syncMobilePushRegistration(): Promise<void> {
     }
     if (permission.receive !== 'granted') return;
 
-    const storedToken = await getSecureStorage()?.get(PUSH_TOKEN_SLOT);
-    if (storedToken) await registerTokenWithBackend(storedToken);
-    await PushNotifications.register();
+    try {
+      const storedToken = await getSecureStorage()?.get(PUSH_TOKEN_SLOT);
+      if (storedToken) await registerTokenWithBackend(storedToken);
+    } finally {
+      // A rejected cached token must not block native token refresh.
+      await PushNotifications.register();
+    }
   })().finally(() => {
     registrationPromise = null;
   });

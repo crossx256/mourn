@@ -261,7 +261,12 @@ interface SendFrame {
  * on restart, which is correct: the relay dedupes by row id, and the sender
  * chain stays consistent either way.
  */
-const sendFramesByRow = new WeakMap<ClientMessage, { partnerUserId: string; frames: SendFrame[] }>();
+const sendFramesByRow = new WeakMap<ClientMessage, {
+  partnerUserId: string;
+  deviceKeys: Map<string, string>;
+  frames: SendFrame[];
+}>();
+const retryingRows = new WeakSet<ClientMessage>();
 /** Monotonic suffix for locally-created row ids (see `nextLocalMessageId`). */
 let nextLocalMessageSeq = 0;
 
@@ -2248,7 +2253,6 @@ export const useVaultStore = defineStore('vault', {
       // because it was just appended.
       const wasAppendedNow = persistLocal;
       let outgoingRow: ClientMessage | undefined = undefined;
-      type BuiltFrames = { partnerUserId: string; frames: SendFrame[] };
       const deliverableFrames = sendFramesByRow;
       // Accepted sends only: one entry per successful transport hand-off.
       // The frame is on the socket. Flip the row to SENT straight away and let
@@ -2259,8 +2263,7 @@ export const useVaultStore = defineStore('vault', {
         row.status = 'SENT';
         deliverableFrames.delete(row);
         this.messages = { ...this.messages };
-        if (!persistLocal) return;
-        void this.persistMessages(linkId).catch((persistError) => {
+        void this.persistMessages(linkId, operation).catch((persistError) => {
           console.warn('[Vault] Failed to persist delivered status', persistError);
         });
       };
@@ -2320,17 +2323,22 @@ export const useVaultStore = defineStore('vault', {
       // be re-encrypted on retry — that consumes a fresh index and leaves a hole
       // the receiver can never fill. The built frames are kept per row and the
       // retry replays them unchanged.
-      const reusable: BuiltFrames | undefined =
-        outgoingRow && deliverableFrames.has(outgoingRow) ? deliverableFrames.get(outgoingRow) : undefined;
-      if (
-        reusable &&
-        reusable.partnerUserId === partnerUserId &&
-        reusable.frames.length === sanitizedDevices.length
-      ) {
-        frames.push(...reusable.frames);
-      }
+      const deviceKeys = new Map(sanitizedDevices.map((device) => [device.id, device.devicePub]));
+      const reusable = outgoingRow ? deliverableFrames.get(outgoingRow) : undefined;
 
       try {
+        if (reusable?.partnerUserId === partnerUserId) {
+          for (const frame of reusable.frames) {
+            const currentKey = deviceKeys.get(frame.targetDeviceId);
+            if (currentKey === undefined) continue;
+            // Never replay ciphertext across key rotation or silently reset a
+            // ratchet whose previous frame was built for a different key.
+            if (currentKey !== reusable.deviceKeys.get(frame.targetDeviceId)) {
+              throw new Error('Ratchet binding mismatch; recovery required');
+            }
+            frames.push(frame);
+          }
+        }
         for (const device of sanitizedDevices) {
           // A replayed retry already carries this device's frame: encrypting it
           // again would consume a fresh ratchet index and send the message twice.
@@ -2471,13 +2479,10 @@ export const useVaultStore = defineStore('vault', {
           // and leaving an unfillable hole in the sender's message index.
           if (outgoingRow) {
             outgoingRow.status = failureStatus;
-            deliverableFrames.set(outgoingRow, { partnerUserId, frames });
-            if (persistLocal) {
-              const uid = this.getStorageUid();
-              if (uid && uid !== 'unknown') {
-                await this.persistMessages(linkId);
-              }
-            }
+            deliverableFrames.set(outgoingRow, { partnerUserId, deviceKeys, frames });
+            await this.persistMessages(linkId, operation).catch((persistError) => {
+              console.warn('[Vault] Failed to persist network failure status', persistError);
+            });
           }
           throw lastErr instanceof Error ? lastErr : new Error('Message was not sent');
         }
@@ -5501,20 +5506,22 @@ const decryptingEngine = engine;
       return !!(this.rateLimitedUntil && Date.now() < this.rateLimitedUntil);
     },
 
-    async retryMessage(linkId: string, messageId: string) {
-      const messages = this.messages[linkId];
-      if (!messages) return;
+    async retryMessage(linkId: string, messageId: string, partnerUserId: string, partnerDevices: LinkUserDevice[]) {
+      const row = this.messages[linkId]?.find((message) => message.id === messageId);
+      if (!row?.isSender || !row.plaintext ||
+          (row.status !== 'FAILED_NETWORK' && row.status !== 'FAILED_PROTOCOL') || retryingRows.has(row)) return;
 
-      const msg = messages.find((m) => m.id === messageId);
-      if (!msg || !msg.isSender || !msg.plaintext) {
-        console.warn('[Vault] Cannot retry message - not found or invalid', { messageId, linkId });
-        return;
+      // Leave failure visible until socket handoff. An early rejection must
+      // not strand a SENDING row or hide its retry button.
+      retryingRows.add(row);
+      try {
+        await this.sendMessage(linkId, partnerUserId, partnerDevices, row.plaintext, {
+          persistLocal: false,
+          localMessageId: row.id,
+        });
+      } finally {
+        retryingRows.delete(row);
       }
-
-      msg.status = 'SENDING';
-      this.messages = { ...this.messages };
-
-      await this.persistMessages(linkId);
     },
 
     async deleteLocalMessage(linkId: string, messageId: string) {
