@@ -7,11 +7,11 @@ const fixture = vi.hoisted(() => ({
   record: null as MlsGroupRecord | null,
   pending: null as PendingKeyPackageRecord | null,
   writes: [] as number[],
-  auth: { user: { id: 'invitee' }, isLoggedIn: true, authOperationGeneration: 0 },
+  auth: { user: { id: 'invitee' }, isLoggedIn: true, authOperationGeneration: 0, fetchCsrfToken: async () => {}, csrfToken: 'test-csrf' },
 }));
 vi.mock('../src/stores/auth', () => ({ useAuthStore: () => fixture.auth }));
 vi.mock('../src/stores/vault', () => ({ useVaultStore: () => ({ deviceId: 'invitee-device' }) }));
-vi.mock('../src/boot/axios', () => ({ api: { get: vi.fn() } }));
+vi.mock('../src/boot/axios', () => ({ api: { get: vi.fn(), post: vi.fn() } }));
 vi.mock('idb-keyval', () => ({ get: vi.fn() }));
 vi.mock('../src/crypto/groupLocalVault', () => ({ encryptGroups: vi.fn(), decryptGroups: vi.fn() }));
 vi.mock('../src/utils/notificationSound', () => ({ playNotificationSound: vi.fn() }));
@@ -35,6 +35,26 @@ import { MlsGroupClient, makeCredentialValidator, mlsGroupIdBytes } from '../src
 import { useGroupStore } from '../src/stores/groupStore';
 
 afterEach(() => { useGroupStore().reset(); vi.unstubAllGlobals(); });
+
+it.each([true, false])('only requests recovery for a confirmed missing device Welcome (confirmed=%s)', async (confirmed) => {
+  setActivePinia(createPinia());
+  vi.stubGlobal('localStorage', { getItem: () => null });
+  vi.mocked(api.get).mockReset().mockRejectedValue({ response: { status: 404, data: confirmed ? { code: 'MLS_WELCOME_MISSING' } : {} } });
+  vi.mocked(api.post).mockReset().mockResolvedValue({ data: { pendingWelcome: true, recoveryStatus: 'requested' } });
+  const store = useGroupStore();
+  const prepare = vi.spyOn(store, 'prepareMlsKeyPackageForGroup').mockResolvedValue('saved-device-package');
+  expect(await store.retryMlsRestore('suite')).toBe(false);
+  expect(await store.requestMissingMlsWelcome('suite')).toBe(confirmed);
+  if (confirmed) {
+    expect(api.post).toHaveBeenCalledWith('/api/v1/groups/suite/mls/devices/current', {
+      keyPackage: 'saved-device-package', reEnroll: true, missingWelcomeOnly: true,
+    }, { headers: { 'X-CSRF-Token': 'test-csrf' } });
+  } else {
+    expect(prepare).not.toHaveBeenCalled();
+    expect(api.post).not.toHaveBeenCalled();
+  }
+  prepare.mockRestore();
+});
 
 it('restores a fresh invitee via HTTP only, checkpoints the Welcome epoch, and decrypts after ordered replay', async () => {
   setActivePinia(createPinia());
@@ -72,7 +92,10 @@ it('restores a fresh invitee via HTTP only, checkpoints the Welcome epoch, and d
       replayStarts.push(afterEpoch);
       return { data: { currentEpoch: 2, commits: afterEpoch < 2 ? [{ epoch: 2, commit: laterAdd.commitB64, senderDeviceId: devices[0] }] : [] } };
     }
-    if (route.endsWith('/messages')) return { data: { messages: [{ id: 'server-message', senderId: 'owner', senderDeviceId: devices[0], epoch: 2, ciphertext, createdAt: '2026-01-01T00:00:00Z' }] } };
+    if (route.endsWith('/messages')) return { data: { messages: [
+      { id: 'pre-join', senderId: 'owner', senderDeviceId: devices[0], epoch: 0, ciphertext: 'not decryptable', createdAt: '2025-12-31T00:00:00Z' },
+      { id: 'server-message', senderId: 'owner', senderDeviceId: devices[0], epoch: 2, ciphertext, createdAt: '2026-01-01T00:00:00Z' },
+    ] } };
     throw new Error(`Unexpected route: ${url}`);
   });
 

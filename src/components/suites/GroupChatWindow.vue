@@ -758,15 +758,32 @@ const vaultStore = useVaultStore();
  * Manual recovery for a suite whose MLS state failed to restore. The banner only
  * shows in that state, so a successful retry clears it and re-fetches history.
  */
+const restoringMls = ref(false);
 async function retryMlsRestore(): Promise<void> {
   const groupId = groupStore.activeGroupId;
-  if (!groupId) return;
-  const restored = await groupStore.retryMlsRestore(groupId);
+  if (!groupId || restoringMls.value) return;
+  const generation = authStore.authOperationGeneration;
+  const isCurrent = () => generation === authStore.authOperationGeneration && groupStore.activeGroupId === groupId;
+  restoringMls.value = true;
+  let restored = false;
+  let requested = false;
+  try {
+    restored = await groupStore.retryMlsRestore(groupId);
+    if (!restored && isCurrent()) {
+      requested = await groupStore.requestMissingMlsWelcome(groupId);
+      restored = groupStore.mlsState[groupId] === 'ready';
+    }
+  } catch (error) {
+    console.warn('[Suites] Recovery request did not complete', error);
+  } finally {
+    restoringMls.value = false;
+  }
+  if (!isCurrent()) return;
   $q.notify({
-    type: restored ? 'positive' : 'negative',
-    message: restored
-      ? 'Suite encryption restored.'
-      : 'Still could not restore this suite — try again once you are back online.',
+    type: restored ? 'positive' : requested ? 'info' : 'negative',
+    message: restored ? 'Suite encryption restored.' : requested
+      ? 'Recovery requested. A Suite owner or admin must be online on a device that can open it.'
+      : 'Could not restore this Suite. Try again online with a Suite owner or admin.',
     timeout: restored ? 2000 : 3500,
   });
 }

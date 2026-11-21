@@ -61,6 +61,7 @@ function cloneCheckpointClient(client: MlsGroupClient, validator: Parameters<typ
  * exists". Tracking the failure here is what lets us ASK for a re-provision.
  */
 const mlsClientRecoveryNeeded = new Set<string>();
+const missingMlsWelcomes = new Set<string>();
 const mlsMembershipReconciliations = new Set<string>();
 const historySignals = new Map<string, { again: boolean; work: Promise<void> }>();
 const groupCheckpoints = new GroupCheckpointRepository({
@@ -953,6 +954,7 @@ export const useGroupStore = defineStore('groups', {
       requireGroupDevice(operation);
       const key = groupOperationKey(operation, groupId);
       await operation.wait(() => this.recoverPendingRemoval(groupId, false, operation));
+      missingMlsWelcomes.delete(key);
       if (mlsClients.has(key)) {
         await operation.wait(() => this.syncMlsCommits(groupId, operation));
         mlsClientRecoveryNeeded.delete(key);
@@ -989,9 +991,12 @@ export const useGroupStore = defineStore('groups', {
         } catch (error) {
         operation.assertCurrent();
           operation.assertCurrent();
-          const response = (error as { response?: { status?: number; headers?: Record<string, string> } }).response;
+          const response = (error as { response?: { status?: number; data?: { code?: string }; headers?: Record<string, string> } }).response;
           if (attempt === 3) {
-            if (response?.status === 404) break;
+            if (response?.status === 404) {
+              if (response.data?.code === 'MLS_WELCOME_MISSING') missingMlsWelcomes.add(key);
+              break;
+            }
             throw error;
           }
           const retryAfter = Number(response?.headers?.['retry-after']) * 1000;
@@ -1004,6 +1009,23 @@ export const useGroupStore = defineStore('groups', {
       this.mlsState = { ...this.mlsState, [groupId]: 'unavailable' };
       return false;
 
+      });
+    },
+
+    async requestMissingMlsWelcome(groupId: string, operation: GroupOperation = captureGroupScope()): Promise<boolean> {
+      return withGroupOperation(operation, groupId, async (operation) => {
+        const key = groupOperationKey(operation, groupId);
+        if (!missingMlsWelcomes.has(key)) return false;
+        const keyPackage = await operation.wait(() => this.prepareMlsKeyPackageForGroup(groupId, operation));
+        if (!keyPackage) throw new Error('Could not prepare this device for Suite recovery');
+        const result = await authed<{ recoveryStatus?: string }>('post', `/api/v1/groups/${groupId}/mls/devices/current`, {
+          keyPackage, reEnroll: true, missingWelcomeOnly: true,
+        }, operation);
+        if (result.recoveryStatus === 'available') return this.retryMlsRestore(groupId, operation);
+        if (result.recoveryStatus !== 'requested') throw new Error('Suite recovery requires an updated server and another authorized device');
+        missingMlsWelcomes.delete(key);
+        mlsClientRecoveryNeeded.delete(key);
+        return true;
       });
     },
 
@@ -1115,6 +1137,12 @@ export const useGroupStore = defineStore('groups', {
           const hidden = new Set(next.hiddenIds);
           let blocked = false;
           for (const row of rows) {
+            if (history.joinedEpoch !== undefined && row.epoch < history.joinedEpoch) {
+              // A fresh Welcome cannot decrypt pre-join ciphertext. Do not let
+              // it block newer messages or delete previously cached history.
+              next.cursor = row.id;
+              continue;
+            }
             if (row.senderDeviceId !== deviceId) {
               let plaintext: string;
               try { plaintext = await operation.wait(() => working.decrypt(row.ciphertext)); }
@@ -1790,7 +1818,9 @@ export const useGroupStore = defineStore('groups', {
         initPrivateKey: b64ToBytes(rec.privatePackage.initPrivateKey), hpkePrivateKey: b64ToBytes(rec.privatePackage.hpkePrivateKey),
         signaturePrivateKey: b64ToBytes(rec.privatePackage.signaturePrivateKey),
       }, validator));
-      await operation.wait(() => this.persistMls(groupId, deviceId, client, operation));
+      const history = await operation.wait(() => groupCheckpoints.history<GroupMessage>(groupId, operation));
+      history.joinedEpoch = client.epoch;
+      await operation.wait(() => this.persistMls(groupId, deviceId, client, operation, history));
       operation.assertCurrent();
       pendingKeyPackages.delete(key);
       await operation.wait(() => deletePendingKeyPackage(groupId, operation.uid, deviceId));
@@ -1859,10 +1889,6 @@ export const useGroupStore = defineStore('groups', {
         const recovered = await operation.wait(() => this.recoverPendingAdd(groupId, operation));
         if (recovered?.recipients.some((recipient) => recipient.userId === inviteeId &&
             (!inviteeDeviceId || recipient.deviceId === inviteeDeviceId))) return;
-        if (reAdd && inviteeDeviceId) {
-          await operation.wait(() => this.ownerRemoveMemberDevices(groupId, [inviteeDeviceId], operation));
-        }
-
         // Only key-package lookup is retried here. Once Add artifacts exist,
         // their durable outbox owns recovery; never regenerate after a 409.
         let data: { keyPackage: string; deviceId?: string } | undefined;
@@ -1883,6 +1909,23 @@ export const useGroupStore = defineStore('groups', {
         const targetDeviceId = data?.deviceId ?? inviteeDeviceId;
         if (!data || !targetDeviceId || (inviteeDeviceId && targetDeviceId !== inviteeDeviceId)) {
           throw new Error('MLS key package device mismatch');
+        }
+        if (reAdd && inviteeDeviceId) {
+          if (!await operation.wait(() => this.loadMlsClient(groupId, operation))) throw new Error('MLS recovery requires working Suite state');
+          const client = mlsClients.get(groupOperationKey(operation, groupId));
+          if (!client) throw new Error('MLS state unavailable');
+          const kp = await operation.wait(() => MlsGroupClient.decodeKeyPackage(data.keyPackage));
+          const credential = kp.leafNode.credential;
+          if (credential.credentialType !== 'basic' || new TextDecoder().decode(credential.identity) !== targetDeviceId || kp.cipherSuite !== client.ciphersuite) {
+            throw new Error('MLS replacement key package does not match the device or Suite');
+          }
+          const validator = await operation.wait(() => this.buildCredentialValidator(groupId, operation));
+          const preview = MlsGroupClient.cloneWithValidator(client, validator);
+          if (preview.listMemberDeviceIds().includes(targetDeviceId)) {
+            await operation.wait(() => preview.removeMember(targetDeviceId));
+          }
+          await operation.wait(() => preview.addMember(data.keyPackage));
+          await operation.wait(() => this.ownerRemoveMemberDevices(groupId, [targetDeviceId], operation));
         }
         await operation.wait(() => this.ownerAddMembers(groupId, [{
           userId: inviteeId, deviceId: targetDeviceId, keyPackageB64: data.keyPackage,
@@ -2710,6 +2753,7 @@ export const useGroupStore = defineStore('groups', {
       groupCheckpoints.clear();
       historySignals.clear();
       mlsClientRecoveryNeeded.clear();
+      missingMlsWelcomes.clear();
       mlsMembershipReconciliations.clear();
       pendingKeyPackages.clear();
       this.groupsLoading = false;
