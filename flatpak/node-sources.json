@@ -427,6 +427,14 @@
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
+    "url": "https://registry.npmjs.org/@isaacs/nonrecursive-glob-match/-/nonrecursive-glob-match-1.1.0.tgz",
+    "sha512": "18f9bf0dbbe4e512e68519f15c86bb9d3a4ad31b65e04d308f432c96cb8d889d45211394fb6fbd960502fdd805ec4cb84025a17c4b20c6294c44c09d1cf7c37f",
+    "dest": "node_modules/@isaacs/nonrecursive-glob-match"
+  },
+  {
+    "type": "archive",
+    "archive-type": "tar-gzip",
+    "strip-components": 1,
     "url": "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.3.13.tgz",
     "sha512": "da492dffb9e227a32010fc45d1b61d43a7ad65a03e7d0bc370b29c921cb5c8840ecdaa0a8c10634a3eb7fda2d58d8137aa146de5dbccfae5327c283a50a0816c",
     "dest": "node_modules/@jridgewell/gen-mapping"
@@ -871,8 +879,8 @@
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@tauri-apps/api/-/api-2.11.1.tgz",
-    "sha512": "33614fb98343da6fb087985f5bd66949dc4c3dd109a2f3c15b0a07266c14a72b1360d1da3a4545378d7d9bf2b42c88236ffeca536bc182c51ea495ae8100af00",
+    "url": "https://registry.npmjs.org/@tauri-apps/api/-/api-2.12.5.tgz",
+    "sha512": "1bd40832de5fcc40fe692e108552b7c351d62caa4b2301ff327a42afdcf5ba01841e74b63919aaacb91cd2e00b3a344ae2a5c9cbee188b0f0b0e5fca89c0b51e",
     "dest": "node_modules/@tauri-apps/api"
   },
   {
@@ -963,8 +971,8 @@
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@tauri-apps/plugin-updater/-/plugin-updater-2.10.1.tgz",
-    "sha512": "34560c83eb563993c977313f3e9163daa7eac005b0352de45eb6f5b66d609c127d998cd9e160d1af0cbcb9dcd6a009df1821cbb9e3cd2d8d565423479e1dde44",
+    "url": "https://registry.npmjs.org/@tauri-apps/plugin-updater/-/plugin-updater-2.14.1.tgz",
+    "sha512": "1ebee79419b5c13eb16f0ce367f4b7e9850b6b3bbc30d963e6fbcec0c978edf5c8ec74dae418e5d4f6c31305476994c02b3135559b14cb7e54aa76eb43199843",
     "dest": "node_modules/@tauri-apps/plugin-updater"
   },
   {
@@ -1219,8 +1227,8 @@
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.72.1.tgz",
-    "sha512": "e42a244d65e999bca57c569bb1bbc70b4080c375cb6869e86be9c5257e45479f7687f2e866c10d504ea9feb839c6f90aac5117cfaa589a0236f4081773637705",
+    "url": "https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.73.0.tgz",
+    "sha512": "524ca03057abe776339f6f4c0981531dfdf88465dfe4a26188359f226d6d5ed5d1af29b5092ea5e47f58df20ad3d60a1a42d3f7fddc7f3c81d8fcb4dd1d77893",
     "dest": "node_modules/@typescript-eslint/eslint-plugin"
   },
   {
@@ -1235,64 +1243,64 @@
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-8.72.1.tgz",
-    "sha512": "646c193f83827f20340104e9100316cfeaed5f4d434614165b9841d2e70a0c4217e54ee37663d268cc7de2b41f68f010cc8633d818a63a028e26d8dfa51150f6",
+    "url": "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-8.73.0.tgz",
+    "sha512": "02e2f8e5b55c9acb077d9dc38b772cf50d25e20066e19155ac9390104ed5a6a5be3d5810684c12c1acf3e1354888569b5e493a539d44a6b603c2ac3e1d1f1e3f",
     "dest": "node_modules/@typescript-eslint/parser"
   },
   {
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@typescript-eslint/project-service/-/project-service-8.72.1.tgz",
-    "sha512": "7c0b95324c1d3bf86e23c9f2a3f58a9cd29fe866a0f774b9e918774ece6619c6afc1275a37cb51835802788197f0f17e9f3a7506319f3b8807846cd6d49ea34e",
+    "url": "https://registry.npmjs.org/@typescript-eslint/project-service/-/project-service-8.73.0.tgz",
+    "sha512": "fe911ff1173832393ea899d8d2e3b5f8669d79a97cbafe74c69ba273eb2b1b6bc855ab40d17c6f58c51e32d16fb3a3821ea7ed890efffaa1f869e846e6cb7320",
     "dest": "node_modules/@typescript-eslint/project-service"
   },
   {
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@typescript-eslint/scope-manager/-/scope-manager-8.72.1.tgz",
-    "sha512": "942fede9e30265940000a6446062fa443552b857a1a5d98c4fa87e9c922321aea8ca537f3f00e00d5b4421b07b3bdc457d962d64060ba0b94335628986d17eb9",
+    "url": "https://registry.npmjs.org/@typescript-eslint/scope-manager/-/scope-manager-8.73.0.tgz",
+    "sha512": "fd38c3ef7f08ab6af38f9cf48b154e8be4ecbe08c0cd93cb3da1f5c96743072b51fc74d1e60329c985997827b95934192f0937868f0057b5379aea10091b5705",
     "dest": "node_modules/@typescript-eslint/scope-manager"
   },
   {
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@typescript-eslint/tsconfig-utils/-/tsconfig-utils-8.72.1.tgz",
-    "sha512": "7b80f9479be978010f0714f6040cec1502f7b1bc3279e7a8e7e69cce035244ad55ef7e2313ba53a9a18553e7d76a95844309d96e915a4e7df6f99f03c12e8e4e",
+    "url": "https://registry.npmjs.org/@typescript-eslint/tsconfig-utils/-/tsconfig-utils-8.73.0.tgz",
+    "sha512": "966b4214e7d86897e9a99cb01ae5e2e05a4db44f8d43e60b7b74f42bdaed103716f19b865af7c8fbea63f2bd39b18308f2f593d8260ae2b5b279d983e91a78a2",
     "dest": "node_modules/@typescript-eslint/tsconfig-utils"
   },
   {
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@typescript-eslint/type-utils/-/type-utils-8.72.1.tgz",
-    "sha512": "898db0966cab5c99b1e32c5418fdda602145ddc03fe9285d74e2a62d4d9dc7b2e713291b00cf164e19716447ddd4d75da9c785e9e2666546b2c71f6828860d96",
+    "url": "https://registry.npmjs.org/@typescript-eslint/type-utils/-/type-utils-8.73.0.tgz",
+    "sha512": "30e0bd8b8c72d45eca70375eec8a7c8dfd52ad18802dbd8a9b8516c46363504d989618c8128d5ac84dbb187230210c9f5ae1d3984a27413d78bb2bab9720ba68",
     "dest": "node_modules/@typescript-eslint/type-utils"
   },
   {
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@typescript-eslint/types/-/types-8.72.1.tgz",
-    "sha512": "2e613922141eb75056396117a81ad5b413ec300390e8dce4df977e58b8779a4e04505df7b2a95fc638a8d4c758792bca486e6c91a72d28aba2c4120a5e12f847",
+    "url": "https://registry.npmjs.org/@typescript-eslint/types/-/types-8.73.0.tgz",
+    "sha512": "3bfd72b58cdf945d7a403297c78fea39783522e669fa7ee1afdb7e4b49efecdff64e5f2b262342b21ced57581c494bc76cfb685f7fb398d6ed480c956f3c557f",
     "dest": "node_modules/@typescript-eslint/types"
   },
   {
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@typescript-eslint/typescript-estree/-/typescript-estree-8.72.1.tgz",
-    "sha512": "0c0954a1457dde122faed2102f009b999418559c0e32188726b39551421689c1596886234d1aa563723f3597af7e42e64aa90d1d1bb6a980dcabd96b9f5ea839",
+    "url": "https://registry.npmjs.org/@typescript-eslint/typescript-estree/-/typescript-estree-8.73.0.tgz",
+    "sha512": "2278e506449d59c788c080564b04b710d529fa2d0ed363c65f766fdb09e2856242d560d51af1bb9931ee7fc6f9eee01a2138fde1dead44f0c7fac504b5775141",
     "dest": "node_modules/@typescript-eslint/typescript-estree"
   },
   {
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/minimatch/-/minimatch-10.2.6.tgz",
-    "sha512": "be92d012cf952c2af59d4d015d2d3b99a628170943007d209e042ebadb71230bad0c510c1ead9b957fbcbe98310dd2b72753f08c22627a9efb3a2b536782e5d4",
+    "url": "https://registry.npmjs.org/minimatch/-/minimatch-11.0.9.tgz",
+    "sha512": "2821647f28ea7ab3654acb6396120635720a64603fe8ee15e1196167e0ecafadb548f3f0d26ce5ca913d0fd64ea0f89579f1c80fe8fbfd7b8c325a9f0ff17ad1",
     "dest": "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch"
   },
   {
@@ -1315,16 +1323,16 @@
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@typescript-eslint/utils/-/utils-8.72.1.tgz",
-    "sha512": "e6fe658b2a6eac90451c204daa1fd18ecca6003f9559c134763b8663f054aa9e5f0b7427fa5b960c492c8ee4ed5a33e7ea2e7342552d9190911bf0981b4c8290",
+    "url": "https://registry.npmjs.org/@typescript-eslint/utils/-/utils-8.73.0.tgz",
+    "sha512": "8f6495249bd59177542f459c133a38bc41f598ed6f222f0a955ba4718036320319bd83762e5651e0f9ac5be1934b1496db88fa43f10fefe30e89f2ed839866b0",
     "dest": "node_modules/@typescript-eslint/utils"
   },
   {
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/@typescript-eslint/visitor-keys/-/visitor-keys-8.72.1.tgz",
-    "sha512": "481f31aa2a52cd91d478f0822cd798c6a9f1abcdd7eb5feaccd8634066d37e3c4664878e10feed0605985f4e5371de82804d3659d4c99e1e5bf2431927ff9b9d",
+    "url": "https://registry.npmjs.org/@typescript-eslint/visitor-keys/-/visitor-keys-8.73.0.tgz",
+    "sha512": "93896c155a5164809b96d9081041f8859464c1792a0c5d461c1a4294a40e1d063e464a19000bb2735722dc8ea9f8207abf75388da1c852c85ce11cf34176562e",
     "dest": "node_modules/@typescript-eslint/visitor-keys"
   },
   {
@@ -4539,8 +4547,8 @@
     "type": "archive",
     "archive-type": "tar-gzip",
     "strip-components": 1,
-    "url": "https://registry.npmjs.org/typescript-eslint/-/typescript-eslint-8.72.1.tgz",
-    "sha512": "dcb8bd15f3e6429e399f112d143d590ab6052377182b9929c8db669b51fb94c6a09bcbbdb32e8f4e3cb7cadc1066ceca36e90ec8a147019eb3e868d815e69e5f",
+    "url": "https://registry.npmjs.org/typescript-eslint/-/typescript-eslint-8.73.0.tgz",
+    "sha512": "f849cacbdae460fba7e25fa41b66c3b98590eb2d6d19581d47fb58d54f400ba876d428c4c0ea1cee0b23c1ed055c1f2e585ce4e1088215bb915a05fbe7c3e202",
     "dest": "node_modules/typescript-eslint"
   },
   {

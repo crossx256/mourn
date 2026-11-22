@@ -1,8 +1,8 @@
 {
   "schema": 3,
   "lockfile_encoding": "utf-8-lf",
-  "bun_lock_sha256": "5082694ad904da90d52397717daaab650e0fb891b81fc4b4b8ca623af3ef6a6e",
-  "cargo_lock_sha256": "06785d44f53e32765a0ac5193d1c3507a42bdc46e24d8cf20517dfba0c2883ba",
+  "bun_lock_sha256": "999888c44252bb0890d048a13cdfc85d39e59efa5f7d3bbdd1361ccda94cdb22",
+  "cargo_lock_sha256": "d79f71d2a44d0e743c720444c90c9a161a2c79b5bbb77579b1d584406a3567f0",
   "local_cargo_sources": {
     "glib": {
       "version": "0.18.5",

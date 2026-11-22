@@ -70,10 +70,8 @@ jobs:
       - name: Install isolated SSR dependencies without lifecycle scripts
         working-directory: src-ssr
         run: bun install --frozen-lockfile --ignore-scripts
-      - run: bun audit --audit-level=high
-      - name: Audit isolated SSR dependencies
-        working-directory: src-ssr
-        run: bun audit --audit-level=high
+      - name: Audit JavaScript dependencies
+        run: bash scripts/audit-dependencies.sh web
       - name: Prepare Quasar metadata explicitly
         run: node node_modules/@quasar/app-vite/bin/quasar.js prepare
 
