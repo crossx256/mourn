@@ -26,5 +26,19 @@ if [[ $mode == all || $mode == desktop ]]; then
   # Fetch a fresh snapshot; avoid a full history clone and project-local audit config.
   git clone --quiet --depth 1 https://github.com/RustSec/advisory-db.git "$scratch/db"
   git -C "$scratch/db" rev-parse HEAD
-  (cd "$scratch" && cargo audit --db "$scratch/db" --no-fetch --file "$lock" --deny unsound --deny yanked)
+  # Keep index fetching enabled: cargo-audit couples it to advisory DB fetching.
+  # It can report registry lookup failures without a nonzero exit status.
+  for attempt in 1 2 3; do
+    status=0
+    (cd "$scratch" && cargo audit --db "$scratch/db" --file "$lock" --deny unsound --deny yanked) > "$scratch/audit.log" 2>&1 || status=$?
+    cat "$scratch/audit.log"
+    # Never retry away a reported advisory or other scanner failure.
+    if (( status != 0 )); then exit "$status"; fi
+    if ! grep -Eq "couldn.t (open|update) crates\.io index|couldn.t check if the package is yanked" "$scratch/audit.log"; then
+      exit 0
+    fi
+    printf 'Rust audit incomplete: crates.io yank status could not be verified (attempt %s/3).\n' "$attempt" >&2
+    if (( attempt < 3 )); then sleep "$((attempt * 2))"; fi
+  done
+  exit 1
 fi
