@@ -12868,7 +12868,6 @@ $vault-warning: #ffaa00;
   border-radius: 0 !important;
   color: $vault-text;
   font-family: monospace;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65) !important;
 }
 .vault-action-menu :deep(.q-item) {
   color: $vault-text;
