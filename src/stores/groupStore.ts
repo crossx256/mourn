@@ -694,8 +694,8 @@ export const useGroupStore = defineStore('groups', {
       for (const group of this.myGroups.filter((item) => !item.isLeft)) {
         try {
           await operation.wait(() => this.fetchGroupDetails(group.id, operation));
-          const ready = await operation.wait(() => this.loadMlsClient(group.id, operation));
-          if (ready) await operation.wait(() => this.fetchHistory(group.id, operation));
+          // History restores the client and replays commits before reading ciphertext.
+          await operation.wait(() => this.fetchHistory(group.id, operation));
         } catch (error) {
         operation.assertCurrent();
           console.warn('[GroupStore] offline Suite sync deferred', { groupId: group.id, error });
@@ -928,10 +928,9 @@ export const useGroupStore = defineStore('groups', {
                 '[GroupStore] MLS state unavailable for group — history cannot be decrypted until restored',
                 { groupId },
               );
+              return;
             }
-            return this.fetchHistory(groupId, operation);
-          })
-          .then(() => {
+            await operation.wait(() => this.fetchHistory(groupId, operation));
             // Forward-secrecy sweep: Remove-commit any device leaf that is no
             // longer in the roster (member left while we were offline). Closes
             // the offline-owner gap.
@@ -963,8 +962,9 @@ export const useGroupStore = defineStore('groups', {
       const rec = await operation.wait(() => groupCheckpoints.load(groupId, operation));
       if (rec) {
         const cs = await operation.wait(() => mlsCiphersuite(rec.cipherSuite));
-        const validator = await operation.wait(() => this.buildCredentialValidator(groupId, operation));
-        const client = MlsGroupClient.deserialize(rec.serialized, cs, validator);
+        // Reading trusted local state does not admit any new credentials.
+        // Replay and history install the authoritative validator before processing data.
+        const client = MlsGroupClient.deserialize(rec.serialized, cs, makeCredentialValidator(new Map()));
         operation.assertCurrent();
         mlsClientRevisions.set(client, rec.revision ?? null);
         mlsClients.set(key, client);
@@ -1019,7 +1019,12 @@ export const useGroupStore = defineStore('groups', {
         try {
           await operation.wait(() => groupCheckpoints.recoverAdd(groupId, operation, {
             publish: async (commit, epoch) => {
-              await authed('post', `/api/v1/groups/${groupId}/mls/commit`, { commit, epoch }, operation);
+              // Publish the Welcome with the epoch. The outbox still verifies
+              // exact receipts and handles legacy split writes under the guard.
+              const members = pending.recipients.map(({ userId, deviceId }) => ({ userId, deviceId }));
+              await authed('post', `/api/v1/groups/${groupId}/mls/commit`, {
+                commit, epoch, onboarding: { welcomeBlob: pending.welcome, members },
+              }, operation);
             },
             findPublished: async (epoch) => {
               const { data } = await operation.wait(() => api.get<{
@@ -1096,7 +1101,7 @@ export const useGroupStore = defineStore('groups', {
         if (!client) return;
         let history = await operation.wait(() => groupCheckpoints.history<GroupMessage>(groupId, operation));
         this.messages[groupId] = history.messages;
-        const validator = await operation.wait(() => this.buildCredentialValidator(groupId, operation));
+        let validator: AuthenticationService | undefined;
         const pageSize = 100;
         let hasMore = true;
         while (hasMore) {
@@ -1104,6 +1109,7 @@ export const useGroupStore = defineStore('groups', {
             '/api/v1/groups/' + groupId + '/messages', { params: { ...(history.cursor ? { after: history.cursor } : {}), limit: String(pageSize) } }));
           const rows = data.messages ?? [];
           if (!rows.length) break;
+          validator ??= await operation.wait(() => this.buildCredentialValidator(groupId, operation));
           const working = cloneCheckpointClient(client, validator);
           const next = JSON.parse(JSON.stringify(history)) as GroupHistoryCheckpoint<GroupMessage>;
           const hidden = new Set(next.hiddenIds);
@@ -1800,7 +1806,7 @@ export const useGroupStore = defineStore('groups', {
       await operation.wait(() => this.recoverPendingRemoval(groupId, false, operation));
       let client = mlsClients.get(groupOperationKey(operation, groupId));
       if (!client) return;
-      const validator = await operation.wait(() => this.buildCredentialValidator(groupId, operation));
+      let validator: AuthenticationService | undefined;
       let hasMore = true;
       while (hasMore) {
         const afterEpoch = client.epoch;
@@ -1811,6 +1817,7 @@ export const useGroupStore = defineStore('groups', {
         for (const item of commits) {
           if (item.epoch <= client.epoch) continue;
           if (item.epoch !== client.epoch + 1) throw new Error('MLS commit ordering gap');
+          validator ??= await operation.wait(() => this.buildCredentialValidator(groupId, operation));
           const working = cloneCheckpointClient(client, validator);
           await operation.wait(() => working.applyCommit(item.commit));
           await operation.wait(() => this.persistMls(groupId, deviceId, working, operation));

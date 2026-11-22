@@ -48,6 +48,27 @@ Public support questions belong in [SUPPORT.md](SUPPORT.md).
   Legacy unscoped watcher rows are retained separately and not attributed to a
   newly signed-in user.
 
+## Voice calls
+
+- Calls use a dedicated, device-addressed encrypted signalling channel, not chat
+  messages or the legacy plaintext RTC relay. Call keys are domain-separated
+  from direct-message keys. This remains Mourn's custom protocol, not Signal or
+  RingRTC compatibility or an independently audited cryptographic construction.
+- Signalling is memory-only: SDP, ICE, their encrypted envelopes and call-session
+  ratchet state must not enter message history, persistent relay queues, recovery
+  journals, push payloads or telemetry. Bounded online retries use RAM only.
+  Restarting the app loses negotiation state; interrupted calls require fresh setup.
+- Call-history metadata is separate from signalling and has a 90-day server
+  retention limit with per-user clearing. The relay still observes routing and
+  timing metadata. Metadata-only incoming-call notifications are not acceptance.
+- Media uses WebRTC DTLS-SRTP. Direct connections can disclose network addresses
+  to the peer; relay-only mode must never fall back to a direct candidate. TURN
+  sees transport metadata but is not given media encryption keys.
+- Receiving an offer does not grant microphone consent. Native permissions,
+  background/locked-screen behavior, audio routing and public-network relay
+  operation require platform qualification before rollout. Calls are disabled
+  by default; unit tests and browser fixtures do not establish native readiness.
+
 ## Desktop and release safety
 
 Only the main window receives credential/storage commands; the tray capability

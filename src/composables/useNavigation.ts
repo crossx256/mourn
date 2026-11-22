@@ -52,6 +52,7 @@ let searchBlurTimer: ReturnType<typeof setTimeout> | null = null;
 
 /** Debounce timer for search */
 let searchTimer: ReturnType<typeof setTimeout> | null = null;
+let searchRevision = 0;
 
 /** Track in-flight link requests from header search */
 const linkRequesting = ref<Record<string, boolean>>({});
@@ -91,17 +92,19 @@ export function useNavigation() {
   }
 
   function toggleSearch() {
-    isSearchExpanded.value = !isSearchExpanded.value;
-    if (!isSearchExpanded.value) {
-      searchQuery.value = '';
-      searchResults.value = [];
-    }
+    if (isSearchExpanded.value) closeSearch();
+    else isSearchExpanded.value = true;
   }
 
   function closeSearch() {
+    searchRevision++;
+    if (searchTimer) clearTimeout(searchTimer);
+    if (searchBlurTimer) clearTimeout(searchBlurTimer);
+    searchTimer = searchBlurTimer = null;
     isSearchExpanded.value = false;
     searchQuery.value = '';
     searchResults.value = [];
+    isSearching.value = false;
     isSearchFocused.value = false;
   }
 
@@ -127,6 +130,7 @@ export function useNavigation() {
   }
 
   async function onSearchInput(query: string) {
+    const revision = ++searchRevision;
     searchQuery.value = query;
 
     if (searchTimer) clearTimeout(searchTimer);
@@ -149,22 +153,19 @@ export function useNavigation() {
         const res = await api.get('/api/v1/search/users', {
           params: { q: query.trim() },
         });
-        if (res.data.success) {
+        if (revision === searchRevision && res.data.success) {
           searchResults.value = res.data.data;
         }
       } catch {
-        searchResults.value = [];
+        if (revision === searchRevision) searchResults.value = [];
       } finally {
-        isSearching.value = false;
+        if (revision === searchRevision) isSearching.value = false;
       }
     }, 300);
   }
 
   function navigateToUser(username: string) {
-    searchQuery.value = '';
-    searchResults.value = [];
-    isSearchExpanded.value = false;
-    isSearchFocused.value = false;
+    closeSearch();
     void router.push(`/${username}`);
   }
 
@@ -177,10 +178,9 @@ export function useNavigation() {
   }
 
   function onSearchBlur() {
-    // Delay clearing focus to allow clicks on results
-    searchBlurTimer = setTimeout(() => {
-      isSearchFocused.value = false;
-    }, 120);
+    // Keep result clicks working when pointer clicks do not focus buttons.
+    if (searchBlurTimer) clearTimeout(searchBlurTimer);
+    searchBlurTimer = setTimeout(closeSearch, 120);
   }
 
   function isLinkRequesting(userId: string) {

@@ -29,6 +29,8 @@ import { isJsonContentType } from 'src/utils/http';
 import { serializeAccountTransition, teardownPrivateStores } from '../utils/accountLifecycle';
 import { collectClientFingerprint, hashClientFingerprint } from 'src/services/clientFingerprint';
 
+const desktopLogins = new WeakMap<object, number>();
+
 function logBackendRoutingError(): void {
   console.error('Backend Routing Error: Received HTML instead of JSON');
 }
@@ -187,7 +189,11 @@ export const useAuthStore = defineStore('auth', {
     // 2. Secure Login with CSRF Token and Fingerprint
     login(credentials: LoginCredentials, fingerprint: string | null, stayLoggedIn = false) {
       const generation = ++this.authOperationGeneration;
-      return serializeAccountTransition(this, () => this.performLogin(credentials, fingerprint, stayLoggedIn, generation));
+      if (isNativeRuntime() && !isMobileAuthRuntime()) desktopLogins.set(this, generation);
+      return serializeAccountTransition(this, () => this.performLogin(credentials, fingerprint, stayLoggedIn, generation))
+        .finally(() => {
+          if (desktopLogins.get(this) === generation) desktopLogins.delete(this);
+        });
     },
 
     async performLogin(credentials: LoginCredentials, fingerprint: string | null, stayLoggedIn: boolean, operationGeneration: number): Promise<AuthResult> {
@@ -503,6 +509,14 @@ export const useAuthStore = defineStore('auth', {
     async checkSession(): Promise<boolean> {
       const operationGeneration = this.authOperationGeneration;
       const isCurrent = () => operationGeneration === this.authOperationGeneration;
+      const desktop = isNativeRuntime() && !isMobileAuthRuntime();
+      // The bounded startup guard can fall through while the cookie is still
+      // being replaced. Do not probe the old cookie during that login.
+      if (desktopLogins.get(this) === operationGeneration) return this.isLoggedIn;
+      const clearInvalidSession = () => {
+        // Anonymous desktop boot may still be reading the keychain.
+        if (!desktop || this.isLoggedIn || this.user) this.clearMobileAuthState();
+      };
       try {
         const response =
           await api.get<ApiResponseEnvelope<LoginResponsePayload>>('/api/v1/auth/me');
@@ -542,7 +556,18 @@ export const useAuthStore = defineStore('auth', {
           await useAccountsStore().saveAccount(accountUser, isCurrent);
           return true;
         }
-        this.clearMobileAuthState();
+        // `success: true` with a null/missing user is the backend's "fail soft"
+        // answer for a transient server-side failure (DB/Redis hiccup), NOT
+        // "session expired" (which the backend answers with a 401). Clearing the
+        // local session here is what turned a blip during a send into "the user
+        // got kicked out of the chat": the auth watcher sees user/generation
+        // change and closes the open 1:1 thread AND the active Suite. Keep the
+        // session — the next real API call is the one that gets to decide.
+        if (response?.data?.success) {
+          console.warn('[Auth] Session check got success without a user; keeping local session');
+          return this.isLoggedIn;
+        }
+        clearInvalidSession();
         return false;
       } catch (error) {
         if (!isCurrent()) return false;
@@ -564,7 +589,7 @@ export const useAuthStore = defineStore('auth', {
           return this.isLoggedIn;
         }
 
-        this.clearMobileAuthState();
+        clearInvalidSession();
         return false;
       }
     },
@@ -695,26 +720,33 @@ export const useAuthStore = defineStore('auth', {
       if (!isNativeRuntime()) return false;
       if (this.isLoggedIn) return true;
 
+      const desktop = !isMobileAuthRuntime();
+      let generation = this.authOperationGeneration;
+      const mayRestore = () => !desktop || (generation === this.authOperationGeneration && !this.isLoggedIn);
       try {
-        if (isMobileAuthRuntime() && (await getMobileSession())) {
+        if (!desktop && (await getMobileSession())) {
           if (await this.checkSession()) return true;
         }
         const { getCredentials, listCredentials } = useSecureStore();
         const stored = (await listCredentials()).filter((credential) => credential.stayLoggedIn);
 
-        if (stored.length === 0) return false;
+        if (!mayRestore() || stored.length === 0) return false;
 
         const fingerprint = await collectClientFingerprint();
 
         for (const selected of stored) {
+          if (!mayRestore()) return false;
           const cred = await getCredentials(selected.username);
-          if (!cred?.password) continue;
+          if (!mayRestore()) return false;
+          if (!cred?.password || (desktop && cred.stayLoggedIn !== true)) continue;
 
-          const result = await this.login(
+          const pendingLogin = this.login(
             { username: cred.username, password: cred.password },
             fingerprint,
             true,
           );
+          generation = this.authOperationGeneration;
+          const result = await pendingLogin;
           if (result.success) return true;
         }
         return false;

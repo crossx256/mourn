@@ -7,7 +7,7 @@ import {
 } from 'vue-router';
 import routes from './routes';
 import { useAuthStore } from 'src/stores/auth';
-import { isNativeShellActive } from 'src/utils/platform';
+import { isNativeShellActive, isTauriRuntime } from 'src/utils/platform';
 
 /*
  * If not building with SSR mode, you can
@@ -48,17 +48,34 @@ export default defineRouter(function (/* { store, ssrContext } */) {
 
   // Track whether we've checked the session on initial load
   let sessionChecked = false;
+  let desktopRestore: Promise<boolean> | undefined;
+
+  Router.afterEach((to, _from, failure) => {
+    if (failure) return;
+    const restore = desktopRestore;
+    desktopRestore = undefined;
+    const target = to.redirectedFrom;
+    if (!restore || to.path !== '/login' || !target?.meta.requiresAuth ||
+        to.query.redirect !== target.fullPath) return;
+
+    // Only resume the guard's original route, and only if the user is still on
+    // that login page when the saved login finishes. Never trust a query alone.
+    void restore.then(async (restored) => {
+      if (restored && Router.currentRoute.value === to && useAuthStore().isLoggedIn) {
+        await Router.replace(target.fullPath);
+      }
+    }).catch(() => {});
+  });
 
   // Navigation guard for protected routes
-  Router.beforeEach(async (to, _from, next) => {
+  Router.beforeEach(async (to) => {
     const authStore = useAuthStore();
 
     // The Vault/messaging surface exists only inside a native shell (Tauri
     // desktop or Capacitor mobile) — the website must never reach it.
     const isNativeShell = isNativeShellActive();
     if (to.name === 'chains' && !isNativeShell) {
-      next({ path: '/desktop-only' });
-      return;
+      return { path: '/desktop-only' };
     }
 
     // Only check session once on initial app load (client-side only)
@@ -68,8 +85,10 @@ export default defineRouter(function (/* { store, ssrContext } */) {
       // (no-op on web). Bounded as well — it is a local bridge call, but a stalled
       // bridge must not be able to hold the first paint hostage.
       if (isNativeShell) {
+        const restore = authStore.autoLogin();
+        if (isTauriRuntime()) desktopRestore = restore;
         await Promise.race([
-          authStore.autoLogin(),
+          restore,
           new Promise<void>((resolve) => {
             setTimeout(resolve, 1500);
           }),
@@ -94,13 +113,12 @@ export default defineRouter(function (/* { store, ssrContext } */) {
 
     if (to.meta.requiresAuth && !authStore.isLoggedIn) {
       // Redirect to login with return URL
-      next({
+      return {
         path: '/login',
         query: { redirect: to.fullPath },
-      });
-    } else {
-      next();
+      };
     }
+    return true;
   });
 
   return Router;

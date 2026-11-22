@@ -67,6 +67,7 @@ const mainChildren: RouteRecordRaw[] = [
 ];
 
 if (isNativeShellBuild) {
+  mainChildren.push({ path: '/calls', name: 'calls', component: () => import('pages/CallsPage.vue'), meta: { requiresAuth: true, ssr: false } });
   mainChildren.push({
     path: '/chains',
     name: 'chains',

@@ -9,11 +9,31 @@
 // Run with:  bunx vitest run tests/mls.e2e.test.ts
 
 import { describe, it, expect } from 'vitest';
-import { MlsGroupClient, mlsGroupIdBytes, mlsCiphersuite } from '../src/crypto/mlsGroup';
+import { createGroup, encodeGroupState, encodeMlsMessage, generateKeyPackage } from 'ts-mls';
+import {
+  LEGACY_CIPHERSUITE_NAME, MlsGroupClient, mlsCapabilities, mlsCiphersuite,
+  mlsClientConfig, mlsCredential, mlsExtensions, mlsGroupIdBytes, mlsLifetime,
+} from '../src/crypto/mlsGroup';
 
 const GROUP_ID = '11111111-2222-3333-4444-555555555555';
 
 describe('MLS groups (ts-mls, PQC ciphersuite)', () => {
+  it('restores an AES-era Suite and joins its AES Welcome after the default changed', async () => {
+    const cs = await mlsCiphersuite(LEGACY_CIPHERSUITE_NAME);
+    const caps = { ...mlsCapabilities(), ciphersuites: [LEGACY_CIPHERSUITE_NAME] };
+    const owner = await generateKeyPackage(mlsCredential('legacy-owner'), caps, mlsLifetime(), [], cs);
+    const peer = await generateKeyPackage(mlsCredential('legacy-peer'), caps, mlsLifetime(), [], cs);
+    const state = await createGroup(mlsGroupIdBytes(GROUP_ID), owner.publicPackage, owner.privatePackage,
+      mlsExtensions(), cs, mlsClientConfig());
+    const creator = MlsGroupClient.deserialize(Buffer.from(encodeGroupState(state)).toString('base64'), cs);
+    const kp = Buffer.from(encodeMlsMessage({ version: 'mls10', wireformat: 'mls_key_package', keyPackage: peer.publicPackage })).toString('base64');
+    const { welcomeB64 } = await creator.addMember(kp);
+    const joined = await MlsGroupClient.join(welcomeB64, peer.publicPackage, peer.privatePackage);
+    expect(joined.ciphersuite).toBe(LEGACY_CIPHERSUITE_NAME);
+    expect(await joined.decrypt(await creator.encrypt('still the same Suite'))).toBe('still the same Suite');
+    expect(await creator.decrypt(await joined.encrypt('confirmed'))).toBe('confirmed');
+  });
+
   it("creator can create a group and a member can decrypt the creator's message", async () => {
     const creator = (await MlsGroupClient.create(mlsGroupIdBytes(GROUP_ID))).client;
     const bPair = await MlsGroupClient.generateKeyPackagePair('device-B');

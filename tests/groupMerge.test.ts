@@ -237,7 +237,8 @@ it.each(['single', 'batch'] as const)('routes %s Add through a durable outbox be
         new TextEncoder().encode('exact-commit'))), byte => byte.toString(16).padStart(2, '0')).join('') });
   expect(f.record?.pendingAdd).toBeUndefined();
   expect(f.generated).toBe(1);
-  expect(commit?.body).toEqual({ commit: 'exact-commit', epoch: 2 });
+  expect(commit?.body).toEqual({ commit: 'exact-commit', epoch: 2,
+    onboarding: { welcomeBlob: 'exact-welcome', members: [{ userId: 'bob', deviceId: 'bob-device' }] } });
 });
 
 it('preserves unavailable if durable restored-client checkpoint publication fails', async () => {
