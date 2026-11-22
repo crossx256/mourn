@@ -17,6 +17,11 @@ describe('isSessionAuthFailure', () => {
     );
   });
 
+  it('does not interpret an HTML or empty proxy response as a dead session', () => {
+    expect(isSessionAuthFailure('/api/v1/auth/me', 401, '<html>Unauthorized</html>')).toBe(false);
+    expect(isSessionAuthFailure('/api/v1/auth/me', 401, undefined)).toBe(false);
+  });
+
   it('accepts an explicit AUTH_REQUIRED code from any endpoint', () => {
     expect(
       isSessionAuthFailure('/api/v1/vault/devices', 401, {

@@ -26,6 +26,7 @@ import {
 } from 'src/services/mobileAuth';
 
 import { isJsonContentType } from 'src/utils/http';
+import { isSessionAuthFailure } from 'src/utils/apiAuthFailure';
 import { serializeAccountTransition, teardownPrivateStores } from '../utils/accountLifecycle';
 import { collectClientFingerprint, hashClientFingerprint } from 'src/services/clientFingerprint';
 
@@ -67,7 +68,11 @@ function isNativeRuntime(): boolean {
   return isNativeShellActive();
 }
 
-async function initializeVaultIfNative(currentPassword?: string, isCurrent: () => boolean = () => true) {
+async function initializeVaultIfNative(
+  currentPassword?: string,
+  isCurrent: () => boolean = () => true,
+  replaceMobileBinding = false,
+) {
   if (!isNativeRuntime()) return;
   const { useVaultStore } = await import('src/stores/vault');
   if (!isCurrent()) return;
@@ -75,7 +80,9 @@ async function initializeVaultIfNative(currentPassword?: string, isCurrent: () =
   // A password reauthentication creates a new mobile bearer session. Re-run
   // device proof even when the prior session already initialized the Vault so
   // the replacement session is bound before protected requests resume.
-  if (isMobileAuthRuntime() && vaultStore.isInitialized) await vaultStore.clearVaultState();
+  if (replaceMobileBinding && isMobileAuthRuntime() && vaultStore.isInitialized) {
+    await vaultStore.clearVaultState();
+  }
   if (!isCurrent()) return;
   await vaultStore.initialize({ currentPassword });
 }
@@ -349,7 +356,7 @@ export const useAuthStore = defineStore('auth', {
      * result is never decided by it.
      */
     async establishVaultAfterLogin(password?: string, isCurrent: () => boolean = () => true): Promise<void> {
-      const establishment = initializeVaultIfNative(password, isCurrent).catch((err: unknown) => {
+      const establishment = initializeVaultIfNative(password, isCurrent, true).catch((err: unknown) => {
         if (import.meta.env.DEV) {
           console.warn('[Auth] Vault initialization after login failed', err);
         }
@@ -561,19 +568,12 @@ export const useAuthStore = defineStore('auth', {
       } catch (error) {
         if (!isCurrent()) return false;
 
-        // Distinguish "the server says this session is invalid" from "we could
-        // not ask the server". Only 401/403 are authoritative: everything else
-        // (5xx, gateway HTML, network drop, timeout) says nothing about the
-        // session, and wiping here was expensive — a single transient blip
-        // logged the user out AND tore down the native vault (clearVaultState),
-        // so the vault re-initialized mid-session, severing the realtime socket
-        // and re-syncing everything. On device that read as "it logged me out"
-        // plus "syncing across devices takes forever". Keep the session; the
-        // next real API call is the one that gets to decide.
-        const status = (error as { response?: { status?: number } })?.response?.status;
-        if (status !== 401 && status !== 403) {
+        // A proxy refusal or device-authorization failure is not a session
+        // revocation. Use the same rule as the API interceptor.
+        const response = (error as { response?: { status?: number; data?: unknown } } | null)?.response;
+        if (!isSessionAuthFailure('/api/v1/auth/me', response?.status, response?.data)) {
           console.warn('[Auth] Session check failed with a non-auth error; keeping local session', {
-            status,
+            status: response?.status,
           });
           return this.isLoggedIn;
         }
