@@ -11,6 +11,11 @@ const chrome = process.env.MOURN_THEME_CHROMIUM;
 const require = createRequire(import.meta.url);
 const read = (path: string) => readFileSync(new URL(path, import.meta.url), 'utf8');
 
+it('loads Suite list sizing from the messaging page', () => {
+  const { scriptSetup } = parse(read('../src/pages/MessagingPage.vue')).descriptor;
+  expect(scriptSetup?.content).toContain("import 'src/css/suite-list.css';");
+});
+
 it.skipIf(!chrome)('keeps long Suite rows and their actions inside the list viewport', () => {
   const page = parse(read('../src/pages/MessagingPage.vue')).descriptor;
   const css = compileString(page.styles.find((style) => style.lang === 'scss')!.content).css;

@@ -1,0 +1,30 @@
+name: Bug report
+description: Something in the Mourn client does not work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not report security issues here — see SECURITY.md.
+        Remove account names, message contents and other personal data before posting.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Steps to reproduce, including what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Platform and version (Windows, Linux, Android), and the Mourn version from Settings.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Optional. Redact anything personal.
+    validations:
+      required: false

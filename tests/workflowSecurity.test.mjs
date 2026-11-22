@@ -28,6 +28,33 @@ const workflows = readdirSync(WORKFLOW_DIR)
   .filter((f) => f.endsWith('.yml') || f.endsWith('.yaml'))
   .map((f) => ({ name: f, text: readFileSync(join(WORKFLOW_DIR, f), 'utf8') }));
 
+test('the required frontend check audits every Bun lock and the Rust lock without exclusions', () => {
+  const verify = readFileSync(join(WORKFLOW_DIR, 'verify.yml'), 'utf8');
+  assert.match(verify, /^  frontend:\n/m);
+  assert.match(verify, /^      - run: bash scripts\/audit-dependencies.sh all$/m);
+  const audit = readFileSync('scripts/audit-dependencies.sh', 'utf8');
+  assert.match(audit, /for dir in \. src-capacitor src-ssr;/);
+  assert.match(audit, /cd "\$dir" && bun audit\)/);
+  assert.match(audit, /lock="\$PWD\/src-tauri\/Cargo.lock"/);
+  const fetch = audit.indexOf('git clone --quiet --depth 1 https://github.com/RustSec/advisory-db.git "$scratch/db"');
+  const scan = audit.indexOf('cargo audit --db "$scratch/db" --file "$lock" --deny unsound --deny yanked');
+  assert.ok(fetch >= 0 && scan > fetch, 'RustSec must refresh both the advisory database and crates.io index');
+  assert.doesNotMatch(audit, /--ignore|--audit-level|--no-fetch|--no-yanked|\|\| true/);
+  assert.match(audit, /grep -Eq .*couldn.t.*crates\\\.io index.*couldn.t check if the package is yanked/);
+});
+
+test('manual builds also gate their dependency locks before packaging', () => {
+  for (const [file, mode, build] of [
+    ['release.yml', 'desktop', 'Build and validate signed packages'],
+    ['android.yml', 'mobile', 'Build web bundle and sync Capacitor'],
+    ['web-release.yml', 'web', 'Build SSR bundle'],
+  ]) {
+    const workflow = readFileSync(join(WORKFLOW_DIR, file), 'utf8');
+    const gate = workflow.indexOf(`run: bash scripts/audit-dependencies.sh ${mode}`);
+    assert.ok(gate >= 0 && gate < workflow.indexOf(`name: ${build}`), file);
+  }
+});
+
 test('no workflow uses pull_request_target', () => {
   const bad = workflows.filter((w) => /^\s*pull_request_target\s*:/m.test(w.text)).map((w) => w.name);
   assert.deepEqual(bad, [], `pull_request_target is forbidden (fork code + secrets): ${bad.join(', ')}`);

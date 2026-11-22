@@ -1,6 +1,6 @@
 [package]
 name = "mourn-desktop"
-version = "1.5.4"
+version = "1.5.6"
 description = "An internet revolution - Mourn Desktop"
 authors = ["psycho, cross & L"]
 edition = "2021"
@@ -34,7 +34,7 @@ devtools = ["tauri/devtools"]
 [dependencies]
 tauri = { version = "2", features = ["tray-icon"] }
 tauri-plugin-notification = "2.0"
-tauri-plugin-updater = "2"
+tauri-plugin-updater = "2.14.1"
 tauri-plugin-opener = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
@@ -43,7 +43,7 @@ tauri-plugin-process = "2"
 keyring = { version = "3.6", features = ["apple-native", "windows-native", "sync-secret-service"] }
 base64 = "0.22"
 tempfile = "3"
-rusqlite = { version = "0.31", features = ["bundled"] }
+rusqlite = { version = "0.41", default-features = false, features = ["cache", "libsqlite3-sys", "bundled"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 reqwest = { version = "0.12", features = ["json", "cookies"] }

@@ -20,7 +20,7 @@ class NeverOpeningSocket {
   onopen: (() => void) | null = null;
   onmessage: (() => void) | null = null;
   onerror: (() => void) | null = null;
-  onclose: (() => void) | null = null;
+  onclose: ((event?: { code: number }) => void) | null = null;
   close = vi.fn(() => {
     this.readyState = NeverOpeningSocket.CLOSED;
   });
@@ -84,5 +84,25 @@ describe('VaultTransport handshake bound', () => {
     await Promise.resolve();
     NeverOpeningSocket.instances[0].onclose?.();
     await settled;
+  });
+
+  it.each([4002, 1006])('handles close code %s without fighting a replacement connection', async (code) => {
+    const proof = vi.fn(proofProvider);
+    const transport = new VaultTransport('device-id', 'device-token', proof);
+    const connection = transport.connect('mourn.bio', true, '/api/v1/vault/ws/secure');
+    await Promise.resolve();
+    await Promise.resolve();
+    const socket = NeverOpeningSocket.instances[0];
+    socket.readyState = NeverOpeningSocket.OPEN;
+    socket.onopen?.();
+    await connection;
+
+    socket.readyState = NeverOpeningSocket.CLOSED;
+    socket.onclose?.({ code });
+    await vi.advanceTimersByTimeAsync(2_000);
+
+    expect(proof).toHaveBeenCalledTimes(code === 4002 ? 1 : 2);
+    expect(transport.isOpen()).toBe(false);
+    transport.disconnect();
   });
 });

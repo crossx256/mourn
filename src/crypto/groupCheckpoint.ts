@@ -1,4 +1,6 @@
 export interface GroupHistoryCheckpoint<T = unknown> {
+  /** First epoch this device can decrypt when it joined from a Welcome. */
+  joinedEpoch?: number;
   version: 1;
   messages: T[];
   hiddenIds: string[];

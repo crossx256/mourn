@@ -81,6 +81,9 @@ jobs:
         working-directory: src-capacitor
         run: bun install --frozen-lockfile --ignore-scripts
 
+      - name: Audit JavaScript dependencies
+        run: bash scripts/audit-dependencies.sh mobile
+
       - name: Prepare Quasar explicitly without dependency lifecycle scripts
         run: node node_modules/@quasar/app-vite/bin/quasar.js prepare
 

@@ -2,17 +2,18 @@ import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAuthStore } from 'src/stores/auth';
 
-const { get, listCredentials, getCredentials, saveCredentials } = vi.hoisted(() => ({
+const { get, listCredentials, getCredentials, saveCredentials, isMobile, vault } = vi.hoisted(() => ({
   get: vi.fn(), listCredentials: vi.fn(), getCredentials: vi.fn(), saveCredentials: vi.fn(),
+  isMobile: vi.fn(), vault: { isInitialized: true, initialize: vi.fn(), clearVaultState: vi.fn() },
 }));
 vi.mock('boot/axios', () => ({ api: { get }, mobilePreAuthApi: {}, refreshMobileSession: vi.fn() }));
 vi.mock('src/composables/useSecureStore', () => ({
   useSecureStore: () => ({ getCredentials, listCredentials, saveCredentials }),
 }));
 vi.mock('src/utils/platform', () => ({ isNativeShellActive: () => true }));
-vi.mock('src/services/mobileAuth', () => ({ isMobileAuthRuntime: () => false }));
+vi.mock('src/services/mobileAuth', () => ({ isMobileAuthRuntime: isMobile }));
 vi.mock('src/services/clientFingerprint', () => ({ collectClientFingerprint: async () => null, hashClientFingerprint: async () => null }));
-vi.mock('src/stores/vault', () => ({ useVaultStore: () => ({ initialize: async () => {} }) }));
+vi.mock('src/stores/vault', () => ({ useVaultStore: () => vault }));
 vi.mock('src/stores/accounts', () => ({ useAccountsStore: () => ({ saveAccount: async () => {} }) }));
 vi.mock('src/utils/accountLifecycle', async (importOriginal) => ({
   ...await importOriginal<object>(), teardownPrivateStores: async () => ({ success: true }),
@@ -23,6 +24,8 @@ const credentials = { username: 'saved-user', password: 'fixture-only', stayLogg
 
 beforeEach(() => {
   vi.resetAllMocks();
+  isMobile.mockReturnValue(false);
+  vault.isInitialized = true;
   vi.stubGlobal('localStorage', { setItem: vi.fn(), removeItem: vi.fn() });
   setActivePinia(createPinia());
   listCredentials.mockResolvedValue([credentials]);
@@ -30,6 +33,51 @@ beforeEach(() => {
 });
 
 describe('desktop saved-session recovery', () => {
+  it.each([
+    { status: 403, data: '<html>Access denied</html>', headers: { 'content-type': 'text/html' } },
+    { status: 403, data: { code: 'DEVICE_BINDING_REQUIRED' }, headers: { 'content-type': 'application/json' } },
+    { status: 401, data: '<html>Gateway unauthorized</html>', headers: { 'content-type': 'text/html' } },
+  ])('preserves the signed-in account on a non-session refusal', async (response) => {
+    const auth = useAuthStore();
+    Object.assign(auth, { user: { id: 'signed-in' }, isLoggedIn: true });
+    get.mockRejectedValueOnce({ response });
+    await expect(auth.checkSession()).resolves.toBe(true);
+    expect(auth.user?.id).toBe('signed-in');
+    expect(auth.authOperationGeneration).toBe(0);
+  });
+
+  it('still clears a session the API explicitly invalidated', async () => {
+    const auth = useAuthStore();
+    Object.assign(auth, { user: { id: 'signed-in' }, isLoggedIn: true });
+    get.mockRejectedValueOnce({ response: { status: 401, data: { code: 'AUTH_REQUIRED' }, headers: { 'content-type': 'application/json' } } });
+    await expect(auth.checkSession()).resolves.toBe(false);
+    expect(auth.user).toBeNull();
+  });
+
+  it('does not tear down an initialized mobile Vault when checking the same session', async () => {
+    isMobile.mockReturnValue(true);
+    const auth = useAuthStore();
+    const user = { id: 'signed-in' };
+    Object.assign(auth, { user, isLoggedIn: true });
+    get.mockResolvedValueOnce({ headers: { 'content-type': 'application/json' }, data: { success: true, data: { user } } });
+    await expect(auth.checkSession()).resolves.toBe(true);
+    await vi.waitFor(() => expect(vault.initialize).toHaveBeenCalledOnce());
+    expect(vault.clearVaultState).not.toHaveBeenCalled();
+  });
+
+  it('keeps the local session when /auth/me succeeds but returns no user (transient server failure)', async () => {
+    const auth = useAuthStore();
+    Object.assign(auth, { user: { id: 'signed-in' }, isLoggedIn: true });
+    get.mockResolvedValueOnce({
+      headers: { 'content-type': 'application/json' },
+      data: { success: true, data: { user: null } },
+    });
+    await expect(auth.checkSession()).resolves.toBe(true);
+    expect(auth.user?.id).toBe('signed-in');
+    expect(auth.isLoggedIn).toBe(true);
+    expect(auth.authOperationGeneration).toBe(0);
+  });
+
   it('does not let an anonymous session probe invalidate an in-flight saved login', async () => {
     const auth = useAuthStore();
     let resolveLogin!: (response: unknown) => void;
@@ -53,19 +101,5 @@ describe('desktop saved-session recovery', () => {
     resolveList([credentials]);
     await expect(restore).resolves.toBe(false);
     expect(login).not.toHaveBeenCalled();
-  });
-
-  it('keeps the local session when /auth/me succeeds but returns no user (transient server failure)', async () => {
-    const auth = useAuthStore();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (auth as any).user = { id: 'existing-id', username: 'existing' };
-    auth.isLoggedIn = true;
-    get.mockResolvedValueOnce({
-      headers: { 'content-type': 'application/json' },
-      data: { success: true, data: { user: null } },
-    });
-    await expect(auth.checkSession()).resolves.toBe(true);
-    expect((auth as any).user?.id).toBe('existing-id');
-    expect(auth.isLoggedIn).toBe(true);
   });
 });

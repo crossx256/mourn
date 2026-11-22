@@ -3615,6 +3615,7 @@
 </template>
 
 <script setup lang="ts">
+import 'src/css/suite-list.css';
 import {
   ref,
   reactive,

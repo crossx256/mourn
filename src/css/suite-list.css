@@ -1,0 +1,9 @@
+/* QScrollArea's absolute content otherwise grows to the widest Suite row.
+   Keep the row inside the viewport so its name, not its actions, truncates. */
+.messaging-page-root
+  .vault-suites-head
+  ~ .vault-scroll
+  > .q-scrollarea__container
+  > .q-scrollarea__content {
+  width: 100%;
+}

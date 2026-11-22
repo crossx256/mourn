@@ -534,6 +534,16 @@
       ]
     },
     {
+      "path": "node_modules/@isaacs/nonrecursive-glob-match",
+      "name": "@isaacs/nonrecursive-glob-match",
+      "version": "1.1.0",
+      "bin": {},
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ]
+    },
+    {
       "path": "node_modules/@jridgewell/gen-mapping",
       "name": "@jridgewell/gen-mapping",
       "version": "0.3.13",
@@ -1036,7 +1046,7 @@
     {
       "path": "node_modules/@tauri-apps/api",
       "name": "@tauri-apps/api",
-      "version": "2.11.1",
+      "version": "2.12.5",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1134,7 +1144,7 @@
     {
       "path": "node_modules/@tauri-apps/plugin-updater",
       "name": "@tauri-apps/plugin-updater",
-      "version": "2.10.1",
+      "version": "2.14.1",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1454,7 +1464,7 @@
     {
       "path": "node_modules/@typescript-eslint/eslint-plugin",
       "name": "@typescript-eslint/eslint-plugin",
-      "version": "8.72.1",
+      "version": "8.73.0",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1474,7 +1484,7 @@
     {
       "path": "node_modules/@typescript-eslint/parser",
       "name": "@typescript-eslint/parser",
-      "version": "8.72.1",
+      "version": "8.73.0",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1484,7 +1494,7 @@
     {
       "path": "node_modules/@typescript-eslint/project-service",
       "name": "@typescript-eslint/project-service",
-      "version": "8.72.1",
+      "version": "8.73.0",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1494,7 +1504,7 @@
     {
       "path": "node_modules/@typescript-eslint/scope-manager",
       "name": "@typescript-eslint/scope-manager",
-      "version": "8.72.1",
+      "version": "8.73.0",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1504,7 +1514,7 @@
     {
       "path": "node_modules/@typescript-eslint/tsconfig-utils",
       "name": "@typescript-eslint/tsconfig-utils",
-      "version": "8.72.1",
+      "version": "8.73.0",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1514,7 +1524,7 @@
     {
       "path": "node_modules/@typescript-eslint/type-utils",
       "name": "@typescript-eslint/type-utils",
-      "version": "8.72.1",
+      "version": "8.73.0",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1524,7 +1534,7 @@
     {
       "path": "node_modules/@typescript-eslint/types",
       "name": "@typescript-eslint/types",
-      "version": "8.72.1",
+      "version": "8.73.0",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1534,7 +1544,7 @@
     {
       "path": "node_modules/@typescript-eslint/typescript-estree",
       "name": "@typescript-eslint/typescript-estree",
-      "version": "8.72.1",
+      "version": "8.73.0",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1544,7 +1554,7 @@
     {
       "path": "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch",
       "name": "minimatch",
-      "version": "10.2.6",
+      "version": "11.0.9",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1574,7 +1584,7 @@
     {
       "path": "node_modules/@typescript-eslint/utils",
       "name": "@typescript-eslint/utils",
-      "version": "8.72.1",
+      "version": "8.73.0",
       "bin": {},
       "arches": [
         "x86_64",
@@ -1584,7 +1594,7 @@
     {
       "path": "node_modules/@typescript-eslint/visitor-keys",
       "name": "@typescript-eslint/visitor-keys",
-      "version": "8.72.1",
+      "version": "8.73.0",
       "bin": {},
       "arches": [
         "x86_64",
@@ -5623,7 +5633,7 @@
     {
       "path": "node_modules/typescript-eslint",
       "name": "typescript-eslint",
-      "version": "8.72.1",
+      "version": "8.73.0",
       "bin": {},
       "arches": [
         "x86_64",
