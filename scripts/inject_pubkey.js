@@ -4,7 +4,7 @@ import path from 'path';
 import { decodeTauriPublicKey } from './minisign_verify.mjs';
 
 const confPath = path.resolve(process.cwd(), 'src-tauri', 'tauri.conf.json');
-const DEFAULT_ENDPOINT = 'https://mourn.bio/update/{{target}}/{{current_version}}';
+const DEFAULT_ENDPOINT = 'https://mourn.live/update/{{target}}/{{current_version}}';
 
 function getPubkey() {
   if (process.env.PUBKEY && process.env.PUBKEY.trim().length > 0) return process.env.PUBKEY.trim();

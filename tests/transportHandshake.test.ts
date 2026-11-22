@@ -50,7 +50,7 @@ describe('VaultTransport handshake bound', () => {
   it('rejects a handshake that never opens instead of hanging forever', async () => {
     const transport = new VaultTransport('device-id', 'device-token', proofProvider);
 
-    const connection = transport.connect('mourn.bio', true, '/api/v1/vault/ws/secure');
+    const connection = transport.connect('mourn.live', true, '/api/v1/vault/ws/secure');
     const settled = expect(connection).rejects.toThrow('WebSocket handshake timed out');
 
     await vi.advanceTimersByTimeAsync(VaultTransport.WS_OPEN_TIMEOUT_MS + 1);
@@ -62,7 +62,7 @@ describe('VaultTransport handshake bound', () => {
   it('resolves immediately when the socket opens, without waiting for the bound', async () => {
     const transport = new VaultTransport('device-id', 'device-token', proofProvider);
 
-    const connection = transport.connect('mourn.bio', true, '/api/v1/vault/ws/secure');
+    const connection = transport.connect('mourn.live', true, '/api/v1/vault/ws/secure');
     await Promise.resolve();
     await Promise.resolve();
 
@@ -77,7 +77,7 @@ describe('VaultTransport handshake bound', () => {
   it('rejects immediately when the socket closes before opening', async () => {
     const transport = new VaultTransport('device-id', 'device-token', proofProvider);
 
-    const connection = transport.connect('mourn.bio', true, '/api/v1/vault/ws/secure');
+    const connection = transport.connect('mourn.live', true, '/api/v1/vault/ws/secure');
     const settled = expect(connection).rejects.toThrow('WebSocket closed before opening');
 
     await Promise.resolve();
@@ -89,7 +89,7 @@ describe('VaultTransport handshake bound', () => {
   it.each([4002, 1006])('handles close code %s without fighting a replacement connection', async (code) => {
     const proof = vi.fn(proofProvider);
     const transport = new VaultTransport('device-id', 'device-token', proof);
-    const connection = transport.connect('mourn.bio', true, '/api/v1/vault/ws/secure');
+    const connection = transport.connect('mourn.live', true, '/api/v1/vault/ws/secure');
     await Promise.resolve();
     await Promise.resolve();
     const socket = NeverOpeningSocket.instances[0];

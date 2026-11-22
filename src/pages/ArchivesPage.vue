@@ -52,7 +52,7 @@
     <nav class="archive-nav" aria-label="Archive navigation">
       <router-link to="/" class="archive-nav__back" aria-label="Back to home">
         <q-icon name="mdi-arrow-left" size="18px" />
-        <span>mourn.bio</span>
+        <span>mourn.live</span>
       </router-link>
     </nav>
 

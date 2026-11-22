@@ -3,7 +3,7 @@
     <nav class="leaderboard-nav" aria-label="Leaderboard navigation">
       <router-link to="/" class="leaderboard-back" aria-label="Back to home">
         <q-icon name="mdi-arrow-left" size="18px" />
-        <span>mourn.bio</span>
+        <span>mourn.live</span>
       </router-link>
       <span class="leaderboard-nav__mark" aria-hidden="true">[ M / INDEX ]</span>
     </nav>
@@ -110,7 +110,7 @@
         </div>
         <div class="leaderboard-footer" aria-hidden="true">
           <span>END OF INDEX</span>
-          <span>mourn.bio / rankings</span>
+          <span>mourn.live / rankings</span>
         </div>
       </section>
     </main>

@@ -19,18 +19,18 @@
           <div class="col-12 text-left">
             <div class="feature-item q-pa-md bordered-panel">
               customizable profiles (biolinks at
-              <span class="text-primary">mourn.bio/{username}</span>)
+              <span class="text-primary">mourn.live/{username}</span>)
             </div>
           </div>
           <div class="col-12 text-left">
             <div class="feature-item q-pa-md bordered-panel">
-              educational center (Archives at <span class="text-primary">mourn.bio/archives</span>)
+              educational center (Archives at <span class="text-primary">mourn.live/archives</span>)
             </div>
           </div>
           <div class="col-12 text-left">
             <div class="feature-item q-pa-md bordered-panel">
               our own 3D universe where you can leave a message as a star (The Graveyard at
-              <span class="text-primary">mourn.bio/graveyard</span>)
+              <span class="text-primary">mourn.live/graveyard</span>)
             </div>
           </div>
           <div class="col-12 text-left">

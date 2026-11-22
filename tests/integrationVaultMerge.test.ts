@@ -533,12 +533,12 @@ describe('transport timeout + account cancellation integration', () => {
     Socket.instances = [];
     vi.stubGlobal('WebSocket', Socket);
     const transport = new VaultTransport('device', 'token', async () => ({ token: 'token', proof: 'proof' }));
-    const first = transport.connect('mourn.bio', true);
+    const first = transport.connect('mourn.live', true);
     const cancelled = expect(first).rejects.toThrow('cancelled');
     await vi.advanceTimersByTimeAsync(0);
     transport.disconnect();
     await cancelled;
-    const second = transport.connect('mourn.bio', true);
+    const second = transport.connect('mourn.live', true);
     await vi.advanceTimersByTimeAsync(0);
     const socket = Socket.instances[1]!;
     socket.readyState = Socket.OPEN;

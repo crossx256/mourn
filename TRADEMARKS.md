@@ -29,7 +29,7 @@ redistribute code or artwork under the AGPL.
 
 Do not use the name or logos to falsely imply an official product, affiliation,
 sponsorship or approval. Uses beyond the permissions described here may be
-requested from `cross@mourn.bio` and `psycho@mourn.bio`.
+requested from `cross@mourn.live` and `psycho@mourn.live`.
 
 Nothing here restricts nominative or descriptive use, fair use, or other rights
 under applicable law, requires permission for exercising AGPL code rights, or

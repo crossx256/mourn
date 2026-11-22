@@ -16,7 +16,7 @@ MOURN Desktop aims to be the most privacy-respecting social ecosystem client.
 
 ### Customizable Profiles
 
-Personal profiles accessible at `https://mourn.bio/{username}` - fully customizable with complete user control.
+Personal profiles accessible at `https://mourn.live/{username}` - fully customizable with complete user control.
 
 ### The Archives
 
@@ -88,4 +88,4 @@ Have a feature idea? We'd love to hear it!
 
 - [Issue Tracker](https://github.com/mourn-project/desktop/issues)
 - [Contributing Guide](CONTRIBUTING.md)
-- [MOURN Main Site](https://mourn.bio)
+- [MOURN Main Site](https://mourn.live)

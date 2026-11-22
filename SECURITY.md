@@ -4,7 +4,7 @@
 
 Do not post credentials, private messages, key material, or exploit details in a
 public issue. Report privately to the approved security contacts:
-`cross@mourn.bio` and `psycho@mourn.bio`. Include affected versions, impact, and
+`cross@mourn.live` and `psycho@mourn.live`. Include affected versions, impact, and
 minimal reproduction steps with synthetic or redacted evidence. Ask how to
 transfer sensitive evidence securely before sending it; no encryption key is
 published here.

@@ -23,7 +23,7 @@ const isDev = import.meta.env.DEV;
 // unless they are pointed at the real backend origin.
 const configuredApiBase =
   (import.meta.env.VITE_API_BASE as string | undefined) ||
-  (isNativeBuild ? 'https://mourn.bio' : '');
+  (isNativeBuild ? 'https://mourn.live' : '');
 const clientBaseURL = isDev ? '' : configuredApiBase;
 
 const baseURL = isServer ? 'http://127.0.0.1:3000' : clientBaseURL;

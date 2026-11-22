@@ -25,7 +25,7 @@
                 id="email"
                 v-model="email"
                 type="email"
-                placeholder="operator@mourn.bio"
+                placeholder="operator@mourn.live"
                 dense
                 outlined
                 square

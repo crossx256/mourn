@@ -198,7 +198,7 @@ there — but it is a short list, and it is already wired:
   `server/server-entry.js` contain zero `process.env` reads). Nothing from `.env` is
   needed on the box; `deployed.json` + pm2 are the whole runtime story.
 - What *is* needed is the `VITE_*` set, because those are compiled into the client
-  bundle: `VITE_API_BASE`, `VITE_WS_BASE` (both hardcoded to `https://mourn.bio` in
+  bundle: `VITE_API_BASE`, `VITE_WS_BASE` (both hardcoded to `https://mourn.live` in
   the workflow), `VITE_CAP_API_ENDPOINT` and `VITE_KLIPY_API_KEY`.
 - Those live in the repo's **Actions secrets** (`VITE_CAP_API_ENDPOINT`,
   `VITE_KLIPY_API_KEY`), which is the CI equivalent of your `.env`. The workflow reads

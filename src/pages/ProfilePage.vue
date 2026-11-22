@@ -696,7 +696,7 @@ useMeta(() => {
   if (!p || !u) return {};
 
   const title = p.seoTitle || `@${u.username}`;
-  const description = p.seoDescription || p.bio || 'View my profile on mourn.bio';
+  const description = p.seoDescription || p.bio || 'View my profile on mourn.live';
   const image = p.profilePicture || '';
 
   const meta: Record<string, { property?: string; name?: string; content: string }> = {

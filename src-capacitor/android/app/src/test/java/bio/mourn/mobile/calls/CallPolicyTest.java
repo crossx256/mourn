@@ -17,7 +17,7 @@ public final class CallPolicyTest {
         check(!CallPolicy.trustedOrigin("https://localhost.evil"));
         check(!CallPolicy.trustedOrigin("https://evil@localhost"));
         check(!CallPolicy.trustedOrigin("https://localhost:444"));
-        check(!CallPolicy.trustedOrigin("https://mourn.bio"));
+        check(!CallPolicy.trustedOrigin("https://mourn.live"));
         check(!CallPolicy.trustedOrigin(null));
         check(CallPolicy.expiry("2027-01-15T08:00:00.000Z") > 0);
         check(CallPolicy.expiry("2027-02-30T08:00:00.000Z") == 0);
