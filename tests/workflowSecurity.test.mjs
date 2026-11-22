@@ -37,9 +37,10 @@ test('the required frontend check audits every Bun lock and the Rust lock withou
   assert.match(audit, /cd "\$dir" && bun audit\)/);
   assert.match(audit, /lock="\$PWD\/src-tauri\/Cargo.lock"/);
   const fetch = audit.indexOf('git clone --quiet --depth 1 https://github.com/RustSec/advisory-db.git "$scratch/db"');
-  const scan = audit.indexOf('cargo audit --db "$scratch/db" --no-fetch --file "$lock" --deny unsound --deny yanked');
-  assert.ok(fetch >= 0 && scan > fetch, 'RustSec must scan a freshly fetched database');
-  assert.doesNotMatch(audit, /--ignore|--audit-level|\|\| true/);
+  const scan = audit.indexOf('cargo audit --db "$scratch/db" --file "$lock" --deny unsound --deny yanked');
+  assert.ok(fetch >= 0 && scan > fetch, 'RustSec must refresh both the advisory database and crates.io index');
+  assert.doesNotMatch(audit, /--ignore|--audit-level|--no-fetch|--no-yanked|\|\| true/);
+  assert.match(audit, /grep -Eq .*couldn.t.*crates\\\.io index.*couldn.t check if the package is yanked/);
 });
 
 test('manual builds also gate their dependency locks before packaging', () => {
