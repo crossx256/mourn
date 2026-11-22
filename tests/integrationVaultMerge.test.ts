@@ -188,6 +188,149 @@ describe('main + hardening Vault integration', () => {
     expect(csrf).not.toHaveBeenCalled();
     expect(vault.isInitialized).toBe(false);
   });
+
+  it('restarts Vault initialization instead of using a transport left by a failed bootstrap', async () => {
+    const vault = useVaultStore();
+    const stale = { isOpen: () => false, connect: vi.fn(), ensureConnected: vi.fn() };
+    const ready = { isOpen: () => true, ensureConnected: vi.fn() };
+    vault.transport = stale as never;
+    const initialize = vi.spyOn(vault, 'initialize').mockImplementation(async () => {
+      vault.transport = ready as never;
+      vault.isInitialized = true;
+    });
+    await vault.ensureVaultTransport();
+    expect(initialize).toHaveBeenCalledOnce();
+    expect(stale.connect).not.toHaveBeenCalled();
+    expect(ready.ensureConnected).toHaveBeenCalledOnce();
+  });
+
+  it('does not await Vault bootstrap from the lock-held Suite send path', async () => {
+    const vault = useVaultStore();
+    const initialize = vi.spyOn(vault, 'initialize').mockResolvedValue(undefined);
+    const transport = { isOpen: () => true, ensureConnected: vi.fn() };
+    vault.transport = transport as never;
+    await expect(vault.ensureTransportConnected()).rejects.toThrow('vault transport not ready');
+    expect(initialize).not.toHaveBeenCalled();
+    expect(transport.ensureConnected).not.toHaveBeenCalled();
+  });
+
+  it('invalidates the current transport with a stale device binding without deleting keys', async () => {
+    const vault = useVaultStore();
+    const disconnect = vi.fn();
+    vault.deviceId = 'enrolled-device';
+    vault.transport = { disconnect } as never;
+    vault.transportConnected = vault.isInitialized = true;
+    await vault.clearStaleDeviceIdentity();
+    expect(disconnect).toHaveBeenCalledOnce();
+    expect(vault.transport).toBeNull();
+    expect(vault.isInitialized).toBe(false);
+    expect(vault.transportConnected).toBe(false);
+    expect(storage.del).not.toHaveBeenCalled();
+  });
+
+  it('lets manual sync restart failed startup without reloading the app', async () => {
+    const vault = useVaultStore();
+    const requestVaultSync = vi.fn();
+    vi.spyOn(vault, 'initialize').mockImplementation(async () => {
+      vault.transport = { isOpen: () => true, ensureConnected: vi.fn(), requestVaultSync } as never;
+      vault.isInitialized = true;
+    });
+    const pending = vi.spyOn(vault, 'fetchPendingMessages').mockResolvedValue(undefined);
+    await vault.requestVaultSync();
+    expect(pending).toHaveBeenCalledWith({ forceRetry: true });
+    expect(requestVaultSync).toHaveBeenCalledOnce();
+  });
+
+  it('does not report manual sync accepted when its pending fetch invalidates the binding', async () => {
+    const vault = useVaultStore();
+    const requestVaultSync = vi.fn();
+    vault.transport = { isOpen: () => true, ensureConnected: vi.fn(), requestVaultSync, disconnect: vi.fn() } as never;
+    vault.isInitialized = true;
+    vi.spyOn(vault, 'fetchPendingMessages').mockImplementation(async () => vault.clearStaleDeviceIdentity());
+    await expect(vault.requestVaultSync()).rejects.toThrow('Vault transport changed');
+    expect(requestVaultSync).not.toHaveBeenCalled();
+  });
+
+  it('rebinds once when reconnect gets DEVICE_AUTH_INVALID before the pending pull', async () => {
+    const vault = useVaultStore();
+    vi.stubGlobal('WebSocket', { OPEN: 1 });
+    const challenge = vi.fn(async () => { throw { response: { status: 403, data: { code: 'DEVICE_AUTH_INVALID' } } }; });
+    vault.transport = new VaultTransport('enrolled-device', 'fixture-token', challenge);
+    vault.deviceId = 'enrolled-device';
+    vault.isInitialized = true;
+    vault.pendingFetchInProgress = true;
+    const requestVaultSync = vi.fn();
+    const initialize = vi.spyOn(vault, 'initialize').mockImplementation(async () => {
+      expect(vault.transport).toBeNull();
+      expect(vault.pendingFetchInProgress).toBe(false);
+      vault.transport = { isOpen: () => true, ensureConnected: vi.fn(), requestVaultSync } as never;
+      vault.isInitialized = true;
+    });
+    const pending = vi.spyOn(vault, 'fetchPendingMessages').mockResolvedValue(undefined);
+    await vault.requestVaultSync();
+    expect(challenge).toHaveBeenCalledOnce();
+    expect(initialize).toHaveBeenCalledOnce();
+    expect(pending).toHaveBeenCalledWith({ forceRetry: true });
+    expect(requestVaultSync).toHaveBeenCalledOnce();
+    expect(storage.del).not.toHaveBeenCalled();
+  });
+
+  it('does not rebind inside a Suite send or on an unrelated authorization failure', async () => {
+    const vault = useVaultStore();
+    const initialize = vi.spyOn(vault, 'initialize').mockResolvedValue(undefined);
+    const connect = vi.fn();
+    const disconnect = vi.fn();
+    vault.transport = { isOpen: () => false, connect, disconnect } as never;
+    vault.isInitialized = true;
+    const other = { response: { status: 403, data: { code: 'CSRF_INVALID' } } };
+    const stale = { response: { status: 403, data: { code: 'DEVICE_AUTH_INVALID' } } };
+    connect.mockRejectedValueOnce(other).mockRejectedValueOnce(stale);
+    await expect(vault.ensureVaultTransport()).rejects.toBe(other);
+    expect(disconnect).not.toHaveBeenCalled();
+    expect(vault.isInitialized).toBe(true);
+    await expect(vault.ensureTransportConnected()).rejects.toBe(stale);
+    expect(disconnect).toHaveBeenCalledOnce();
+    expect(vault.isInitialized).toBe(false);
+    expect(initialize).not.toHaveBeenCalled();
+  });
+
+  it('does not repeatedly initialize when the new binding is also rejected', async () => {
+    const vault = useVaultStore();
+    const stale = { response: { status: 403, data: { code: 'DEVICE_AUTH_INVALID' } } };
+    const createClosedTransport = () => ({ isOpen: () => false, connect: vi.fn().mockRejectedValue(stale), disconnect: vi.fn() });
+    const first = createClosedTransport();
+    const second = createClosedTransport();
+    vault.transport = first as never;
+    vault.isInitialized = true;
+    const initialize = vi.spyOn(vault, 'initialize').mockImplementation(async () => {
+      vault.transport = second as never;
+      vault.isInitialized = true;
+    });
+    await expect(vault.ensureVaultTransport()).rejects.toBe(stale);
+    expect(first.disconnect).toHaveBeenCalledOnce();
+    expect(second.disconnect).toHaveBeenCalledOnce();
+    expect(initialize).toHaveBeenCalledOnce();
+    expect(vault.transport).toBeNull();
+  });
+
+  it('does not retire a replacement transport when an old challenge fails', async () => {
+    const vault = useVaultStore();
+    let rejectChallenge!: (error: unknown) => void;
+    const old = { isOpen: () => false, disconnect: vi.fn(), connect: vi.fn(() => new Promise((_resolve, reject) => { rejectChallenge = reject; })) };
+    const current = { disconnect: vi.fn() };
+    vault.transport = old as never;
+    vault.isInitialized = true;
+    const recovery = vault.ensureVaultTransport();
+    const rejected = expect(recovery).rejects.toThrow('superseded');
+    await vi.waitFor(() => expect(old.connect).toHaveBeenCalledOnce());
+    useAuthStore().authOperationGeneration++;
+    vault.transport = current as never;
+    rejectChallenge({ response: { status: 403, data: { code: 'DEVICE_AUTH_INVALID' } } });
+    await rejected;
+    expect(vault.transport?.disconnect).toBe(current.disconnect);
+    expect(current.disconnect).not.toHaveBeenCalled();
+    expect(vault.isInitialized).toBe(true);
+  });
 });
 
 async function encryptedCheckpointFixture() {

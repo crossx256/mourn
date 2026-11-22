@@ -99,11 +99,14 @@ mod platform {
         // SAFETY: the descriptor is owned and alive. flock only locks the file;
         // the File remains owned by Listener until the primary process exits.
         if unsafe { libc::flock(lock.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) } != 0 {
-            return Ok(if ask(&path) {
-                Claim::Secondary
-            } else {
-                Claim::Unguarded
-            });
+            let error = std::io::Error::last_os_error();
+            if error.kind() != std::io::ErrorKind::WouldBlock {
+                return Err(error);
+            }
+            // The lock proves a primary already owns the profile. Its UI may
+            // not be able to answer yet; never start a second writer for that.
+            let _ = ask(&path);
+            return Ok(Claim::Secondary);
         }
         if let Ok(meta) = fs::symlink_metadata(&path) {
             if !meta.file_type().is_socket() || meta.uid() != uid {
@@ -146,6 +149,18 @@ mod platform {
     #[cfg(test)]
     mod tests {
         use super::*;
+
+        #[test]
+        fn a_primary_still_booting_keeps_exclusive_profile_access() {
+            let dir = tempfile::tempdir().unwrap();
+            fs::set_permissions(dir.path(), fs::Permissions::from_mode(0o700)).unwrap();
+            let primary = claim_at(dir.path()).unwrap();
+            assert!(matches!(primary, Claim::Primary(_)));
+            // The lock is held, but the window and its raise server aren't ready.
+            assert!(matches!(claim_at(dir.path()).unwrap(), Claim::Secondary));
+            drop(primary);
+        }
+
         #[test]
         fn claims_use_private_directories_and_release_locks() {
             let dir = tempfile::tempdir().unwrap();

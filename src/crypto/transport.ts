@@ -524,6 +524,12 @@ export class VaultTransport {
         }
         this.ws = null;
         this.rejectSocket = null;
+        // The server already routes this device to its replacement connection.
+        // Background retries here would repeatedly evict the active instance.
+        if (event?.code === 4002) {
+          this.shouldReconnect = false;
+          return;
+        }
         if (opened) this.scheduleReconnect();
       };
     })

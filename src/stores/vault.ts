@@ -591,17 +591,9 @@ export const useVaultStore = defineStore('vault', {
     },
 
     async ensureTransportConnected(): Promise<void> {
-      if (!this.transport) throw new Error('vault transport not ready');
-      if (this.transport.isOpen()) return;
-
-      const target = resolveVaultTransportTarget();
-      const host = this.transportHost || target.host;
-      const secureTransport = this.transportHost ? undefined : target.secure;
-      const transportPath = this.transportPath || target.path;
-      this.transportHost = host;
-      this.transportPath = transportPath;
-      await this.transport.connect(host, secureTransport, transportPath);
-      this.connectionError = null;
+      // Suite sends hold a per-Suite lock; initialization synchronizes Suite
+      // history under that same lock. Do not start/wait for bootstrap here.
+      await this.ensureVaultTransport({ allowInitialize: false });
     },
 
     /**
@@ -1488,6 +1480,9 @@ export const useVaultStore = defineStore('vault', {
             console.warn('[Vault] Failed to refresh links before pending-message fetch', err);
           }
           await waitForInit(() => this.fetchPendingMessages());
+          // Pending sync may invalidate this session's device binding. Do not
+          // proceed into Suites or mark this transport ready after that happens.
+          if (!this.transport) return;
           try {
             const groupStore = (await waitForInit(() => import('stores/groupStore'))).useGroupStore();
             await waitForInit(() => groupStore.fetchGroups());
@@ -1583,39 +1578,54 @@ export const useVaultStore = defineStore('vault', {
      * image/camera send failure. Clearing the stale flag and re-running init makes
      * every send self-heal instead of dead-ending.
      */
-    async ensureVaultTransport(): Promise<void> {
-      if (!this.transport) {
-        // A "initialized with no transport" state can only be stale — clear the
-        // flag so initialize() actually runs instead of early-returning.
-        if (this.isInitialized) this.isInitialized = false;
-        try {
-          await this.initialize();
-        } catch (err) {
-          console.warn('[Vault] Transport recovery via initialize failed', err);
+    async ensureVaultTransport({ allowInitialize = true }: { allowInitialize?: boolean } = {}): Promise<void> {
+      const operation = captureAccountOperation();
+      for (let attempt = 0; ; attempt++) {
+        operation.assertCurrent();
+        if (!this.transport || !this.isInitialized) {
+          if (!allowInitialize) throw new Error('vault transport not ready');
+          // An initialized flag without a transport cannot be used.
+          this.isInitialized = false;
+          await operation.wait(() => this.initialize());
         }
-      }
 
-      if (!this.transport) {
-        throw new Error('WSS transport missing. Initialize vault first.');
-      }
+        const transport = this.transport;
+        if (!transport || !this.isInitialized) {
+          throw new Error('WSS transport missing. Initialize vault first.');
+        }
 
-      if (!this.transport.isOpen()) {
-        const target = resolveVaultTransportTarget();
-        const host = this.transportHost || target.host;
-        const secureTransport = this.transportHost ? undefined : target.secure;
-        const transportPath = this.transportPath || target.path;
-        this.transportHost = host;
-        this.transportPath = transportPath;
         try {
-          await this.transport.connect(host, secureTransport, transportPath);
-          this.connectionError = null;
+          if (!transport.isOpen()) {
+            const target = resolveVaultTransportTarget();
+            const host = this.transportHost || target.host;
+            const secureTransport = this.transportHost ? undefined : target.secure;
+            const transportPath = this.transportPath || target.path;
+            this.transportHost = host;
+            this.transportPath = transportPath;
+            await operation.wait(() => transport.connect(host, secureTransport, transportPath));
+            if (this.transport !== transport) throw new Error('Vault transport changed');
+            this.connectionError = null;
+          }
+          await operation.wait(() => transport.ensureConnected());
+          if (this.transport !== transport) throw new Error('Vault transport changed');
+          return;
         } catch (err) {
-          this.connectionError = err instanceof Error ? err.message : 'connect_failed';
+          operation.assertCurrent();
+          if (this.transport !== transport) throw err;
+          const response = (err as { response?: { status?: number; data?: { code?: string } } } | null)?.response;
+          if (response?.status === 403 && response.data?.code === 'DEVICE_AUTH_INVALID') {
+            // A rejected challenge can prevent sync from ever reaching the
+            // pending-fetch recovery path. Retire just this transport and use
+            // the existing proof-of-possession enrollment flow at most once.
+            this.connectionError = 'vault_device_not_authorized';
+            await this.clearStaleDeviceIdentity();
+            if (allowInitialize && attempt === 0) continue;
+          } else {
+            this.connectionError = err instanceof Error ? err.message : 'connect_failed';
+          }
           throw err;
         }
       }
-
-      await this.transport.ensureConnected();
     },
 
     /**
@@ -1633,6 +1643,16 @@ export const useVaultStore = defineStore('vault', {
       // 403 into the permanent "unlock" lockout.
       this.deviceId = null;
       this.deviceToken = null;
+      const transport = this.transport;
+      this.transport = null;
+      this.transportConnected = false;
+      this.isInitialized = false;
+      this.pendingFetchInProgress = false;
+      try {
+        transport?.disconnect();
+      } catch {
+        // Binding is invalid even if the underlying socket is already closed.
+      }
       console.warn('[Vault] Marked device identity stale after a 403 (will re-register on next init).');
     },
 
@@ -4651,23 +4671,29 @@ const decryptingEngine = engine;
     },
 
     async requestVaultSync() {
-      const transport = this.transport as VaultTransport | null;
+      const operation = captureAccountOperation();
+      await operation.wait(() => this.ensureVaultTransport());
+      const transport = this.transport;
       if (!transport) throw new Error('WSS transport not initialized');
-      await transport.ensureConnected();
+      const assertTransportCurrent = () => {
+        operation.assertCurrent();
+        if (this.transport !== transport) throw new Error('Vault transport changed');
+      };
 
       // Manual sync must always pull pending ciphertext for this device. The
       // WebSocket broadcast only nudges sibling devices; it does not hydrate the
       // current device by itself.
-      const t = transport; // narrowed non-null (const, stable across closure)
       await this.beginBatchSync(async () => {
-        await this.fetchPendingMessages({ forceRetry: true });
+        await operation.wait(() => this.fetchPendingMessages({ forceRetry: true }));
+        assertTransportCurrent();
         // On mobile the authoritative message log lives on the desktop, so a
         // manual "sync everything" must also ask it to backfill history (force
         // bypasses the 20s auto-retry cooldown — the user explicitly asked).
         if (isMobileAuthRuntime()) {
-          await this.requestHistoryFromDesktop(true);
+          await operation.wait(() => this.requestHistoryFromDesktop(true));
         }
-        t.requestVaultSync();
+        assertTransportCurrent();
+        transport.requestVaultSync();
       });
     },
 
