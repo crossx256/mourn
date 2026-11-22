@@ -50,6 +50,7 @@ export default defineConfig((ctx) => {
     boot: [
       'unocss',
       'axios',
+      'calls',
       'theme',
       'updater',
       'desktopSessionKeepalive',

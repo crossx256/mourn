@@ -65,6 +65,19 @@ describe('desktop saved-session recovery', () => {
     expect(vault.clearVaultState).not.toHaveBeenCalled();
   });
 
+  it('keeps the local session when /auth/me succeeds but returns no user (transient server failure)', async () => {
+    const auth = useAuthStore();
+    Object.assign(auth, { user: { id: 'signed-in' }, isLoggedIn: true });
+    get.mockResolvedValueOnce({
+      headers: { 'content-type': 'application/json' },
+      data: { success: true, data: { user: null } },
+    });
+    await expect(auth.checkSession()).resolves.toBe(true);
+    expect(auth.user?.id).toBe('signed-in');
+    expect(auth.isLoggedIn).toBe(true);
+    expect(auth.authOperationGeneration).toBe(0);
+  });
+
   it('does not let an anonymous session probe invalidate an in-flight saved login', async () => {
     const auth = useAuthStore();
     let resolveLogin!: (response: unknown) => void;

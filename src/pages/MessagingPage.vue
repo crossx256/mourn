@@ -111,6 +111,10 @@
               <template v-if="navMenuOpen">
                 <div class="vault-nav-menu-backdrop" @click="navMenuOpen = false" />
                 <div class="vault-nav-menu bg-black">
+                  <button v-if="callsStore.enabled" type="button" class="vault-nav-menu-item" @click="navMenuOpen = false; $router.push('/calls')">
+                    <q-icon name="sym_o_call" size="16px" />
+                    <span>Calls</span>
+                  </button>
                   <button
                     type="button"
                     class="vault-nav-menu-item"
@@ -697,6 +701,9 @@
               </div>
 
               <div class="vault-chat-head-right">
+                <q-btn v-if="showCallButton" flat round dense icon="sym_o_call" size="sm" class="vault-icon-btn" :disable="!callsStore.canCall" aria-label="Start voice call" @click="selectedLink && callsStore.dial(selectedLink.id)">
+                  <q-tooltip class="font-mono text-[10px]">{{ callsStore.canCall ? 'Voice call' : 'Voice calls unavailable' }}</q-tooltip>
+                </q-btn>
                 <q-btn
                   v-if="!messageSearchMode"
                   flat
@@ -3541,6 +3548,7 @@
 
         <q-card-section class="modal-body coms-settings-content">
           <!-- Auto Download Media -->
+          <CallSettings v-if="callsStore.enabled" class="q-mb-md" />
           <div class="coms-settings-section">
             <div class="coms-settings-row">
               <div class="coms-settings-label">
@@ -3621,6 +3629,10 @@ import {
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import { useLinksStore } from 'stores/links';
+import { useCallsStore } from 'src/stores/calls';
+import { canOfferVoiceCall } from 'src/calls/eligibility';
+import CallSettings from 'src/components/calls/CallSettings.vue';
+const callsStore = useCallsStore();
 import { useAuthStore } from 'stores/auth';
 import { useNotificationsStore } from 'stores/notifications';
 import { isOfflineVaultEnabled } from 'src/crypto/offlineVault';
@@ -3794,6 +3806,12 @@ const searchCurrentIndex = ref(0);
 type MessagingTab = 'chats' | 'suites' | 'signals';
 const activeTab = ref<MessagingTab>('chats');
 const selectedLink = ref<Link | null>(null);
+const showCallButton = computed(() => {
+  const link = selectedLink.value;
+  if (link && vaultStore.compromisedLinks[link.id]) return false;
+  return canOfferVoiceCall(link, authStore.user?.id, callsStore, vaultStore.currentServerEpochMs(),
+    link ? vaultStore.quarantinedDevices[link.id] : undefined);
+});
 const lastSelectedLinkId = ref<string | null>(null);
 const lastSelectedGroupId = ref<string | null>(null);
 let tabTransitionVersion = 0;
@@ -5419,7 +5437,7 @@ async function retryMessage(msgId: string) {
   const snapshot = conversationSnapshot();
   if (!snapshot || !currentConversation(snapshot) || isChatUnavailable.value) return;
   try {
-    await refreshLinks();
+    await refreshLinks({ skipSessionCheck: true });
     if (!currentAccount(snapshot) || selectedLink.value?.id !== snapshot.linkId) return;
     if (linksStore.offline || linksStore.error) throw new Error('RECIPIENT_REFRESH_FAILED');
     if (!currentConversation(snapshot) || isChatUnavailable.value) return;
@@ -6036,9 +6054,13 @@ function scrollToSearchResult() {
     scrollToHighlightedMessage(messagesScrollRef.value as QScrollArea | null, message.id);
 }
 
-async function refreshLinks(options: { silent?: boolean } = { silent: true }) {
+async function refreshLinks(options: { silent?: boolean; skipSessionCheck?: boolean } = { silent: true }) {
   const account = accountSnapshot();
-  await authStore.checkSession();
+  // A send/retry only needs fresh recipient devices from the links API. Running
+  // a full session probe here is redundant (fetchLinks 401s on a dead session
+  // anyway) and, worse, a `checkSession` that clears the session mid-send closes
+  // the open thread without even redirecting to login. Skip it on the hot path.
+  if (!options.skipSessionCheck) await authStore.checkSession();
   if (!currentAccount(account)) return;
   await linksStore.fetchLinks({ silent: options.silent });
   if (!currentAccount(account)) return;
@@ -6098,7 +6120,7 @@ async function sendVaultMessage() {
     if (!currentConversation(snapshot) || linksStore.offline || isChatUnavailable.value) return;
     // Receiving proves our own device is reachable, not that the cached link
     // carries the peer's current device keys. Resolve them before encrypting.
-    await refreshLinks();
+    await refreshLinks({ skipSessionCheck: true });
     if (!currentConversation(snapshot) || isChatUnavailable.value) return;
     if (linksStore.offline || linksStore.error) throw new Error('RECIPIENT_REFRESH_FAILED');
     const devices = recipientDevices(snapshot);
@@ -12834,6 +12856,36 @@ $vault-warning: #ffaa00;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+/* ⋮ Actions menu — force the dark $vault-* theme. Same class of bug as the
+   Coms Settings popup: a q-menu portalled to <body> relies on the dashboard's
+   global .q-menu rule (var(--dash-*) tokens), which is undefined in
+   MessagingPage's $vault-* scope, so it renders as Quasar's light blob. */
+.vault-action-menu {
+  background: $vault-card !important;
+  border: 1px solid $vault-border !important;
+  border-radius: 0 !important;
+  color: $vault-text;
+  font-family: monospace;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65) !important;
+}
+.vault-action-menu :deep(.q-item) {
+  color: $vault-text;
+  font-size: 12px;
+  min-height: 32px;
+}
+.vault-action-menu :deep(.q-item__section),
+.vault-action-menu :deep(.q-item__label) {
+  color: $vault-text;
+}
+.vault-action-menu :deep(.q-item:hover),
+.vault-action-menu :deep(.q-item--active) {
+  background: $vault-accent-lo;
+  color: $vault-text;
+}
+.vault-action-menu :deep(.q-separator) {
+  background: $vault-border;
 }
 .group-invite-results {
   max-height: 280px;

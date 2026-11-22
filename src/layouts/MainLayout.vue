@@ -242,6 +242,9 @@
             </q-btn>
 
             <!-- Notifications — STRICTLY DESKTOP/TAURI ONLY -->
+            <q-btn v-if="callsVisible" flat dense round icon="sym_o_call" size="md" class="nav-icon-btn" to="/calls" aria-label="Call history">
+              <q-tooltip class="bg-[var(--card)] text-white text-xs">calls</q-tooltip>
+            </q-btn>
             <q-btn
               v-if="isTauri && authStore.isLoggedIn"
               flat
@@ -920,9 +923,13 @@
                   </q-item-section>
                   <q-item-section class="text-xs tracking-wide">messaging</q-item-section>
                 </q-item>
+                <q-item v-if="callsVisible" clickable v-close-popup to="/calls" @click="closeMasterNavigator()">
+                  <q-item-section side><q-icon name="sym_o_call" size="18px" class="text-[var(--dash-muted)]" /></q-item-section>
+                  <q-item-section class="text-xs tracking-wide">calls</q-item-section>
+                </q-item>
 
                 <div
-                  v-else
+                  v-if="!isNativeShell"
                   class="flex items-center gap-3 px-4 py-2 text-xs tracking-wide select-none opacity-60 cursor-not-allowed"
                 >
                   <div class="flex items-center justify-center shrink-0">
@@ -1584,6 +1591,8 @@ import AccountSwitcher from 'src/components/AccountSwitcher.vue';
 import appPackage from '../../package.json';
 import { unlockAudio } from 'src/utils/notificationSound';
 import { isNativeBuild } from 'src/utils/platform';
+import { useCallsStore } from 'src/stores/calls';
+import { showCallNavigation } from 'src/calls/eligibility';
 import { updateUnreadBadge } from 'src/services/desktopNotifications';
 
 const $q = useQuasar();
@@ -1593,6 +1602,8 @@ const notificationsStore = useNotificationsStore();
 const linksStore = useLinksStore();
 const groupStore = useGroupStore();
 const { isTauri, isNativeShell, isDesktop, isMobile, viewportWidth } = usePlatform();
+const callsStore = useCallsStore();
+const callsVisible = computed(() => showCallNavigation(isNativeShell.value, authStore.isLoggedIn, callsStore.enabled));
 const vaultEnroll = useVaultEnrollment();
 const masterNavigatorOpen = ref(false);
 const vaultUnreadCount = ref(0);

@@ -5,6 +5,7 @@
     <TauriTitleBar />
     <DeviceLoginDialog />
     <BackdropLayer />
+    <CallOverlay v-if="isNativeShellBuild" />
     <router-view />
   </template>
 </template>
@@ -27,6 +28,7 @@ import { useQuasar } from 'quasar';
 import TauriTitleBar from 'src/components/TauriTitleBar.vue';
 import DeviceLoginDialog from 'src/components/DeviceLoginDialog.vue';
 import BackdropLayer from 'src/components/theme/BackdropLayer.vue';
+import CallOverlay from 'src/components/calls/CallOverlay.vue';
 import { installInterfaceHoverSounds } from 'src/utils/interfaceSounds';
 
 const $q = useQuasar();

@@ -563,6 +563,17 @@ export const useAuthStore = defineStore('auth', {
           await useAccountsStore().saveAccount(accountUser, isCurrent);
           return true;
         }
+        // `success: true` with a null/missing user is the backend's "fail soft"
+        // answer for a transient server-side failure (DB/Redis hiccup), NOT
+        // "session expired" (which the backend answers with a 401). Clearing the
+        // local session here is what turned a blip during a send into "the user
+        // got kicked out of the chat": the auth watcher sees user/generation
+        // change and closes the open 1:1 thread AND the active Suite. Keep the
+        // session — the next real API call is the one that gets to decide.
+        if (response?.data?.success) {
+          console.warn('[Auth] Session check got success without a user; keeping local session');
+          return this.isLoggedIn;
+        }
         clearInvalidSession();
         return false;
       } catch (error) {

@@ -2,6 +2,11 @@ import { defineStore } from 'pinia';
 import { KeyManager } from '../crypto/keys';
 import { CipherEngine } from '../crypto/engine';
 import { VaultTransport } from '../crypto/transport';
+import { CallSignalTransport, type CallSignalPeer } from '../calls/signalTransport';
+import { isUUID } from '../calls/codec';
+import { callSessionKey, callSessionTranscript, CALL_SESSION_TTL, MAX_CALL_SESSIONS } from '../calls/session';
+import type { CallBody, ServerCall } from '../calls/types';
+import { markRaw } from 'vue';
 import { api, refreshMobileSession, resolveApiUrl } from 'boot/axios';
 import sodium from 'libsodium-wrappers';
 import { Notify, Dialog } from 'quasar';
@@ -486,6 +491,15 @@ function nextSendBudgetSeq(): number {
   return sendBudgetSeq;
 }
 
+const callSignalTransports = new WeakMap<object, CallSignalTransport>();
+const callSessionPeers = new WeakMap<object, Map<string, CallSignalPeer>>();
+const callEngines = new WeakMap<object, Map<string, CipherEngine>>();
+const callQueues = new WeakMap<object, Map<string, Promise<void>>>();
+const freshCallAdmissions = new WeakMap<object, Set<string>>();
+// Process-lifetime spent keys: never reconstruct an evicted/disposed chain.
+const spentCallKeys = new Set<string>();
+const callBootEpoch = Date.now();
+
 export const useVaultStore = defineStore('vault', {
   state: (): VaultState => ({
     isInitialized: false,
@@ -563,6 +577,167 @@ export const useVaultStore = defineStore('vault', {
       },
   },
   actions: {
+    /** A stable, non-reactive controller: subscribe before vault initialization. */
+    getCallSignalTransport(): CallSignalTransport {
+      const existing = callSignalTransports.get(this);
+      if (existing) return existing;
+      const controller = markRaw(new CallSignalTransport({
+        queues: () => { let queues = callQueues.get(this); if (!queues) { queues = new Map(); callQueues.set(this, queues); } return queues; },
+        deviceId: () => this.deviceId,
+        capture: () => {
+          const operation = captureAccountOperation();
+          const session = this.sessionId;
+          const uid = operation.uid;
+          const deviceId = this.deviceId;
+          // Reconnect may replace the socket, but never the account/session/device.
+          return {
+            assertCurrent: () => {
+              operation.assertCurrent();
+              if (!uid || this.sessionId !== session || this.deviceId !== deviceId) throw new Error('CALL_OPERATION_SUPERSEDED');
+            },
+            isCurrent: () => !!uid && operation.isCurrent() && this.sessionId === session && this.deviceId === deviceId,
+          };
+        },
+        ensureConnected: async () => { if (!this.transport?.isOpen()) throw new Error('CALL_OFFLINE'); },
+        resolvePeer: (callId, deviceId, userId) => this.resolveCallSignalPeer(callId, deviceId, userId),
+        getEngine: (peer, key) => this.getCallEngine(peer, key),
+        releaseCall: callId => {
+          freshCallAdmissions.get(this)?.delete(callId);
+          const peers = callSessionPeers.get(this);
+          for (const [key, peer] of peers ?? []) if (peer.callId === callId) { callEngines.get(this)?.delete(key); peers?.delete(key); }
+        },
+        send: packet => {
+          if (!this.transport) throw new Error('CALL_VAULT_UNAVAILABLE');
+          this.transport.sendCallSignal(packet);
+        },
+        ack: (callId, signalId, receiptToken) => this.transport?.ackCallSignal(callId, signalId, receiptToken),
+      }));
+      callSignalTransports.set(this, controller);
+      return controller;
+    },
+
+    /** Call boot must terminate stale owned ACTIVE/origin rows first. Never
+     * reconstruct a pre-existing call after this process lost its RAM keys. */
+    async admitCallSignals(callId: string, created?: ServerCall): Promise<void> {
+      const operation = captureAccountOperation();
+      if (!isUUID(callId)) throw new Error('INVALID_CALL_ID');
+      const deviceId = this.deviceId;
+      const session = this.sessionId;
+      if (!operation.uid || !deviceId) throw new Error('CALL_OPERATION_SUPERSEDED');
+      const controller = this.getCallSignalTransport();
+      if (freshCallAdmissions.get(this)?.has(callId)) { controller.assertAdmitted(callId); return; }
+      // Only the caller's own successful POST supplies this snapshot. A callee
+      // can claim ACTIVE before any subsequent GET, so use the original RINGING
+      // evidence. Peer/key resolution still checks the live REST row.
+      const call = created ?? (await operation.wait(() => api.get<{ call: ServerCall }>(`/api/v1/calls/${callId}`))).data.call;
+      operation.assertCurrent();
+      if (this.deviceId !== deviceId || this.sessionId !== session) throw new Error('CALL_OPERATION_SUPERSEDED');
+      const createdAt = Date.parse(call?.createdAt ?? '');
+      const ringExpiresAt = Date.parse(call?.ringExpiresAt ?? '');
+      if (call?.id !== callId || call.state !== 'RINGING' || call.answeredDeviceId !== null ||
+        call.media !== 'audio' || call.protocolVersion !== 1 || !isUUID(call.linkId) ||
+        !(createdAt >= callBootEpoch && createdAt + CALL_SESSION_TTL > Date.now() && ringExpiresAt > createdAt) ||
+        (created ? call.callerId !== operation.uid || call.callerDeviceId !== deviceId
+          : call.calleeId !== operation.uid || ringExpiresAt <= Date.now())) throw new Error('CALL_FRESH_RING_REQUIRED');
+      controller.admitCall(callId);
+      const admissions = freshCallAdmissions.get(this) ?? new Set<string>();
+      admissions.add(callId); freshCallAdmissions.set(this, admissions);
+    },
+
+    /** Resolve the device key from the current linked account, never caller input. */
+    async resolveCallSignalPeer(callId: string, deviceId: string, expectedUserId?: string): Promise<CallSignalPeer> {
+      const operation = captureAccountOperation();
+      const localDeviceId = this.deviceId;
+      if (!operation.uid || !localDeviceId || !isUUID(callId) || !isUUID(deviceId)) throw new Error('INVALID_CALL_PEER');
+      const { data } = await operation.wait(() => api.get<{ call: ServerCall }>(`/api/v1/calls/${callId}`));
+      const call = data?.call;
+      if (!call || call.id !== callId || call.media !== 'audio' || call.protocolVersion !== 1 || !Number.isFinite(Date.parse(call.createdAt)) || Date.parse(call.createdAt) + CALL_SESSION_TTL <= Date.now()) throw new Error('INVALID_CALL');
+      const iAmCaller = call.callerId === operation.uid;
+      if (!iAmCaller && call.calleeId !== operation.uid) throw new Error('CALL_NOT_PARTICIPANT');
+      if (iAmCaller ? call.callerDeviceId !== localDeviceId : call.answeredDeviceId !== null && call.answeredDeviceId !== localDeviceId) throw new Error('CALL_DEVICE_MISMATCH');
+      const peerUserId = iAmCaller ? call.calleeId : call.callerId;
+      if (expectedUserId && peerUserId !== expectedUserId) throw new Error('CALL_PEER_MISMATCH');
+      if (!iAmCaller && call.callerDeviceId !== deviceId || iAmCaller && call.answeredDeviceId !== null && call.answeredDeviceId !== deviceId) throw new Error('CALL_DEVICE_MISMATCH');
+      const linksStore = (await operation.wait(() => import('stores/links'))).useLinksStore();
+      await operation.wait(() => linksStore.fetchLinks({ silent: true }));
+      const link = linksStore.links.find(l => l.id === call.linkId);
+      if (!link || !['ESTABLISHED', 'ANCHORED'].includes(link.status) || link.expiresAt && Date.parse(link.expiresAt) <= this.currentServerEpochMs()) throw new Error('CALL_LINK_UNAVAILABLE');
+      if (!([link.senderId, link.receiverId].includes(operation.uid) && [link.senderId, link.receiverId].includes(peerUserId)) || peerUserId === operation.uid) throw new Error('CALL_PEER_MISMATCH');
+      if (this.compromisedLinks[link.id] || this.quarantinedDevices[link.id]?.[deviceId]) throw new Error('LINK_COMPROMISED');
+      const peerUser = link.senderId === peerUserId ? link.sender : link.receiver;
+      const device = peerUser.devices?.find(d => d.id === deviceId);
+      if (!device || !/^[0-9a-f]{64}$/i.test(device.devicePub) || !/^[0-9a-f]{64}$/i.test(device.identityPub)) throw new Error('CALL_DEVICE_UNAVAILABLE');
+      const identity = device.identityPub.toLowerCase();
+      const pinned = await operation.wait(() => this.getTrustedDeviceIdentity(link.id, deviceId));
+      if (pinned && pinned !== identity) throw new Error('LINK_COMPROMISED');
+      if (!pinned) await operation.wait(() => this.setTrustedDeviceIdentity(link.id, deviceId, identity));
+      if (this.deviceId !== localDeviceId) throw new Error('CALL_DEVICE_MISMATCH');
+      const localPriv = await operation.wait(() => this.keyManager.getStoredKey(`vault_device_priv_${operation.uid}`));
+      const localIdentity = await operation.wait(() => this.keyManager.getStoredKey(`vault_identity_pub_${operation.uid}`));
+      if (!localPriv || !localIdentity || localIdentity.length !== 32) throw new Error('CALL_VAULT_UNAVAILABLE');
+      const local = { userId: operation.uid, deviceId: localDeviceId, devicePub: sodium.to_hex(sodium.crypto_scalarmult_base(localPriv)), identityPub: sodium.to_hex(localIdentity) };
+      const remote = { userId: peerUserId, deviceId, devicePub: device.devicePub.toLowerCase(), identityPub: identity };
+      const transcript = callSessionTranscript(callId, link.id, iAmCaller ? local : remote, iAmCaller ? remote : local);
+      if (this.deviceId !== localDeviceId) throw new Error('CALL_DEVICE_MISMATCH');
+      return { linkId: link.id, ...remote, callId, transcript, iAmInitiator: iAmCaller };
+    },
+
+    /** No legacy migration or chat fallback: a distinct cryptographic protocol. */
+    async getCallEngine(peer: CallSignalPeer, key: string): Promise<CipherEngine> {
+      const operation = captureAccountOperation();
+      const deviceId = this.deviceId;
+      const keyManager = this.keyManager;
+      const assertCurrent = () => { operation.assertCurrent(); if (this.deviceId !== deviceId || this.keyManager !== keyManager) throw new Error('CALL_OPERATION_SUPERSEDED'); };
+      if (!operation.uid || !deviceId || key !== callSessionKey(peer, deviceId)) throw new Error('INVALID_CALL_SESSION');
+      this.getCallSignalTransport().assertAdmitted(peer.callId);
+      if (!freshCallAdmissions.get(this)?.has(peer.callId)) throw new Error('CALL_FRESH_RING_REQUIRED');
+      const peers = callSessionPeers.get(this) ?? new Map<string, CallSignalPeer>();
+      const engines = callEngines.get(this) ?? new Map<string, CipherEngine>();
+      callSessionPeers.set(this, peers); callEngines.set(this, engines);
+      if (engines.has(key)) return engines.get(key)!;
+      if (peers.size >= MAX_CALL_SESSIONS || spentCallKeys.size >= 4096) throw new Error('CALL_SESSION_BACKPRESSURE');
+      const spentKey = JSON.stringify([operation.uid, deviceId, key]);
+      if (spentCallKeys.has(spentKey)) throw new Error('CALL_SESSION_RETIRED');
+      // Reserve before awaiting: concurrent creation cannot reset the same chain.
+      spentCallKeys.add(spentKey);
+      peers.set(key, peer);
+      const { data } = await operation.wait(() => api.get<{ call: ServerCall }>(`/api/v1/calls/${peer.callId}`));
+      assertCurrent(); this.getCallSignalTransport().assertAdmitted(peer.callId);
+      if (data.call?.id !== peer.callId || !['RINGING', 'ACTIVE'].includes(data.call.state) || !(Date.parse(data.call.createdAt) >= callBootEpoch)) throw new Error('CALL_FRESH_RING_REQUIRED');
+      const priv = await keyManager.getStoredKey(`vault_device_priv_${operation.uid}`); assertCurrent();
+      if (!priv) throw new Error('CALL_VAULT_UNAVAILABLE');
+      const engine = markRaw(new CipherEngine());
+      await engine.init(priv, sodium.from_hex(peer.devicePub), operation.uid, peer.userId, { iAmInitiator: peer.iAmInitiator }, peer.transcript); assertCurrent();
+      engine.bindIdentityKey(sodium.from_hex(peer.identityPub));
+      assertCurrent(); this.getCallSignalTransport().assertAdmitted(peer.callId);
+      engines.set(key, engine);
+      return engine;
+    },
+
+    invalidateCallLink(linkId: string): void {
+      callSignalTransports.get(this)?.invalidateLink(linkId);
+      const peers = callSessionPeers.get(this);
+      for (const [key, peer] of peers ?? []) {
+        if (peer.linkId !== linkId) continue;
+        callEngines.get(this)?.delete(key); peers?.delete(key);
+      }
+    },
+
+    sendCallSignal(linkId: string, partnerUserId: string, partnerDevices: readonly { id: string; devicePub?: string }[], body: CallBody): Promise<string[]> {
+      return this.getCallSignalTransport().send(linkId, partnerUserId, partnerDevices, body);
+    },
+
+    bindCallSignalHandlers(transport: Pick<VaultTransport, 'onCallSignal' | 'onCallSignalAck' | 'onCallSignalStored' | 'onCallSignalError' | 'onCallIncoming' | 'onCallState' | 'onCallReady'>): void {
+      const controller = this.getCallSignalTransport();
+      transport.onCallSignal = packet => { void controller.receive(packet).catch(error => controller.reportError(error)); };
+      transport.onCallSignalAck = event => controller.handleAck(event);
+      transport.onCallSignalStored = event => controller.handleStored(event);
+      transport.onCallSignalError = event => controller.handleError(event);
+      transport.onCallIncoming = event => controller.handleIncoming(event);
+      transport.onCallState = event => controller.handleState(event);
+      transport.onCallReady = event => controller.handleReady(event);
+    },
+
     async syncServerClockOffset(): Promise<void> {
       const startedAt = Date.now();
 
@@ -1093,6 +1268,7 @@ export const useVaultStore = defineStore('vault', {
               proof: `device-proof.${data.challenge.id}.${data.challenge.nonce}.${signature}`,
             };
           });
+          this.bindCallSignalHandlers(this.transport);
           const {
             host,
             secure: secureTransport,
@@ -1116,6 +1292,7 @@ export const useVaultStore = defineStore('vault', {
           // desktop at boot left the phone with an empty chat list forever.
           this.transport.onConnectionChange = (open: boolean) => {
             this.transportConnected = open;
+            if (!open) callSignalTransports.get(this)?.handleDisconnect();
             if (open && isMobileAuthRuntime()) {
               void this.requestHistoryFromDesktop();
             }
@@ -2038,7 +2215,7 @@ export const useVaultStore = defineStore('vault', {
       return engine;
     },
 
-    async persistEngineState(engineKey: string, operation = captureAccountOperation(), receivedPacketHash?: string): Promise<void> {
+    async persistEngineState(engineKey: string, operation = captureAccountOperation(), receivedPacketHash?: string | readonly string[]): Promise<void> {
       operation.assertCurrent();
       const engine = this.engines[engineKey];
       if (!engine || !operation.uid || !this.deviceId) return;
@@ -2052,9 +2229,8 @@ export const useVaultStore = defineStore('vault', {
       // checkpoint, including sends, and commit a new receipt WITH key consumption.
       if (checkpoint?.receivedPacketHashes || receivedPacketHash) {
         const previous = checkpoint?.receivedPacketHashes ?? [];
-        state.receivedPacketHashes = receivedPacketHash
-          ? [...previous.filter((hash) => hash !== receivedPacketHash), receivedPacketHash].slice(-MAX_RATCHET_RECEIPTS)
-          : [...previous];
+        const incoming = receivedPacketHash === undefined ? [] : typeof receivedPacketHash === 'string' ? [receivedPacketHash] : [...receivedPacketHash];
+        state.receivedPacketHashes = [...previous.filter(hash => !incoming.includes(hash)), ...incoming].slice(-MAX_RATCHET_RECEIPTS);
       }
       await setEncryptedRatchetState(scope, state);
       operation.assertCurrent();
@@ -2604,6 +2780,10 @@ export const useVaultStore = defineStore('vault', {
     },
 
     async clearVaultState(outgoingUid: string | undefined = useAuthStore().user?.id) {
+      callSignalTransports.get(this)?.dispose();
+      callSignalTransports.delete(this);
+      callSessionPeers.delete(this);
+      callEngines.delete(this); callQueues.delete(this); freshCallAdmissions.delete(this);
       const oldSession = this.sessionId;
       this.realtimeBuffer = [];
       this.pendingFetchInProgress = false;
@@ -4755,6 +4935,7 @@ const decryptingEngine = engine;
     },
 
     async purgeLinkLocal(linkId: string) {
+      this.invalidateCallLink(linkId);
       // Clear in-memory state
       delete this.messages[linkId];
       delete this.compromisedLinks[linkId];
@@ -4838,6 +5019,7 @@ const decryptingEngine = engine;
     },
 
     async clearLinkCryptoState(linkId: string) {
+      this.invalidateCallLink(linkId);
       delete this.compromisedLinks[linkId];
       delete this.overrideSecurity[linkId];
       delete this.quarantinedMessages[linkId];
@@ -5398,6 +5580,9 @@ const decryptingEngine = engine;
       if (plaintext.charAt(0) !== '{') return false;
       try {
         const parsed = JSON.parse(plaintext);
+        // Calls are authenticated/dispatched only in the CALL_SIGNAL domain.
+        // A relay relabelling their ciphertext as chat must not expose SDP as a bubble.
+        if (parsed?.kind === 'call' && typeof parsed.mc === 'number') return true;
         if (!parsed || typeof parsed.v !== 'number') {
           if (parsed && parsed.type === 'protocol_error') {
             console.error(

@@ -1,4 +1,5 @@
 import type { InternalMessagePacket } from './types';
+import type { IncomingCallSignal, OutgoingCallSignal } from '../calls/signalTransport';
 
 export interface VaultHandshakeProof {
   token: string;
@@ -38,6 +39,14 @@ export class VaultTransport {
   private lastPath = '/ws/secure';
 
   // Handlers
+  // Calls use a separate encrypted frame domain, never the legacy RTC_SIGNAL path.
+  public onCallSignal?: (packet: IncomingCallSignal) => void;
+  public onCallSignalAck?: (payload: unknown) => void;
+  public onCallSignalStored?: (payload: unknown) => void;
+  public onCallSignalError?: (payload: unknown) => void;
+  public onCallIncoming?: (payload: unknown) => void;
+  public onCallReady?: (payload: unknown) => void;
+  public onCallState?: (payload: unknown) => void;
   public onMessage?: (msg: InternalMessagePacket) => void;
   /** Fired when the socket transitions open/closed — lets the store re-run
    *  connection-dependent work (e.g. re-request history backfill) after a flap. */
@@ -262,6 +271,15 @@ export class VaultTransport {
           console.log('[Vault Transport] WebSocket message received, parsing...');
           const payload = JSON.parse(event.data);
           console.log('[Vault Transport] Parsed payload type:', payload.type);
+          // Shape and authenticated-body validation belong to the call transport.
+          // These frames must never fall through to chat or plaintext RTC handlers.
+          if (payload.type === 'CALL_SIGNAL') { this.onCallSignal?.(payload); return; }
+          if (payload.type === 'CALL_SIGNAL_ACK') { this.onCallSignalAck?.(payload); return; }
+          if (payload.type === 'CALL_SIGNAL_STORED') { this.onCallSignalStored?.(payload); return; }
+          if (payload.type === 'CALL_SIGNAL_ERROR') { this.onCallSignalError?.(payload); return; }
+          if (payload.type === 'CALL_INCOMING') { this.onCallIncoming?.(payload); return; }
+          if (payload.type === 'CALL_READY') { this.onCallReady?.(payload); return; }
+          if (payload.type === 'CALL_STATE') { this.onCallState?.(payload); return; }
           if (payload.type === 'INCOMING_MESSAGE') {
             console.log('[Vault Transport] Got INCOMING_MESSAGE, calling onMessage handler', {
               messageId: payload.messageId,
@@ -744,6 +762,18 @@ export class VaultTransport {
         newDevicePub,
       }),
     );
+  }
+
+  sendCallSignal(packet: OutgoingCallSignal): void {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) throw new Error('WSS transport is not connected.');
+    // Explicit allowlist: never forward plaintext fields supplied by a caller.
+    const { callId, signalId, targetDeviceId, kind, attempt, needsOffer, createdAt, expiresAt, ciphertextHex, nonceHex, senderDHRPubHex, messageIndex, pn } = packet;
+    this.ws.send(JSON.stringify({ type: 'CALL_SIGNAL', callId, signalId, targetDeviceId, kind, attempt, needsOffer, createdAt, expiresAt, ciphertextHex, nonceHex, senderDHRPubHex, messageIndex, pn }));
+  }
+
+  ackCallSignal(callId: string, signalId: string, receiptToken: string): void {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+    this.ws.send(JSON.stringify({ type: 'CALL_SIGNAL_ACK', callId, signalId, receiptToken }));
   }
 
   sendRtcSignal(targetUserId: string, signal: unknown, transferId: string) {

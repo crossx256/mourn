@@ -39,6 +39,8 @@ export class CipherEngine {
      * `resolveSelfSessionInitiator()` (src/crypto/selfSession.ts).
      */
     selfSession?: { iAmInitiator: boolean },
+    /** Opt-in HKDF domain. Omit for byte-compatible legacy chat initialization. */
+    context?: string,
   ) {
     if (!this.inited) {
       await sodium.ready;
@@ -46,7 +48,20 @@ export class CipherEngine {
     }
 
     const myDevicePub = sodium.crypto_scalarmult_base(myDevicePriv);
-    const SK = sodium.crypto_scalarmult(myDevicePriv, theirDevicePub);
+    let SK = sodium.crypto_scalarmult(myDevicePriv, theirDevicePub);
+    if (context !== undefined) {
+      if (!context || !selfSession) { SK.fill(0); throw new Error('Context requires an explicit symmetric role'); }
+      // RFC 5869 HKDF-SHA256: Extract(salt, device DH), Expand(PRK, transcript).
+      // Context is a canonical, caller-ordered endpoint transcript, not a map key.
+      const dh = SK;
+      try {
+        const material = await crypto.subtle.importKey('raw', new Uint8Array(dh), 'HKDF', false, ['deriveBits']);
+        SK = new Uint8Array(await crypto.subtle.deriveBits({ name: 'HKDF', hash: 'SHA-256',
+          salt: new TextEncoder().encode('mourn/call-session/hkdf-sha256/v1'),
+          info: new TextEncoder().encode(context),
+        }, material, 256));
+      } finally { dh.fill(0); }
+    }
 
     const ratchet = new DoubleRatchet();
     await ratchet.init();
