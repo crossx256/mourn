@@ -16,8 +16,8 @@ jobs:
     env:
       MOURN_ISOLATED_BUILD: '1'
       MOURN_ENABLE_UPDATER: 'false'
-      VITE_API_BASE: https://mourn.bio
-      VITE_WS_BASE: https://mourn.bio
+      VITE_API_BASE: https://mourn.live
+      VITE_WS_BASE: https://mourn.live
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:

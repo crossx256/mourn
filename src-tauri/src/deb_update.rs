@@ -12,6 +12,7 @@ const HOSTS: &[&str] = &[
     "objects.githubusercontent.com",
     "release-assets.githubusercontent.com",
     "mourn.bio",
+    "mourn.live",
 ];
 
 pub fn is_flatpak() -> bool {

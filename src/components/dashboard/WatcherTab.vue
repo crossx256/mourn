@@ -78,7 +78,7 @@
                   <span class="text-[10px] text-muted ml-1">(desktop only)</span>
                 </div>
                 <div class="text-xs text-muted">
-                  logs stored on your device. mourn.bio stays blind to your IP.
+                  logs stored on your device. mourn.live stays blind to your IP.
                 </div>
                 <div
                   v-if="!isTauri && watcherStore.watcherLevel === 2"

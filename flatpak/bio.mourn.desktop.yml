@@ -28,8 +28,8 @@ modules:
         MOURN_TARGET: desktop
         MOURN_ENABLE_UPDATER: 'false'
         MOURN_ISOLATED_BUILD: '1'
-        VITE_API_BASE: https://mourn.bio
-        VITE_WS_BASE: https://mourn.bio
+        VITE_API_BASE: https://mourn.live
+        VITE_WS_BASE: https://mourn.live
         VITE_CLIENT_THEMES: 'true'
         # Required public Cap endpoint is supplied by the submission generator.
         CARGO_NET_OFFLINE: 'true'

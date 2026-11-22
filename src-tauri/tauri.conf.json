@@ -45,8 +45,8 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self' customprotocol: asset:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' asset: data: blob: https:; media-src 'self' asset: data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' ipc: http://ipc.localhost blob: https://mourn.bio wss://mourn.bio https://captcha.mourn.bio https://api.klipy.com; worker-src 'self' blob:; frame-src 'self' blob: https://captcha.mourn.bio; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self' https://mourn.bio",
-      "devCsp": "default-src 'self' customprotocol: asset:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' asset: data: blob: https:; media-src 'self' asset: data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' ipc: http://ipc.localhost blob: https://mourn.bio wss://mourn.bio https://captcha.mourn.bio https://api.klipy.com ws://localhost:3000 ws://127.0.0.1:3000 http://localhost:3000 http://127.0.0.1:3000 http://localhost:3001 http://127.0.0.1:3001; worker-src 'self' blob:; frame-src 'self' blob: https://captcha.mourn.bio http://localhost:3001 http://127.0.0.1:3001; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self' https://mourn.bio"
+      "csp": "default-src 'self' customprotocol: asset:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' asset: data: blob: https:; media-src 'self' asset: data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' ipc: http://ipc.localhost blob: https://mourn.bio https://mourn.live wss://mourn.bio wss://mourn.live https://captcha.mourn.bio https://captcha.mourn.live https://api.klipy.com; worker-src 'self' blob:; frame-src 'self' blob: https://captcha.mourn.bio https://captcha.mourn.live; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self' https://mourn.bio https://mourn.live",
+      "devCsp": "default-src 'self' customprotocol: asset:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' asset: data: blob: https:; media-src 'self' asset: data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' ipc: http://ipc.localhost blob: https://mourn.bio https://mourn.live wss://mourn.bio wss://mourn.live https://captcha.mourn.bio https://captcha.mourn.live https://api.klipy.com ws://localhost:3000 ws://127.0.0.1:3000 http://localhost:3000 http://127.0.0.1:3000 http://localhost:3001 http://127.0.0.1:3001; worker-src 'self' blob:; frame-src 'self' blob: https://captcha.mourn.bio https://captcha.mourn.live http://localhost:3001 http://127.0.0.1:3001; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self' https://mourn.bio https://mourn.live"
     }
   },
   "bundle": {
@@ -96,7 +96,7 @@
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEZDMkI4QUY1NjUzMkM1QzUKUldURnhUSmw5WW9yL0xmMHJ1ZlpnNWlBTE8xMTk0YW5JMFdhNFpBWHpMbkVZTXFobkhxdGpiRzcK",
       "endpoints": [
-        "https://mourn.bio/update/{{target}}/{{current_version}}"
+        "https://mourn.live/update/{{target}}/{{current_version}}"
       ]
     }
   }

@@ -23,9 +23,9 @@ import { Dialog, Notify } from 'quasar';
 
 const STARTUP_UPDATE_DELAY_MS = 3_000;
 const FAILED_UPDATE_RETRY_AFTER_MS = 60 * 60 * 1000;
-const UPDATE_ENDPOINT_ORIGIN = 'https://mourn.bio';
+const UPDATE_ENDPOINT_ORIGIN = 'https://mourn.live';
 const CURRENT_APP_VERSION = import.meta.env.APP_VERSION || '0.0.0';
-const DOWNLOAD_PAGE_URL = 'https://mourn.bio/download';
+const DOWNLOAD_PAGE_URL = 'https://mourn.live/download';
 
 /** Bottom-right notification key so the progress bar is reused, not stacked. */
 const PROGRESS_NOTIFY_GROUP = 'mourn-update-progress';

@@ -121,7 +121,7 @@
             <div ref="invitedByGroupRef" class="form-group question-group">
               <label class="auth-label" for="invited-by-answer">
                 2) Were you invited here by an already active member? If so please provide their
-                Mourn username or their mourn.bio/{username} profile link so they may receive the
+                Mourn username or their mourn.live/{username} profile link so they may receive the
                 referral.
               </label>
               <div class="field-note">username or profile link · no lookup is performed</div>

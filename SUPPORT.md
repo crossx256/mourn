@@ -1,7 +1,7 @@
 # Support
 
 For ordinary setup/packaging bugs, use the issue tracker of the actual published
-repository, or the existing project contact `support@mourn.bio` after confirming
+repository, or the existing project contact `support@mourn.live` after confirming
 it is current. No support SLA or platform-coverage guarantee has been verified.
 
 Include the app version, OS/desktop environment, installation format, architecture,

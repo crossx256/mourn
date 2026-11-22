@@ -31,7 +31,7 @@ const DISCORD_RP_LARGE_TEXT: &str = "MOURN";
 const DISCORD_RP_SMALL_IMAGE: &str = "mourn_sigil";
 const DISCORD_RP_SMALL_TEXT: &str = "vita nova";
 const DISCORD_RP_BUTTON_LABEL: &str = "new life";
-const DISCORD_RP_BUTTON_URL: &str = "https://mourn.bio/register";
+const DISCORD_RP_BUTTON_URL: &str = "https://mourn.live/register";
 
 // =============================================
 // Stored minimized-to-tray state (Rust-side mirror)

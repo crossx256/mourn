@@ -72,7 +72,7 @@ test('notices preserve ownership limits and separate trademark rights', () => {
   assert.match(read('TRADEMARKS.md'), /including through Flatpak/);
   assert.match(read('TRADEMARKS.md'), /does not add restrictions/);
   assert.match(read('THIRD_PARTY.md'), /ledger above remains required/);
-  for (const contact of ['cross@mourn.bio', 'psycho@mourn.bio']) {
+  for (const contact of ['cross@mourn.live', 'psycho@mourn.live']) {
     assert.ok(read('SECURITY.md').includes(contact));
   }
 });

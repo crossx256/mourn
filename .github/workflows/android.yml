@@ -127,8 +127,8 @@ jobs:
         env:
           MOURN_ISOLATED_BUILD: '1'
           VITE_CLIENT_THEMES: 'true'
-          VITE_API_BASE: 'https://mourn.bio'
-          VITE_WS_BASE: 'https://mourn.bio'
+          VITE_API_BASE: 'https://mourn.live'
+          VITE_WS_BASE: 'https://mourn.live'
           VITE_CAP_API_ENDPOINT: ${{ secrets.VITE_CAP_API_ENDPOINT || vars.VITE_CAP_API_ENDPOINT }}
           VITE_KLIPY_API_KEY: ${{ secrets.VITE_KLIPY_API_KEY || vars.VITE_KLIPY_API_KEY }}
 
