@@ -33,7 +33,7 @@ export function isSessionAuthFailure(
   status: number | undefined,
   body?: unknown,
 ): boolean {
-  if (status !== 401) return false;
+  if (status !== 401 || !body || typeof body !== 'object' || Array.isArray(body)) return false;
 
   const requestUrl = url || '';
   if (CREDENTIAL_ENDPOINTS.some((endpoint) => requestUrl.startsWith(endpoint))) {
