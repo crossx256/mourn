@@ -78,3 +78,39 @@ it('does not send to the old conversation after a refresh changes the selection'
   expect(refreshLinks).toHaveBeenCalledOnce();
   expect(vaultStore.sendMessage).not.toHaveBeenCalled();
 });
+
+it('sends with cached devices when the recipient refresh fails (offline/flaky network)', async () => {
+  const snapshot = { accountId: 'alice', linkId: 'link', recipientId: 'bob' };
+  const draftMessage = ref('hello');
+  const replyingTo = ref(null);
+  const linkCurrent = ref(true);
+  const cached = [{ id: 'bob-cached', devicePub: 'bb'.repeat(32) }];
+  // fetchLinks leaves `links` intact on failure and only flags offline/error.
+  const linksStore = { offline: false, error: null };
+  const vaultStore = { initialize: vi.fn(), sendMessage: vi.fn(), messages: {} };
+  const handleSendError = vi.fn();
+  const refreshLinks = vi.fn(async () => { linksStore.error = 'network down'; });
+  const bindings = {
+    isSending: ref(false), linksStore,
+    syncSelectedLinkFromStore: vi.fn(), conversationSnapshot: () => snapshot,
+    draftMessage, replyingTo, sanitizeText: (text: string) => text,
+    currentConversation: () => linkCurrent.value, currentAccount: () => true,
+    isChatUnavailable: computed(() => !linkCurrent.value), isRateLimited: ref(false),
+    createClientMessageId: () => 'msg_test', buildMessageEnvelope: (text: string) => text,
+    pinToBottom: vi.fn(), hapticSuccess: vi.fn(), vaultStore, refreshLinks,
+    recipientDevices: () => cached, isMobile: ref(false), handleSendError,
+    $q: { notify: vi.fn() }, watch,
+  };
+  const send = new Function(...Object.keys(bindings), `
+    let draftRevision = 0;
+    watch([draftMessage, replyingTo], () => { ++draftRevision; }, { flush: 'sync' });
+    ${outputText}
+    return sendVaultMessage;
+  `)(...Object.values(bindings)) as () => Promise<void>;
+  await send();
+  expect(vaultStore.sendMessage).toHaveBeenCalledOnce();
+  expect(vaultStore.sendMessage).toHaveBeenCalledWith('link', 'bob', cached, 'hello', {
+    persistLocal: true, localMessageId: 'msg_test',
+  });
+  expect(handleSendError).not.toHaveBeenCalled();
+});

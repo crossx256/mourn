@@ -5439,7 +5439,6 @@ async function retryMessage(msgId: string) {
   try {
     await refreshLinks({ skipSessionCheck: true });
     if (!currentAccount(snapshot) || selectedLink.value?.id !== snapshot.linkId) return;
-    if (linksStore.offline || linksStore.error) throw new Error('RECIPIENT_REFRESH_FAILED');
     if (!currentConversation(snapshot) || isChatUnavailable.value) return;
     const devices = recipientDevices(snapshot);
     if (!devices.length) throw new Error('NO_PARTNER_DEVICES');
@@ -6118,11 +6117,11 @@ async function sendVaultMessage() {
   try {
     await vaultStore.initialize();
     if (!currentConversation(snapshot) || linksStore.offline || isChatUnavailable.value) return;
-    // Receiving proves our own device is reachable, not that the cached link
-    // carries the peer's current device keys. Resolve them before encrypting.
+    // Best-effort recipient refresh: prefer fresh device keys when the links API
+    // answers, but a failed refresh (offline/flaky network) must not block the
+    // send — fall back to the already-cached device list, as pre-1.5.5 did.
     await refreshLinks({ skipSessionCheck: true });
     if (!currentConversation(snapshot) || isChatUnavailable.value) return;
-    if (linksStore.offline || linksStore.error) throw new Error('RECIPIENT_REFRESH_FAILED');
     const devices = recipientDevices(snapshot);
     if (!devices.length) throw new Error('NO_PARTNER_DEVICES');
     dispatched = true;
