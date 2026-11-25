@@ -105,6 +105,21 @@ describe('raw environment through Quasar and Vite consumers', () => {
 });
 
 describe('Quasar v3 configuration', () => {
+  it.each([undefined, ['@quasar/app-vite'], /existing-package/, true])(
+    'bundles Quasar for SSR without discarding noExternal=%s', async (previous) => {
+      const cfg = await config();
+      const vite: any = { ssr: { noExternal: previous } };
+      cfg.build!.extendViteConf!(vite, { isServer: true } as never);
+      expect(vite.ssr.noExternal).toEqual(previous === true ? true : [
+        ...(Array.isArray(previous) ? previous : previous ? [previous] : []),
+        'quasar',
+      ]);
+      const client: any = {};
+      cfg.build!.extendViteConf!(client, { isServer: false } as never);
+      expect(client.ssr).toBeUndefined();
+    },
+  );
+
   it('filters encoded Quasar env keys for both client and backend, retaining string flags', async () => {
     const cfg = await config();
     const env = {
@@ -170,4 +185,3 @@ describe('Quasar v3 SSR render errors', () => {
     } finally { log.mockRestore(); }
   });
 });
-

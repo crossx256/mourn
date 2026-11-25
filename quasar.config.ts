@@ -140,7 +140,18 @@ export default defineConfig((ctx) => {
       // distDir
       viteVuePluginOptions: widgetCompilerOptions,
 
-      extendViteConf(viteConf) {
+      extendViteConf(viteConf, options) {
+        if (options?.isServer) {
+          viteConf.ssr ??= {};
+          const previous = viteConf.ssr.noExternal;
+          if (previous !== true) {
+            // Hydration requires the same Quasar component tree on server and client.
+            viteConf.ssr.noExternal = [
+              ...(Array.isArray(previous) ? previous : previous ? [previous] : []),
+              'quasar',
+            ];
+          }
+        }
         // Quasar's filtered definitions are the only public env injection path.
         // envDir:false alone still lets Vite import prefixed process variables.
         viteConf.envPrefix = [];
