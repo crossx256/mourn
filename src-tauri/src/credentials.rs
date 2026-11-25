@@ -1,5 +1,8 @@
 //! OS-keychain secrets and serialized, atomic, metadata-only account indexing.
-use base64::{engine::general_purpose::STANDARD, Engine};
+use base64::{
+    engine::general_purpose::{STANDARD, URL_SAFE_NO_PAD},
+    Engine,
+};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::Path;
@@ -86,11 +89,13 @@ fn delete(service: &str, name: &str) -> Result<(), String> {
     }
 }
 
-fn valid_offline_key(value: &str) -> bool {
-    STANDARD
+fn canonical_offline_key(value: &str) -> Option<String> {
+    URL_SAFE_NO_PAD
         .decode(value)
-        .map(|bytes| bytes.len() == 32)
-        .unwrap_or(false)
+        .or_else(|_| STANDARD.decode(value))
+        .ok()
+        .filter(|bytes| bytes.len() == 32)
+        .map(|bytes| URL_SAFE_NO_PAD.encode(bytes))
 }
 
 fn legacy_account_allowed(username: &str) -> bool {
@@ -238,20 +243,20 @@ pub fn offline_vault_get_key(app: tauri::AppHandle) -> Result<Option<String>, St
         .lock()
         .map_err(|_| "credential store lock failed")?;
     if let Some(value) = get(INTERNAL_SERVICE, OFFLINE_SLOT)? {
-        return if valid_offline_key(&value) {
-            Ok(Some(value))
-        } else {
-            Err("invalid offline vault key in OS keychain".into())
-        };
+        let canonical =
+            canonical_offline_key(&value).ok_or("invalid offline vault key in OS keychain")?;
+        if value != canonical {
+            set(INTERNAL_SERVICE, OFFLINE_SLOT, &canonical)?;
+        }
+        return Ok(Some(canonical));
     }
     let index = read_index(&index_path(&app)?)?;
     if index.contains_key(OFFLINE_SLOT) {
         return Err("ambiguous legacy offline key; preserved for manual recovery".into());
     }
     if let Some(value) = get(LEGACY_SERVICE, OFFLINE_SLOT)? {
-        if !valid_offline_key(&value) {
-            return Err("invalid legacy offline key; preserved for recovery".into());
-        }
+        let value = canonical_offline_key(&value)
+            .ok_or("invalid legacy offline key; preserved for recovery")?;
         set(INTERNAL_SERVICE, OFFLINE_SLOT, &value)?;
         delete(LEGACY_SERVICE, OFFLINE_SLOT)?;
         return Ok(Some(value));
@@ -261,17 +266,18 @@ pub fn offline_vault_get_key(app: tauri::AppHandle) -> Result<Option<String>, St
 
 #[tauri::command]
 pub fn offline_vault_set_key(_app: tauri::AppHandle, key_b64: String) -> Result<(), String> {
-    if !valid_offline_key(&key_b64) {
-        return Err("offline vault key must be a base64-encoded 32-byte key".into());
-    }
+    let key_b64 = canonical_offline_key(&key_b64)
+        .ok_or("offline vault key must be a base64-encoded 32-byte key")?;
     let _guard = STORE_LOCK
         .lock()
         .map_err(|_| "credential store lock failed")?;
     if let Some(existing) = get(INTERNAL_SERVICE, OFFLINE_SLOT)? {
-        if existing != key_b64 {
+        if canonical_offline_key(&existing).as_deref() != Some(key_b64.as_str()) {
             return Err("existing offline vault key preserved; implicit rotation refused".into());
         }
-        return Ok(());
+        if existing == key_b64 {
+            return Ok(());
+        }
     }
     set(INTERNAL_SERVICE, OFFLINE_SLOT, &key_b64)
 }
@@ -287,10 +293,52 @@ mod tests {
         assert!(legacy_account_allowed("alice"));
     }
     #[test]
+    fn offline_keys_accept_url_safe_no_pad() {
+        let key = URL_SAFE_NO_PAD.encode([251u8; 32]);
+        assert_eq!(key.len(), 43);
+        assert!(key.contains('-') && key.contains('_'));
+        assert_eq!(canonical_offline_key(&key), Some(key));
+    }
+    #[test]
+    fn offline_keys_canonicalize_standard_padding_and_alphabet() {
+        let bytes = [251u8; 32];
+        let standard = STANDARD.encode(bytes);
+        let canonical = URL_SAFE_NO_PAD.encode(bytes);
+        assert!(standard.contains('+') && standard.contains('/') && standard.ends_with('='));
+        assert_eq!(canonical_offline_key(&standard), Some(canonical.clone()));
+        assert_eq!(
+            canonical_offline_key(&standard),
+            canonical_offline_key(&canonical)
+        );
+        assert_ne!(
+            canonical_offline_key(&canonical),
+            canonical_offline_key(&URL_SAFE_NO_PAD.encode([0u8; 32]))
+        );
+    }
+    #[test]
     fn offline_keys_require_exact_key_material() {
-        assert!(valid_offline_key(&STANDARD.encode([0u8; 32])));
-        assert!(!valid_offline_key(&STANDARD.encode([0u8; 31])));
-        assert!(!valid_offline_key("not-a-key"));
+        for length in [0, 1, 31, 33, 64] {
+            assert_eq!(
+                canonical_offline_key(&STANDARD.encode(vec![0u8; length])),
+                None
+            );
+            assert_eq!(
+                canonical_offline_key(&URL_SAFE_NO_PAD.encode(vec![0u8; length])),
+                None
+            );
+        }
+        for value in ["not-a-key", "!", " ", "💀"] {
+            assert_eq!(canonical_offline_key(value), None);
+        }
+        let key = URL_SAFE_NO_PAD.encode([251u8; 32]);
+        for value in [
+            format!(" {key}"),
+            format!("{key}\n"),
+            format!("{key}="),
+            key.replace('-', "+"),
+        ] {
+            assert_eq!(canonical_offline_key(&value), None);
+        }
     }
     #[test]
     fn corrupt_metadata_fails_closed_and_never_contains_passwords() {
